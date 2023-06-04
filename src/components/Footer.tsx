@@ -1,9 +1,3 @@
-import {
-  faBaseball,
-  faBasketball,
-  faIcons,
-} from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Footer } from "flowbite-react";
 import logo from "../assets/logo.svg";
 
@@ -48,11 +42,6 @@ export default function FooterComponent() {
         <div className="w-full sm:flex sm:items-center sm:justify-between">
           <Footer.Copyright by="Ikoncity Airban™" href="#" year={2022} />
           <div className="mt-4 flex space-x-6 sm:mt-0 sm:justify-center">
-            <FontAwesomeIcon icon={faBasketball} />
-            <FontAwesomeIcon icon={faBaseball} />
-            <FontAwesomeIcon icon={faIcons} />
-            <FontAwesomeIcon icon={faIcons} />
-            <FontAwesomeIcon icon={faIcons} />
           </div>
         </div>
       </div>
