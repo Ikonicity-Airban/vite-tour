@@ -1,6 +1,6 @@
 import { Navbar } from "flowbite-react";
 import React from "react";
-import { Link, NavLink } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import LogoComponent from "./LogoComponent";
 
 function NavbarComponent() {
