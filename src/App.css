@@ -1,0 +1,32 @@
+card:hover .card__overlay {
+  transform: translateY(0);
+}
+
+.link-button {
+  padding: 0.25rem 1rem;
+}
+.icon-button {
+  display: grid;
+  place-content: center;
+  width: 2rem;
+  height: 2rem;
+}
+.icon-button:hover {
+}
+#link {
+  padding: 0.25rem 1rem;
+  transition: all 150ms;
+  border-radius: 0.3rem;
+}
+#link:hover {
+  color: var(--primary);
+  background: #c0c0c06b;
+}
+.active-link::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  height: 2px;
+  width: 100%;
+  background: #1c5391dd;
+}

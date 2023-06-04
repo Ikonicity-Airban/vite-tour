@@ -1,0 +1,107 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: "Montserrat";
+  src: url("./Montserrat-Medium.ttf");
+}
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-size: 14px;
+  /* position: relative; */
+}
+
+a {
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: border 200ms ease-in;
+}
+html {
+  scroll-behavior: smooth;
+}
+body {
+  min-width: 280px;
+  min-height: 100vh;
+  font-family: "Montserrat", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+h1 {
+  font-size: 3em;
+  line-height: 1.2;
+}
+h2 {
+  font-size: 2.2em;
+  line-height: 1.1;
+}
+h3 {
+  font-size: 1.6em;
+  line-height: 1.1;
+}
+h4 {
+  font-size: 1.2em;
+  line-height: 1.1;
+}
+
+/* img {
+  /* object-fit: cover;
+} */
+.title {
+  color: transparent;
+  background: linear-gradient(
+    135deg,
+    lime,
+    white,
+    rgb(0, 255, 255),
+    white,
+    orange
+  );
+  background-clip: text;
+}
+
+.logo-clipped {
+  color: transparent;
+  background: linear-gradient(135deg, rgb(17, 244, 66), rgb(0, 255, 255));
+  background-clip: text;
+}
+
+.ring-button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #00c656;
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+.ring-button:hover {
+  border-color: #29d25c;
+}
+
+.ring-button:focus,
+.ring-button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
+  }
+  a:hover {
+    color: #114466;
+  }
+  .ring-button {
+    background-color: #f9f9f9;
+  }
+}
+
+@layer components {
+  .grid-card {
+    @apply grid tablet:grid-cols-2 laptop:grid-cols-4 desktop:grid-cols-6;
+  }
+}
