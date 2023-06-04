@@ -6,7 +6,6 @@ import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../firebase";
 import { AppContext } from "../api/context";
 import { Types } from "../api/reducer";
-import Section from "../components/Section";
 import Heading from "../components/Heading";
 
 function DashboardLayout() {

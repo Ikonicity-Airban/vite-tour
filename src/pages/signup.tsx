@@ -73,10 +73,11 @@ function SignUpPage() {
         replace: true,
       });
     } catch (error) {
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      console.log(errorCode, errorMessage);
-      alert(errorMessage);
+      if (error instanceof Error) {
+        const errorMessage = error.message;
+        console.log(errorMessage);
+        alert(errorMessage);
+      }
     } finally {
       setLoading(false);
     }
@@ -116,10 +117,11 @@ function SignUpPage() {
         replace: true,
       });
     } catch (error) {
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      console.log(errorCode, errorMessage);
-      alert(errorMessage);
+      if (error instanceof Error) {
+        const errorMessage = error.message;
+        console.log(errorMessage);
+        alert(errorMessage);
+      }
     } finally {
       setLoading(false);
     }

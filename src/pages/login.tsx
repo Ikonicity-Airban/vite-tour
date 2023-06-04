@@ -6,7 +6,6 @@ import { Link, useNavigate } from "react-router-dom";
 import {
   GoogleAuthProvider,
   browserLocalPersistence,
-  inMemoryPersistence,
   signInWithEmailAndPassword,
   signInWithPopup,
 } from "firebase/auth";
@@ -67,10 +66,11 @@ function LoginPage() {
         replace: true,
       });
     } catch (error) {
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      console.log(errorCode, errorMessage);
-      alert(errorMessage);
+      if (error instanceof Error) {
+        const errorMessage = error.message;
+        console.log(errorMessage);
+        alert(errorMessage);
+      }
     } finally {
       setLoading(false);
     }
@@ -110,17 +110,18 @@ function LoginPage() {
         replace: true,
       });
     } catch (error) {
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      console.log(errorCode, errorMessage);
-      alert(errorMessage);
+      if (error instanceof Error) {
+        const errorMessage = error.message;
+        console.log(errorMessage);
+        alert(errorMessage);
+      }
     } finally {
       setLoading(false);
     }
   };
   //return
   return (
-    <section className="grid place-items-center min-h-screen py-10">
+    <section className="grid place-items-center min-h-screen mt-10 mb-20">
       <Card className="smallScreens:min-w-[320px] ">
         <div className="mx-auto mb-10">
           <LogoComponent />
@@ -129,7 +130,7 @@ function LoginPage() {
           <h3 className="text-primary max-w-md">Login Form</h3>
         </span>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <form autoFocus onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
             <div className="mb-2 block">
               <Label htmlFor="email1" value="Email" />

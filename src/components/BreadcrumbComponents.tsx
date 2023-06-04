@@ -1,5 +1,3 @@
-import { faHomeAlt } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Breadcrumb } from "flowbite-react";
 import { Link, useLocation } from "react-router-dom";
 
@@ -10,7 +8,6 @@ export default function BreadcrumbComponents() {
     <Breadcrumb aria-label={location.pathname.toString()}>
       <Link to="/">
         <Breadcrumb.Item>
-          <FontAwesomeIcon icon={faHomeAlt} className="p-4" />
           <p className="text-sm">Home</p>
         </Breadcrumb.Item>
       </Link>
