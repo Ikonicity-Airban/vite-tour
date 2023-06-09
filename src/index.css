@@ -14,6 +14,11 @@
   /* position: relative; */
 }
 
+:root {
+  color: #213547;
+  background-color: #ffffff;
+}
+
 a {
   text-decoration: none;
   -webkit-tap-highlight-color: transparent;
@@ -22,10 +27,44 @@ a {
 html {
   scroll-behavior: smooth;
 }
+
+.heading {
+  margin: 0;
+  padding: 0px;
+  background-color: black;
+  color: white;
+  text-align: center;
+}
+
+.heading > h1 {
+  padding: 20px;
+  margin: 0;
+}
+.map-wrap {
+  position: relative;
+  width: 100%;
+  height: calc(
+    100vh - 77px
+  ); /* calculate height of the screen minus the heading */
+}
+
+.map {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
+
 body {
   min-width: 280px;
   min-height: 100vh;
   font-family: "Montserrat", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 h1 {
@@ -87,14 +126,28 @@ h4 {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
+/* map */
+.mapouter {
+  position: relative;
+  text-align: right;
+  width: 100%;
+  height: 100%;
+  min-height: 400px;
+  min-width: 300px;
+}
+.gmap_canvas {
+  overflow-y: hidden;
+  background: none !important;
+  width: 100%;
+  height: 100%;
+}
+.gmap_iframe {
+  width: 100% !important;
+  height: 100% !important;
+}
+/* map ends */
+
 @media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #114466;
-  }
   .ring-button {
     background-color: #f9f9f9;
   }
@@ -102,6 +155,6 @@ h4 {
 
 @layer components {
   .grid-card {
-    @apply grid tablet:grid-cols-2 laptop:grid-cols-4 desktop:grid-cols-6;
+    @apply grid tablet:grid-cols-3 laptop:grid-cols-4 desktop:grid-cols-4;
   }
 }

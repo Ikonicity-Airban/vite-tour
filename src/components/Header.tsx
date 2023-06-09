@@ -1,10 +1,37 @@
-import { Link } from "react-router-dom";
 import NavbarComponent from "./Navbar";
+
+const topBarLinks = [
+  {
+    id: 1,
+    icon: "fab fa-facebook-f",
+    link: "https://m.facebook.com",
+  },
+  {
+    id: 2,
+    icon: "fab fa-linkedin-in",
+    link: "https://linkedin.com/in/ikonicityairban",
+  },
+  {
+    id: 3,
+    icon: "fab fa-instagram",
+    link: "https://instagram.com",
+  },
+  {
+    id: 4,
+    icon: "fab fa-twitter",
+    link: "https://twitter.com",
+  },
+  {
+    id: 5,
+    icon: "fab fa-youtube",
+    link: "https://youtube.com",
+  },
+];
 
 function Header() {
   return (
-    <header className="flex flex-col w-full text-base">
-      <div className="hidden md:flex w-full bg-gray-50 p-4">
+    <header className="flex flex-col top-0 w-full text-base z-50">
+      <div className="hidden md:flex w-full p-4">
         <div className="flex w-full md:container mx-auto justify-between p-4 pb-10">
           <div className="text-center text-lg-left mb-2 mb-lg-0">
             <div className="inline-flex items-center">
@@ -13,27 +40,22 @@ function Header() {
               </p>
               <p className="text-body px-3">|</p>
               <p>
-                <i className="fa fa-phone-alt mr-2"></i>+012 345 6789
+                <i className="fa fa-phone-alt mr-2"></i>+234 0816 986 2852
               </p>
             </div>
           </div>
           <div className="text-center">
-            <div className="inline-flex align-items-center">
-              <Link to="" className="p-2 icon-button">
-                <i className="fab fa-facebook-f"></i>
-              </Link>
-              <Link to="" className="p-2 icon-button">
-                <i className="fab fa-linkedin-in"></i>
-              </Link>
-              <Link to="" className="p-2 icon-button">
-                <i className="fab fa-instagram"></i>
-              </Link>
-              <Link to="" className="p-2 icon-button">
-                <i className="fab fa-twitter"></i>
-              </Link>
-              <Link to="" className="p-2 icon-button">
-                <i className="fab fa-youtube"></i>
-              </Link>
+            <div className="flex align-items-center gap-2">
+              {topBarLinks.map(({ link, icon, id }) => (
+                <a
+                  href={link}
+                  target="_blank"
+                  key={id}
+                  className="p-2 icon-button hover:text-white hover:bg-primary transition-all rounded"
+                >
+                  <i className={icon}></i>
+                </a>
+              ))}
             </div>
           </div>
         </div>

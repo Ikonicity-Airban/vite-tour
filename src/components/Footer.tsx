@@ -1,18 +1,14 @@
 import { Footer } from "flowbite-react";
-import logo from "../assets/logo.svg";
+import LogoComponent from "./LogoComponent";
+// import logo from "../assets/logo.svg";
 
 export default function FooterComponent() {
   return (
-    <Footer container className="text-sm">
+    <Footer container className="text-sm bg-primary text-white">
       <div className="w-full">
         <div className="grid w-full justify-between sm:flex sm:justify-between md:flex md:grid-cols-1">
           <div>
-            <Footer.Brand
-              alt="Flowbite Logo"
-              href="https://flowbite.com"
-              name="Computronix"
-              src={logo}
-            />
+            <LogoComponent />
           </div>
           <div className="grid grid-cols-2 gap-8 sm:mt-4 sm:grid-cols-3 sm:gap-6">
             <div>
@@ -41,8 +37,7 @@ export default function FooterComponent() {
         <Footer.Divider />
         <div className="w-full sm:flex sm:items-center sm:justify-between">
           <Footer.Copyright by="Ikoncity Airban™" href="#" year={2022} />
-          <div className="mt-4 flex space-x-6 sm:mt-0 sm:justify-center">
-          </div>
+          <div className="mt-4 flex space-x-6 sm:mt-0 sm:justify-center"></div>
         </div>
       </div>
     </Footer>

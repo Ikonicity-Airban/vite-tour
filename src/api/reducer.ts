@@ -1,4 +1,4 @@
-import { ILoginResponse } from "./@types";
+import { ILoginResponse, IPlaceResponse } from "./@types";
 
 type ActionMap<M extends { [index: string]: unknown }> = {
   [Key in keyof M]: M[Key] extends undefined
@@ -14,6 +14,8 @@ type ActionMap<M extends { [index: string]: unknown }> = {
 export enum Types {
   login = "LOGIN",
   logout = "LOGOUT",
+  setPlaces = "LOAD SITES",
+  setIsLoading = "SET LOADING",
 }
 
 type AuthPayload = {
@@ -23,12 +25,27 @@ type AuthPayload = {
   [Types.logout]: unknown;
 };
 
-export type authActions = ActionMap<AuthPayload>[keyof ActionMap<AuthPayload>];
+type placesPayload = {
+  [Types.setPlaces]: IPlaceResponse[];
+};
+type loadingPayload = {
+  [Types.setIsLoading]: boolean;
+};
 
-export const authReducer = <S>(state: S, action: authActions) => {
+export type authActions = ActionMap<AuthPayload>[keyof ActionMap<AuthPayload>];
+export type placesActions =
+  ActionMap<placesPayload>[keyof ActionMap<placesPayload>];
+export type loadingActions =
+  ActionMap<loadingPayload>[keyof ActionMap<loadingPayload>];
+
+export const authReducer = <S>(
+  state: S,
+  action: authActions | placesActions | loadingActions
+) => {
   switch (action.type) {
     case Types.login:
       return {
+        isLoggedIn: true,
         ...state,
         ...action.payload,
       };
@@ -37,6 +54,19 @@ export const authReducer = <S>(state: S, action: authActions) => {
       return {
         ...state,
         user: null,
+        isLoggedIn: false,
+      };
+
+    case Types.setPlaces:
+      return {
+        ...state,
+        places: [action.payload],
+      };
+
+    case Types.setIsLoading:
+      return {
+        ...state,
+        isLoading: action.payload,
       };
 
     default:

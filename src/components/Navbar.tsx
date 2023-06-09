@@ -1,6 +1,6 @@
-import { Navbar } from "flowbite-react";
+import { Avatar, Button, Navbar } from "flowbite-react";
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import LogoComponent from "./LogoComponent";
 
 function NavbarComponent() {
@@ -27,38 +27,41 @@ function NavbarComponent() {
   );
 
   return (
-    <div className="md:container w-full mx-auto p-4 bg-white md:p-6 md:relative top-0 rounded-lg shadow overflow-hidden z-10 md:-my-10">
+    <div className="md:container sticky w-full mx-auto p-4 bg-white md:p-6 top-0 rounded-lg shadow-lg overflow-hidden z-10 md:-my-10">
       <Navbar
         fluid
         style={{
           border: "none",
         }}
       >
-        <Navbar.Brand>
+        <Navbar.Brand className="flex-1 items-end">
           <LogoComponent />
         </Navbar.Brand>
-        <Navbar.Toggle />
-        <Navbar.Collapse>
+        <Navbar.Toggle className="order-2" />
+        <Navbar.Collapse className="order-3">
           {navLinks.map(({ link, title }) => (
             <NavLink
               className={({ isActive }) =>
-                isActive ? "text-green-700 active-link relative" : ""
+                isActive
+                  ? "relative text-primary overflow-hidden active-link py-1"
+                  : "overflow-hidden relative text-[#11224499] py-1"
               }
               to={link}
               key={title}
             >
-              <div id="link">{title}</div>
+              <span className="link">{title}</span>
             </NavLink>
           ))}
         </Navbar.Collapse>
+        <Link
+          to="/login"
+          className="cursor-pointer -my-1 px-4 md:order-3 order-0"
+        >
+          <Avatar rounded />
+        </Link>
       </Navbar>
     </div>
   );
 }
 
 export default NavbarComponent;
-
-// <Link className="link-button" to="/">Home</Link>
-// <Link className="link-button" to="/about">About</Link>
-// <Link className="link-button" to="/services">Services</Link>
-// <Link className="link-button" to="/products">Products</Link>

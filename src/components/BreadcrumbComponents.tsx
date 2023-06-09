@@ -5,9 +5,10 @@ export default function BreadcrumbComponents() {
   const location = useLocation();
   const pathArray = location.pathname.split("/").filter((item) => item != "");
   return (
-    <Breadcrumb aria-label={location.pathname.toString()}>
+    <Breadcrumb aria-label={location.pathname.toString()} className="p-4">
       <Link to="/">
-        <Breadcrumb.Item>
+        <Breadcrumb.Item className="">
+          <i className="fa fa-home px-2 text-primary"></i>
           <p className="text-sm">Home</p>
         </Breadcrumb.Item>
       </Link>

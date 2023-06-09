@@ -1,29 +1,40 @@
+import { Button } from "flowbite-react";
 import { ReactNode } from "react";
-
+import { Link } from "react-router-dom";
+// import "../App.css";
 interface ICardProps {
   heading?: string;
   source?: string;
   children?: ReactNode;
+  place?: string;
+  about?: string;
+  id?: string;
 }
 
-function Card({ heading, source, children }: ICardProps) {
+function CardComponent({ source, children, place, id = "" }: ICardProps) {
   return (
-    <a
-      href="/login"
-      className="card relative h-auto cursor-pointer overflow-hidden rounded-lg shadow-md text-center"
-    >
-      <div className="card__overlay absolute inset-0 bg-red-400 w-full h-full translate-y-full transition-transform">
-        {children}
-      </div>
-      <img className="" src={source || "img/package-1.jpg"} alt="" />
+    <div className="hover_card ring-2  ring-[#c0c0c091] card relative h-auto cursor-pointer overflow-hidden rounded-lg shadow-md text-center">
+      <Link to={`tours/${id}`} className="">
+        <div className="card__overlay absolute inset-0 w-full h-full translate-y-full ">
+          {children}
+          <Button>Learn More</Button>
+        </div>
+        <img
+          className="w-full  object-contain"
+          src={source || "logo.svg"}
+          alt=""
+          placeholder="Hi"
+        />
 
-      <div className="p-6">
-        <h4 className="font-semibold dark:text-white">
-          {heading || "Some Heading"}
-        </h4>
-      </div>
-    </a>
+        <div className="p-6">
+          <h4 className="font-semibold dark:text-white">{place}</h4>
+        </div>
+        <div className="pb-4">
+          <div>4</div>
+        </div>
+      </Link>
+    </div>
   );
 }
 
-export default Card;
+export default CardComponent;

@@ -1,24 +1,33 @@
 import React from "react";
-import { Outlet, useLocation, useNavigate } from "react-router-dom";
-import { Avatar, Breadcrumb, Dropdown, Navbar } from "flowbite-react";
+import { Outlet, useNavigate } from "react-router-dom";
+import { Avatar, Dropdown, Modal, Navbar } from "flowbite-react";
 import LogoComponent from "../components/LogoComponent";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../firebase";
 import { AppContext } from "../api/context";
 import { Types } from "../api/reducer";
-import Heading from "../components/Heading";
+import BreadcrumbComponents from "../components/BreadcrumbComponents";
+
+import Drawer from "../components/Drawer";
+import FooterComponent from "../components/Footer";
+import useFetchSites from "../api/fetchSites";
 
 function DashboardLayout() {
   const {
     dispatch,
-    state: { user },
+    state: { isLoggedIn, user },
   } = React.useContext(AppContext);
   const navigate = useNavigate();
 
-  const path = useLocation().pathname.split("/")[1];
+  // fetching places
 
+  useFetchSites();
   //useEffect
-  React.useEffect(() => {
+  React.useLayoutEffect(() => {
+    dispatch({
+      type: Types.setIsLoading,
+      payload: true,
+    });
     onAuthStateChanged(auth, (userCredentials) => {
       if (userCredentials) {
         // User is signed in, see docs for a list of available properties
@@ -47,27 +56,44 @@ function DashboardLayout() {
           },
         });
       } else {
-        // User is signed out
-        // ...
         dispatch({
           type: Types.logout,
           payload: {},
         });
-        console.log(userCredentials);
-        navigate("/login", {
-          replace: true,
+        dispatch({
+          type: Types.setIsLoading,
+          payload: false,
         });
+        navigate("/login");
         console.log("user is logged out");
       }
     });
   }, [navigate, dispatch]);
 
-  if (user)
+  if (isLoggedIn)
     return (
-      <div className="w-full">
-        <Navbar className="w-full" fluid>
+      <div className="w-full relative tablet:px-4">
+        <Modal
+          popup
+          position="bottom-right"
+          className="my-auto"
+          // show
+          dismissible
+        >
+          <Modal.Header>Header</Modal.Header>
+          <Modal.Body>Error</Modal.Body>
+          <Modal.Footer>Error</Modal.Footer>
+        </Modal>
+        <Navbar className="w-full fixed left-0 z-[999]" fluid rounded>
           <Navbar.Brand>
-            <Navbar.Toggle />
+            <Navbar.Toggle
+              data-drawer-target="drawer-swipe"
+              data-drawer-show="drawer-swipe"
+              data-drawer-placement="bottom"
+              data-drawer-edge="true"
+              data-drawer-edge-offset="bottom-[60px]"
+              aria-controls="drawer-swipe"
+            />
             <LogoComponent />
           </Navbar.Brand>
           <div className="flex md:order-2">
@@ -77,7 +103,7 @@ function DashboardLayout() {
               label={
                 <Avatar
                   alt="User settings"
-                  img={user?.photoURL || ""}
+                  img={user.photoURL || ""}
                   rounded
                   placeholderInitials={
                     user?.photoURL || user?.email?.slice(0, 2).toUpperCase()
@@ -92,13 +118,12 @@ function DashboardLayout() {
                 </span>
               </Dropdown.Header>
               <Dropdown.Item>Dashboard</Dropdown.Item>
-              <Dropdown.Item>Settings</Dropdown.Item>
-              <Dropdown.Item>Earnings</Dropdown.Item>
+              <Dropdown.Item>profile</Dropdown.Item>
               <Dropdown.Divider />
               <Dropdown.Item
                 onClick={() => {
-                  auth.signOut();
                   dispatch({ type: Types.logout, payload: null });
+                  auth.signOut();
                 }}
               >
                 Sign out
@@ -106,19 +131,15 @@ function DashboardLayout() {
             </Dropdown>
           </div>
         </Navbar>
-        <Breadcrumb className="p-6 capitalize">
-          <Breadcrumb.Item>
-            <span className="fa-home">Home</span>
-          </Breadcrumb.Item>
-          <Breadcrumb.Item>{path}</Breadcrumb.Item>
-        </Breadcrumb>
-        <section className="space-y-10 p-6">
-          <Heading section_title={path} />
+        <BreadcrumbComponents />
+        <section className=" tablet:px-6 py-20">
           <Outlet></Outlet>
         </section>
+        <Drawer />
+        <FooterComponent />
       </div>
     );
-  else return <center>Loading...</center>;
+  else return null;
 }
 
 export default DashboardLayout;

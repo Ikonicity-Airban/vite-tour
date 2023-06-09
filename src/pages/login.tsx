@@ -14,6 +14,8 @@ import { AppContext } from "../api/context";
 import { useContext } from "react";
 import { Types } from "../api/reducer";
 
+import logo from "vite.svg";
+import { LoadingButton } from "../components/Buttons";
 interface IFormInput {
   email: string;
   password: string;
@@ -148,11 +150,13 @@ function LoginPage() {
             <div className="mb-2 block">
               <Label htmlFor="password1" value="Password" />
             </div>
+
             <TextInput
               id="password1"
               required
               type="password"
               {...register("password")}
+              // placeholder="help"
             />
           </div>
           <div className="flex items-center gap-2">
@@ -167,14 +171,18 @@ function LoginPage() {
               click here
             </Link>
           </div>
-          <Button
-            disabled={loading}
-            gradientDuoTone={"purpleToBlue"}
-            className="w-full"
-            type="submit"
-          >
-            Submit
-          </Button>
+          {loading ? (
+            <LoadingButton />
+          ) : (
+            <Button
+              disabled={loading}
+              gradientDuoTone={"purpleToBlue"}
+              className="w-full"
+              type="submit"
+            >
+              Submit
+            </Button>
+          )}
         </form>
         <Button
           disabled={loading}

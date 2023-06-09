@@ -1,3 +1,5 @@
+import { DocumentData } from "firebase/firestore";
+
 export interface IUser {
   name: string;
   email: string;
@@ -13,6 +15,15 @@ export interface GenericResponse {
   status: string;
   message: string;
 }
+
+export type IPlaceResponse =
+  | {
+      about: string;
+      images: string[];
+      tags: string;
+      id: string;
+    }
+  | DocumentData;
 
 export interface IUserResponse {
   displayName?: string | null;

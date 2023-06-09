@@ -1,4 +1,10 @@
-card:hover .card__overlay {
+.card__overlay {
+  background-color: #fff1;
+  backdrop-filter: blur(2px);
+  transition: all 500ms ease;
+}
+
+.card:hover .card__overlay {
   transform: translateY(0);
 }
 
@@ -13,20 +19,37 @@ card:hover .card__overlay {
 }
 .icon-button:hover {
 }
-#link {
-  padding: 0.25rem 1rem;
-  transition: all 150ms;
-  border-radius: 0.3rem;
+.active-link {
 }
-#link:hover {
+.link {
+  padding: 0.25rem;
+  transition: all 150ms ease-in;
+}
+.link:hover {
   color: var(--primary);
-  background: #c0c0c06b;
 }
 .active-link::after {
   content: "";
   position: absolute;
   bottom: 0;
+  left: 0;
+  padding-top: 2px;
   height: 2px;
   width: 100%;
   background: #1c5391dd;
+}
+.link::after {
+  padding-top: 2px;
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: -100%;
+  height: 2px;
+  width: 100%;
+  background: #1c5391dd;
+}
+
+.link:hover::after {
+  display: block;
+  left: 0;
 }

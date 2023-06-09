@@ -1,11 +1,14 @@
-import React from "react";
+import React, { useContext } from "react";
 import CarouselComponent from "../components/Carousel";
 import Section from "../components/Section";
 import PremiumCard from "../components/PremiumCard";
 import Card from "../components/Card";
 import BookNowComponent from "../components/BookNowComponent";
+import { AppContext } from "../api/context";
 
 function HomePage() {
+  const { state } = useContext(AppContext);
+  const carouselImages = [];
   const sources = [
     "https://flowbite.s3.amazonaws.com/docs/gallery/square/image.jpg",
     "https://flowbite.s3.amazonaws.com/docs/gallery/square/image-1.jpg",
@@ -41,7 +44,7 @@ function HomePage() {
 
   return (
     <>
-      <CarouselComponent />
+      <CarouselComponent sources={state.carousel} />
       <Section
         id="destination"
         title="destination"

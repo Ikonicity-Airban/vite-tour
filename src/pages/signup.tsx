@@ -128,7 +128,7 @@ function SignUpPage() {
   };
 
   return (
-    <section className="grid place-items-center min-h-screen py-10">
+    <section className="grid place-items-center min-h-screen py-32">
       <Card className="smallScreens:min-w-[320px] ">
         <div className="mx-auto mb-10">
           <LogoComponent />
