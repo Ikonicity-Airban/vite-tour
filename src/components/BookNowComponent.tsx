@@ -1,35 +1,40 @@
-import { Button, Card, Label, TextInput } from "flowbite-react";
-import React from "react";
+import { Button, Card, Dropdown, Label, TextInput } from "flowbite-react";
 import LogoComponent from "./LogoComponent";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { useContext } from "react";
+import { AppContext } from "../api/context";
 
-interface IBNCProps {
-  formData: {
-    name: string;
-    type: string;
-    title: string;
-    icon: string;
-  }[];
+
+interface IForm {
+  name: string;
+  destination: string;
+  email: string;
 }
-function BookNowComponent({ formData }: IBNCProps) {
-  React.useEffect(() => {
-    console.log("TWICE");
-  }, []);
+function BookNowComponent() {
+  const { state: { places } } = useContext(AppContext)
+  const { register, handleSubmit, resetField } = useForm<IForm>()
+
+  const onSubmit: SubmitHandler<IForm> = (data) => {
+    console.log("🚀 ~ file: BookNowComponent.tsx:18 ~ BookNowComponent ~ data:", data)
+
+  }
   return (
     <Card className="w-full">
-      <form className="w-full flex flex-col gap-3">
+      <form onSubmit={handleSubmit(onSubmit)} className="w-full flex flex-col gap-3">
         <div className="mx-auto mb-6">
           <LogoComponent />
         </div>
-        {formData.map(({ name, title, type }, idx) => (
-          <div className="w-full" key={idx}>
-            <Label className="" htmlFor={name}>
-              {title}
-            </Label>
-            <TextInput type={type} />
-          </div>
-        ))}
+        <div className="w-full">
+
+          <Dropdown className="min-w-full" outline inline label={<Label className="" htmlFor="name">
+            Destination
+          </Label>}>
+            {places.map(place => <Dropdown.Item key={place.about}>{place.name}</Dropdown.Item>)}
+          </Dropdown>
+          <TextInput type="text" {...register("destination")} />
+        </div>
         <div className="w-full mt-4">
-          <Button className="w-full">Book</Button>
+          <Button className="w-full" type="submit">Book</Button>
         </div>
       </form>
     </Card>

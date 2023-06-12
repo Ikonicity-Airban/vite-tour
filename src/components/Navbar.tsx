@@ -34,7 +34,7 @@ function NavbarComponent() {
           border: "none",
         }}
       >
-        <Navbar.Brand className="flex-1 items-end">
+        <Navbar.Brand className="flex-1 items-end" href="/">
           <LogoComponent />
         </Navbar.Brand>
         <Navbar.Toggle className="order-2" />

@@ -8,6 +8,7 @@ import ServicesPage from "./pages/services";
 import DashboardLayout from "./Layouts/DashboardLayout";
 import Dashboard from "./pages/dashboard";
 import AboutPage from "./pages/about";
+import ToursPages from "./pages/tours";
 
 export const router = createBrowserRouter([
   {
@@ -31,8 +32,12 @@ export const router = createBrowserRouter([
             element: <ServicesPage></ServicesPage>,
           },
           {
+            path: "/services",
+            element: <ServicesPage></ServicesPage>,
+          },
+          {
             path: "/packages",
-            element: <HomePage></HomePage>,
+            element: <ToursPages></ToursPages>,
           },
           {
             path: "/login",

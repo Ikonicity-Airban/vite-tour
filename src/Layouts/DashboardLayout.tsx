@@ -60,13 +60,14 @@ function DashboardLayout() {
           type: Types.logout,
           payload: {},
         });
-        dispatch({
-          type: Types.setIsLoading,
-          payload: false,
-        });
+
         navigate("/login");
         console.log("user is logged out");
       }
+      dispatch({
+        type: Types.setIsLoading,
+        payload: false,
+      });
     });
   }, [navigate, dispatch]);
 

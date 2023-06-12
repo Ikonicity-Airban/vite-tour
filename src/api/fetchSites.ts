@@ -18,7 +18,6 @@ function useFetchSites() {
         newArray.push(doc.data());
       });
 
-      console.log(newArray);
       dispatch({
         type: Types.setPlaces,
         payload: newArray,

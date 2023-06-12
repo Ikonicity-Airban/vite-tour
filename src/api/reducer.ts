@@ -45,9 +45,9 @@ export const authReducer = <S>(
   switch (action.type) {
     case Types.login:
       return {
-        isLoggedIn: true,
         ...state,
         ...action.payload,
+        isLoggedIn: true,
       };
 
     case Types.logout:
@@ -60,7 +60,7 @@ export const authReducer = <S>(
     case Types.setPlaces:
       return {
         ...state,
-        places: [action.payload],
+        places: action.payload,
       };
 
     case Types.setIsLoading:

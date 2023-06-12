@@ -29,6 +29,7 @@ const initialState = {
   isLoading: false,
   places: [
     {
+      name: "",
       about: "",
       images: [""],
       tags: "",

@@ -5,7 +5,7 @@ type Props = {
   title?: string;
   subtitle?: string;
   children: ReactNode;
-  id: string;
+  id?: string;
 };
 
 const Section = ({ children, subtitle, id, title, ...props }: Props) => {

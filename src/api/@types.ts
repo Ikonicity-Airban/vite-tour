@@ -22,9 +22,17 @@ export type IPlaceResponse =
       images: string[];
       tags: string;
       id: string;
+      name: string;
     }
   | DocumentData;
 
+export type IPlace = {
+  about: string;
+  images: string[];
+  tags: string;
+  id: string;
+  name: string;
+};
 export interface IUserResponse {
   displayName?: string | null;
   email?: string | null;

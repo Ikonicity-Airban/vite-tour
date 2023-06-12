@@ -167,7 +167,7 @@ function SignUpPage() {
               <Label htmlFor="confirmPassword1" value="Confirm Password" />
             </div>
             <TextInput
-              id="password1"
+              id="password2"
               required
               type="password"
               {...register("confirmPassword")}

@@ -4,13 +4,13 @@ import LogoComponent from "./LogoComponent";
 
 export default function FooterComponent() {
   return (
-    <Footer container className="text-sm bg-primary text-white">
-      <div className="w-full">
+    <Footer container className="text-sm bg-[#003355] z-10  text-white">
+      <div className="w-full text-white">
         <div className="grid w-full justify-between sm:flex sm:justify-between md:flex md:grid-cols-1">
           <div>
             <LogoComponent />
           </div>
-          <div className="grid grid-cols-2 gap-8 sm:mt-4 sm:grid-cols-3 sm:gap-6">
+          <div className="grid grid-cols-2 gap-8 sm:mt-4 sm:grid-cols-3 sm:gap-6 text-white">
             <div>
               <Footer.Title title="about" />
               <Footer.LinkGroup col>

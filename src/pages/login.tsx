@@ -124,12 +124,12 @@ function LoginPage() {
   //return
   return (
     <section className="grid place-items-center min-h-screen mt-10 mb-20">
-      <Card className="smallScreens:min-w-[320px] ">
+      <Card className="smallScreens:min-w-[320px] mt-20">
         <div className="mx-auto mb-10">
           <LogoComponent />
         </div>
         <span className="flex place-content-center">
-          <h3 className="text-primary max-w-md">Login Form</h3>
+          <h3 className="text-primary max-w-md">Login</h3>
         </span>
 
         <form autoFocus onSubmit={handleSubmit(onSubmit)} className="space-y-4">
@@ -156,7 +156,7 @@ function LoginPage() {
               required
               type="password"
               {...register("password")}
-              // placeholder="help"
+            // placeholder="help"
             />
           </div>
           <div className="flex items-center gap-2">
@@ -167,8 +167,8 @@ function LoginPage() {
           </div>
           <div className="flex items-center gap-2 text-xs">
             Don't have an account?
-            <Link to="/create-account" className="">
-              click here
+            <Link to="/create-account" className="text-xs underline bg-slate-100 p-1">
+              Sign up
             </Link>
           </div>
           {loading ? (

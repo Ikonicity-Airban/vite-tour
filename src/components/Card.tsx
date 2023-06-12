@@ -13,17 +13,18 @@ interface ICardProps {
 
 function CardComponent({ source, children, place, id = "" }: ICardProps) {
   return (
-    <div className="hover_card ring-2  ring-[#c0c0c091] card relative h-auto cursor-pointer overflow-hidden rounded-lg shadow-md text-center">
+    <div className="hover_card ring-2 h-[400px]  ring-[#c0c0c091] card relative cursor-pointer overflow-hidden rounded-lg shadow-md text-center">
       <Link to={`tours/${id}`} className="">
         <div className="card__overlay absolute inset-0 w-full h-full translate-y-full ">
           {children}
           <Button>Learn More</Button>
         </div>
         <img
-          className="w-full  object-contain"
-          src={source || "logo.svg"}
+          className="w-full h-[80%] object-cover"
+          src={source}
           alt=""
           placeholder="Hi"
+          loading="lazy"
         />
 
         <div className="p-6">
