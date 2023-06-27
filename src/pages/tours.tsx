@@ -1,46 +1,67 @@
-import { AppContext } from "../api/context";
-import { useContext, useState } from "react";
-import Section from "../components/Section";
-import Heading from "../components/Heading";
-import Hr from "../components/HR";
-import CardComponent from "../components/Card";
-import SearchBar from "../components/SearchBar";
-import { IPlace } from "../api/@types";
+import { AppContext } from '../api/context';
+import { useContext, useState } from 'react';
+import Section from '../components/Section';
+import Heading from '../components/Heading';
+import Hr from '../components/HR';
+import SearchBar from '../components/SearchBar';
+import { IPlace } from '../api/@types';
+import { Card } from 'flowbite-react';
+import { CardSkeleton } from '../components/Skeletons';
+import logo from '/carousel/1.jpeg';
 
 function ToursPages() {
-  const {
-    state: { places },
-  } = useContext(AppContext);
+    const {
+        state: { places },
+    } = useContext(AppContext);
 
-  const [filteredPlaces] = useState(
-    []);
-  return (
+    const [searchResults, setSearchResults] = useState<IPlace[]>(places);
 
-    <div className="md:my-20 md:container mx-auto">
-      <SearchBar list={places} />
-      <Heading
-        heading="All Our tour sites"
-        section_title="Welcome to TravelEx Catalogue"
-      />
-      <Hr />
-      {filteredPlaces?.map(({ about, images, tags, name }: IPlace) => {
-        return (
-          <Section subtitle={name}>
-            {
-              <div className="grid-card gap-6">
-                {images.map((image) => (
-                  <CardComponent source={image}>
-                    <p>{tags}</p>
-                    <p>{about}</p>
-                  </CardComponent>
-                ))}
-              </div>
-            }
-          </Section>
-        );
-      })}
-    </div>
-  );
+    const handleSearch = (results: IPlace[]) => {
+        setSearchResults(results);
+    };
+
+    return (
+        <div>
+            <SearchBar
+                list={places}
+                searchKeys={['name', 'about', 'tags']}
+                onSearch={handleSearch}
+                placeholder="Find a place"
+            />
+            <Heading heading="All Our tour sites" section_title="Welcome to TravelEx Catalogue" />
+            <Hr />
+            {searchResults ? (
+                searchResults?.map(({ about, images, tags, name }: IPlace) => {
+                    return (
+                        <Section subtitle={name}>
+                            {
+                                <div className="grid-card gap-6">
+                                    {images ? (
+                                        images.map((image) => (
+                                            <Card>
+                                                <img src={image || logo} alt="" />
+                                                <p>{tags}</p>
+                                                <p>{about}</p>
+                                            </Card>
+                                        ))
+                                    ) : (
+                                        <CardSkeleton />
+                                    )}
+                                </div>
+                            }
+                        </Section>
+                    );
+                })
+            ) : (
+                <Card>
+                    <Heading
+                        heading="No result"
+                        section_title="No Item found to match your search"
+                    />
+                </Card>
+            )}
+        </div>
+    );
 }
 
 export default ToursPages;
