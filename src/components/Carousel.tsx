@@ -13,10 +13,10 @@ const CarouselItem = ({
   button,
   imgSrc,
 }: ICCProps) => (
-  <div className="text-center h-full w-full">
+  <div className="text-center h-full w-full object-bottom object-fill">
     <img src={imgSrc} className="w-full h-full" alt="" />
     <div className="absolute inset-0 bg-[#113a] flex place-content-center">
-      <div className="p-3 max-w-[80vw] tablet:max-w-[60vw] place-self-center grid gap-6">
+      <div className="p-3 max-w-[80vw] tablet:max-w-[60vw] place-self-center grid gap-[10vh]">
         <h4 className="text-white text-lg font-bold mb-3 uppercase tablet:text-3xl">
           {title}
         </h4>

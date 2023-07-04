@@ -17,10 +17,6 @@
   width: 2rem;
   height: 2rem;
 }
-.icon-button:hover {
-}
-.active-link {
-}
 .link {
   padding: 0.25rem;
   transition: all 150ms ease-in;

@@ -26,7 +26,7 @@ function SignUpPage() {
   const { dispatch } = useContext(AppContext);
   auth.setPersistence(inMemoryPersistence);
 
-  //signup function
+  //sign-up function
   const onSubmit: SubmitHandler<IFormInput> = async ({
     email: Email,
     confirmPassword,
@@ -181,7 +181,7 @@ function SignUpPage() {
           </div>
           <div className="flex items-center gap-2 text-xs">
             already have an account?
-            <NavLink to="/login" className="">
+            <NavLink to="/login" className="text-xs underline bg-slate-100 p-1">
               login
             </NavLink>
           </div>
@@ -194,14 +194,17 @@ function SignUpPage() {
             Submit
           </Button>
         </form>
-        <Button
+        <button
           disabled={loading}
-          className="w-full"
+          className="w-full flex items-center space-x-3 justify-center rounded-lg p-3 text-sm my-4 border-[1px] border-slate-200"
           type="button"
           onClick={googleSignIn}
         >
+          <span className="w-6 object-contain mr-2">
+            <img src="vite.svg" alt="logo" className="object-contain" />
+          </span>
           Sign up with google
-        </Button>
+        </button>
       </Card>
     </section>
   );

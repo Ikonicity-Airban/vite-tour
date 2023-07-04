@@ -21,12 +21,6 @@ type Places = {
 const baseUrl = `https://maps.google.com/maps?width=600&height=400&hl=en&q=Enugu&t=&z=14&ie=UTF8&iwloc=B&output=embed`;
 //
 
-//
-
-//
-
-//
-
 // google map search with location completion
 
 //

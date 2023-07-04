@@ -1,41 +1,44 @@
-import { Button } from 'flowbite-react';
-import { ReactNode } from 'react';
-import { Link } from 'react-router-dom';
+import { ReactNode } from "react";
+import { Link } from "react-router-dom";
+import { truncateString } from "../api/helper";
+import { Button } from "flowbite-react";
 // import "../App.css";
 interface ICardProps {
-    heading?: string;
-    source?: string;
-    children?: ReactNode;
-    place?: string;
-    about?: string;
-    link?: string;
+  heading?: string;
+  source?: string;
+  children?: ReactNode;
+  place?: string;
+  about?: string;
+  link?: string;
 }
 
-function CardComponent({ source, children, place, link = '' }: ICardProps) {
-    return (
-        <div className="hover_card ring-2 h-[300px]  ring-[#c0c0c091] card relative cursor-pointer overflow-hidden rounded-lg shadow-md text-center">
-            <Link to={link} className="">
-                <div className="card__overlay absolute inset-0 w-full h-full translate-y-full ">
-                    {children}
-                    <Button>Learn More</Button>
-                </div>
-                <img
-                    className="w-full h-[80%] object-cover"
-                    src={source}
-                    alt=""
-                    placeholder="Hi"
-                    loading="lazy"
-                />
-
-                <div className="p-6">
-                    <h4 className="font-semibold dark:text-white">{place}</h4>
-                </div>
-                <div className="pb-4">
-                    <div>4</div>
-                </div>
-            </Link>
+function CardComponent({ source, place, link = "", about = "" }: ICardProps) {
+  return (
+    <div className="max-w-sm text-sm leading-snug p-4 border border-gray-200 rounded shadow md:p-6 dark:border-gray-700 relative card overflow-hidden">
+      <Link to={link} className="">
+        <div className="flex items-center justify-center h-48 backdrop-blur-sm mb-4 bg-gray-300 rounded dark:bg-gray-700 ring-[.5rem] dark:ring-slate-800 ring-[whitesmoke] overflow-hidden">
+          <img
+            className="w-full h-full hover:scale-105 duration-150"
+            src={source}
+            alt=""
+            placeholder="Hi"
+            loading="lazy"
+          />
         </div>
-    );
+
+        <div className="mt-10">
+          <h4 className="font-semibold dark:text-white">{place}</h4>
+        </div>
+        <div className="py-4">
+          <p>
+            {truncateString(about, 50)}
+            <span>see more</span>
+          </p>
+        </div>
+        <Button outline>View More</Button>
+      </Link>
+    </div>
+  );
 }
 
 export default CardComponent;

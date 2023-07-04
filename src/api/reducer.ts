@@ -15,6 +15,7 @@ export enum Types {
   login = "LOGIN",
   logout = "LOGOUT",
   setPlaces = "LOAD SITES",
+  setServices = "LOAD SERVICES",
   setIsLoading = "SET LOADING",
 }
 
@@ -28,6 +29,9 @@ type AuthPayload = {
 type placesPayload = {
   [Types.setPlaces]: IPlaceResponse[];
 };
+type servicesPayload = {
+  [Types.setServices]: { name: string; icon: string; desc: string }[];
+};
 type loadingPayload = {
   [Types.setIsLoading]: boolean;
 };
@@ -37,10 +41,12 @@ export type placesActions =
   ActionMap<placesPayload>[keyof ActionMap<placesPayload>];
 export type loadingActions =
   ActionMap<loadingPayload>[keyof ActionMap<loadingPayload>];
+export type servicesActions =
+  ActionMap<servicesPayload>[keyof ActionMap<servicesPayload>];
 
 export const authReducer = <S>(
   state: S,
-  action: authActions | placesActions | loadingActions
+  action: authActions | placesActions | loadingActions | servicesActions
 ) => {
   switch (action.type) {
     case Types.login:
@@ -61,6 +67,12 @@ export const authReducer = <S>(
       return {
         ...state,
         places: action.payload,
+      };
+
+    case Types.setServices:
+      return {
+        ...state,
+        services: action.payload,
       };
 
     case Types.setIsLoading:

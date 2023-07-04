@@ -18,7 +18,7 @@ export default {
     },
     extend: {
       colors: {
-        primary: "#003355",
+        primary: "var(--primary)",
       },
       fontFamily: {
         sans: ["var(--font-inter)", ...defaultTheme.fontFamily.sans],

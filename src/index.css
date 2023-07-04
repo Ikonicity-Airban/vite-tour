@@ -156,6 +156,15 @@ h4 {
 
 @layer components {
   .grid-card {
-    @apply grid tablet:grid-cols-3 laptop:grid-cols-4 desktop:grid-cols-4;
+    @apply grid grid-cols-1 tablet:grid-cols-2 laptop:grid-cols-3 desktop:grid-cols-4;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --primary: #dde8ff;
+  }
+  body {
+    color: #f0f4ff;
   }
 }

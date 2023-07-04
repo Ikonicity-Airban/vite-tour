@@ -30,9 +30,9 @@ const topBarLinks = [
 
 function Header() {
   return (
-    <header className="flex flex-col top-0 w-full text-base z-50">
-      <div className="hidden md:flex w-full p-4">
-        <div className="flex w-full md:container mx-auto justify-between p-4 pb-10">
+    <header className="flex flex-col top-0 w-full text-base z-50 dark:text-white">
+      <div className="hidden md:flex w-full p-4 z-20">
+        <div className="flex w-full md:container max-w-screen-desktop mx-auto justify-between p-4 pb-10">
           <div className="text-center text-lg-left mb-2 mb-lg-0">
             <div className="inline-flex items-center">
               <p>
@@ -51,7 +51,7 @@ function Header() {
                   href={link}
                   target="_blank"
                   key={id}
-                  className="p-2 icon-button hover:text-white hover:bg-primary transition-all rounded"
+                  className="p-2 icon-button hover:text-white dark:hover:text-slate-800 hover:bg-primary transition-all rounded"
                 >
                   <i className={icon}></i>
                 </a>

@@ -4,15 +4,18 @@ import LogoComponent from "./LogoComponent";
 
 export default function FooterComponent() {
   return (
-    <Footer container className="text-sm bg-[#003355] z-10  text-white">
-      <div className="w-full text-white">
+    <Footer container className="text-sm bg-[#003355] z-10 text-white relative">
+      <div className="w-full">
         <div className="grid w-full justify-between sm:flex sm:justify-between md:flex md:grid-cols-1">
           <div>
             <LogoComponent />
           </div>
-          <div className="grid grid-cols-2 gap-8 sm:mt-4 sm:grid-cols-3 sm:gap-6 text-white">
-            <div>
-              <Footer.Title title="about" />
+          <div
+            className="grid grid-cols-2 gap-8 sm:mt-4 sm:grid-cols-3 sm:gap-6 "
+            all-white
+          >
+            <div className="">
+              <Footer.Title title="about" className="" />
               <Footer.LinkGroup col>
                 <Footer.Link href="#">Flowbite</Footer.Link>
                 <Footer.Link href="#">Tailwind CSS</Footer.Link>

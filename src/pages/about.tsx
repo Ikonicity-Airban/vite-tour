@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 function AboutPage() {
   return (
-    <section className=" my-10 bg-white dark:bg-gray-900 -z-[10] min-h-[80vh]">
+    <section className=" my-10 dark:bg-gray-900 -z-[10] min-h-[80vh]">
       <div className="py-8 px-4 mx-auto max-w-screen-xl text-center lg:py-16 z-10 relative">
         <Link
           to="/services"
@@ -55,7 +55,6 @@ function AboutPage() {
           </div>
         </form>
       </div>
-      <div className="z-1 bg-gradient-to-b from-blue-50 to-transparent dark:from-blue-900 w-full h-full absolute top-0 left-0 z-0"></div>
     </section>
   );
 }
