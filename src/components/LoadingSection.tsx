@@ -9,7 +9,7 @@ const LoadingSection = () => {
   if (isLoading) {
     return (
       <div className="grid-card justify-center gap-6 w-full">
-        {Array(9)
+        {Array(12)
           .fill(null)
           .map((_, i) => (
             <CardSkeleton key={i} />

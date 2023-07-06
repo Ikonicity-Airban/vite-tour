@@ -16,7 +16,7 @@ const CarouselItem = ({
   <div className="text-center min-h-[60vh] h-full w-full object-bottom object-fill ">
     <img src={imgSrc} className="w-full h-full" alt="" />
     <div className="absolute inset-0 bg-[#113a] flex place-content-center">
-      <div className="p-3 max-w-[80vw] tablet:max-w-[60vw] place-self-center grid md:gap-[10vh]">
+      <div className="p-3 max-w-[80vw] tablet:max-w-[60vw] place-self-center grid gap-10 md:gap-[10vh]">
         <h4 className="text-white text-base font-bold mb-3 uppercase tablet:text-3xl">
           {title}
         </h4>
@@ -27,7 +27,7 @@ const CarouselItem = ({
           href="#explore"
           className="btn btn-primary mx-auto py-md-3 px-md-5 mt-2"
         >
-          {button ?? <Button size="xs">Explore Now</Button>}
+          {button ?? <Button size="xl">Explore Now</Button>}
         </a>
       </div>
     </div>

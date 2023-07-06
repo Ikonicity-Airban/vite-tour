@@ -7,6 +7,7 @@ import BreadcrumbComponents from "../components/BreadcrumbComponents";
 import { useFetchCollection } from "../api/fetchSites";
 import { IService } from "../api/@types";
 import { AppContext } from "../api/context";
+import { Link } from "react-router-dom";
 
 function ServicesPage() {
   const {
@@ -28,11 +29,13 @@ function ServicesPage() {
         title="Our services"
         subtitle="Search our services"
       >
+        <LoadingSection />
         {carousel?.length ? (
           <div className="grid grid-cols-1 text-center w-full smallscreens:grid-cols-2 md:grid-cols-3 desktop:grid-cols-4 gap-4 justify-center">
-            <LoadingSection />
             {carousel.map((source, i) => (
-              <CardComponent key={i} source={source}></CardComponent>
+              <Link to={i + 1 + ""} key={i}>
+                <CardComponent source={source}></CardComponent>
+              </Link>
             ))}
           </div>
         ) : (
