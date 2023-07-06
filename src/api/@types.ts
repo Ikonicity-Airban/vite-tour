@@ -11,6 +11,11 @@ export interface IUser {
   __v: number;
 }
 
+export interface IService {
+  name: string;
+  icon: string;
+  desc: string;
+}
 export interface GenericResponse {
   status: string;
   message: string;

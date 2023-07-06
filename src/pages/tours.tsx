@@ -10,6 +10,7 @@ import { CardSkeleton } from "../components/Skeletons";
 import { truncateString } from "../api/helper";
 import CardComponent from "../components/Card";
 import LoadingSection from "../components/LoadingSection";
+import BreadcrumbComponents from "../components/BreadcrumbComponents";
 
 function ToursPages() {
   const {
@@ -24,7 +25,8 @@ function ToursPages() {
   };
 
   return (
-    <div className="container mx-auto">
+    <div className="md:mt-20 ">
+      <BreadcrumbComponents />
       <SearchBar
         list={places}
         searchKeys={["name", "about", "tags"]}
@@ -40,13 +42,14 @@ function ToursPages() {
       {searchResults ? (
         searchResults?.map(({ about, images, tags, name }: IPlace) => {
           return (
-            <Section subtitle={name}>
+            <Section subtitle={name} key={tags}>
               {
                 <div className="grid-card gap-6">
                   {images ? (
                     images.map((image) => (
                       <div className="" key={image}>
                         <CardComponent
+                          key={image}
                           source={image}
                           about={truncateString(about, 50)}
                         />

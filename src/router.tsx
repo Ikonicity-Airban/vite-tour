@@ -9,6 +9,8 @@ import DashboardLayout from "./Layouts/DashboardLayout";
 import Dashboard from "./pages/dashboard";
 import AboutPage from "./pages/about";
 import ToursPages from "./pages/tours";
+import TourPage from "./pages/tour";
+import FourOhFour from "./pages/404";
 
 export const router = createBrowserRouter([
   {
@@ -21,31 +23,33 @@ export const router = createBrowserRouter([
         children: [
           {
             path: "/",
-            element: <HomePage></HomePage>,
+            element: <HomePage />,
           },
           {
             path: "/about",
-            element: <AboutPage></AboutPage>,
+            element: <AboutPage />,
           },
           {
             path: "/services",
-            element: <ServicesPage></ServicesPage>,
+            element: <ServicesPage />,
           },
           {
-            path: "/services",
-            element: <ServicesPage></ServicesPage>,
-          },
-          {
-            path: "/packages",
-            element: <ToursPages></ToursPages>,
+            path: "/tours",
+            element: <ToursPages />,
+            children: [
+              {
+                path: ":id",
+                element: <TourPage />,
+              },
+            ],
           },
           {
             path: "/login",
-            element: <LoginPage></LoginPage>,
+            element: <LoginPage />,
           },
           {
             path: "/create-account",
-            element: <SignUpPage></SignUpPage>,
+            element: <SignUpPage />,
           },
         ],
       },
@@ -60,5 +64,9 @@ export const router = createBrowserRouter([
         ],
       },
     ],
+  },
+  {
+    path: "*",
+    element: <FourOhFour />,
   },
 ]);

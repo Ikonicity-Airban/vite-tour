@@ -16,7 +16,7 @@ function CardComponent({ source, place, link = "", about = "" }: ICardProps) {
   return (
     <div className="max-w-sm text-sm leading-snug p-4 border border-gray-200 rounded shadow md:p-6 dark:border-gray-700 relative card overflow-hidden">
       <Link to={link} className="">
-        <div className="flex items-center justify-center h-48 backdrop-blur-sm mb-4 bg-gray-300 rounded dark:bg-gray-700 ring-[.5rem] dark:ring-slate-800 ring-[whitesmoke] overflow-hidden">
+        <div className="flex items-center justify-center h-52 backdrop-blur-sm mb-4 bg-gray-300 rounded dark:bg-gray-700 ring-[.5rem] dark:ring-slate-800 ring-[whitesmoke] overflow-hidden">
           <img
             className="w-full h-full hover:scale-105 duration-150"
             src={source}
@@ -35,7 +35,9 @@ function CardComponent({ source, place, link = "", about = "" }: ICardProps) {
             <span>see more</span>
           </p>
         </div>
-        <Button outline>View More</Button>
+        <Button outline className="w-full">
+          View More
+        </Button>
       </Link>
     </div>
   );

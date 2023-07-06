@@ -1,8 +1,10 @@
 import { Link } from "react-router-dom";
+import BreadcrumbComponents from "../components/BreadcrumbComponents";
 
 function AboutPage() {
   return (
-    <section className=" my-10 dark:bg-gray-900 -z-[10] min-h-[80vh]">
+    <section className="md:mt-10 dark:bg-gray-900 -z-[10] min-h-[80vh]">
+      <BreadcrumbComponents />
       <div className="py-8 px-4 mx-auto max-w-screen-xl text-center lg:py-16 z-10 relative">
         <Link
           to="/services"

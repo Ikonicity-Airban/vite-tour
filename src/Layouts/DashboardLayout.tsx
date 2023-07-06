@@ -61,7 +61,7 @@ function DashboardLayout() {
           payload: {},
         });
 
-        navigate("/login");
+        // navigate("/login");
         console.log("user is logged out");
       }
       dispatch({
@@ -71,9 +71,9 @@ function DashboardLayout() {
     });
   }, [navigate, dispatch]);
 
-  if (isLoggedIn)
+  if (!isLoggedIn)
     return (
-      <div className="w-full relative tablet:px-4">
+      <div className="w-full relative tablet:px-4 pb-[56px]">
         <Modal
           popup
           position="bottom-right"
@@ -85,15 +85,22 @@ function DashboardLayout() {
           <Modal.Body>Error</Modal.Body>
           <Modal.Footer>Error</Modal.Footer>
         </Modal>
-        <Navbar className="w-full fixed left-0 z-[999]" fluid rounded>
+        <Navbar
+          className="w-full py-6 px-4 fixed left-0 z-[999]"
+          border
+          fluid
+          rounded
+        >
           <Navbar.Brand>
             <Navbar.Toggle
               data-drawer-target="drawer-swipe"
-              data-drawer-show="drawer-swipe"
+              // data-drawer-show="drawer-swipe"
+              data-drawer-toggle="drawer-swipe"
               data-drawer-placement="bottom"
               data-drawer-edge="true"
               data-drawer-edge-offset="bottom-[60px]"
               aria-controls="drawer-swipe"
+              className="mr-3"
             />
             <LogoComponent />
           </Navbar.Brand>
@@ -104,7 +111,7 @@ function DashboardLayout() {
               label={
                 <Avatar
                   alt="User settings"
-                  img={user.photoURL || ""}
+                  img={user?.photoURL || ""}
                   rounded
                   placeholderInitials={
                     user?.photoURL || user?.email?.slice(0, 2).toUpperCase()
@@ -133,7 +140,7 @@ function DashboardLayout() {
           </div>
         </Navbar>
         <BreadcrumbComponents />
-        <section className=" tablet:px-6 py-20">
+        <section className=" tablet:px-6 py-20 min-h-[70vh]">
           <Outlet></Outlet>
         </section>
         <Drawer />

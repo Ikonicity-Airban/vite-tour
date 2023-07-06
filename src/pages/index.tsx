@@ -11,6 +11,7 @@ import ServicesCard from "../components/ServicesCard";
 import { IPlace } from "../api/@types";
 import LoadingSection from "../components/LoadingSection";
 import { useFetchCollection } from "../api/fetchSites";
+import BreadcrumbComponents from "../components/BreadcrumbComponents";
 
 function HomePage() {
   const {
@@ -22,22 +23,20 @@ function HomePage() {
     icon: string;
     desc: string;
   }>("services");
-  console.log("🚀 ~ file: index.tsx:21 ~ HomePage ~ services:", services);
   const [filtered, setFiltered] = useState<IPlace[]>();
 
   function filterBy(param: string) {
     const newPlaces = places.filter((item) =>
       item.tags.split(",").includes(param)
     );
-    console.log("🚀 ~ file: index.tsx:22 ~ filterBy ~ newPlaces:", newPlaces);
     setFiltered(newPlaces);
   }
 
   return (
-    <>
+    <div className="flex flex-col">
       <CarouselComponent sources={carousel} />
       <Hr />
-
+      <BreadcrumbComponents />
       <Tabs.Group
         onActiveTabChange={() => filterBy}
         style="underline"
@@ -59,43 +58,42 @@ function HomePage() {
           <div className="grid-card gap-6">
             {(filtered ? filtered : places)
               .sort()
-              .slice(8, 14)
-              .map((source) => (
-                <Card
-                  source={source.images[1]}
-                  place={source.name}
-                  key={source.about}
-                  about={source.about}
-                />
+              .slice(6, 14)
+              .map((source, i) => (
+                <div className={`${i == 0 || i == 2 ? "hidden" : ""} lg:block`}>
+                  <Card
+                    source={source.images[1]}
+                    place={source.name}
+                    key={source.about}
+                    about={source.about}
+                  />
+                </div>
               ))}
           </div>
         </Section>
         <Hr />
+
+        {/* Services */}
         <Section
           title="our services"
           id="explore"
           subtitle="Tourist Site and Services"
         >
           <div className="mx-auto container">
-            {services.map(
-              (
-                service: {
-                  name: string;
-                  icon: string;
-                  desc: string;
-                },
-                i: number
-              ) => (
+            {services?.length ||
+              carousel.map((source, i) => (
                 <ServicesCard
+                  icon={source}
                   position={i % 2 === 0 ? 1 : -1}
                   key={i}
-                  info={service.desc}
+                  info={""}
                 />
-              )
-            )}
+              ))}
           </div>
         </Section>
         <Hr />
+
+        {/* Tours Packages */}
         <Section
           id="tours-packages"
           title="tours packages"
@@ -111,11 +109,15 @@ function HomePage() {
           </div>
         </Section>
         <Hr />
+
+        {/* Book now */}
         <Section id="book-now" title="book now" subtitle="Make A Reservation">
           <div className="w-full max-w-3xl mx-auto">
             <BookNowComponent />
           </div>
         </Section>
+
+        {/* Tours and Guides */}
         <Section
           title="Tour Guides"
           subtitle="Our Amazing Tour Guides"
@@ -131,7 +133,7 @@ function HomePage() {
           </div>
         </Section>
       </div>
-    </>
+    </div>
   );
 }
 

@@ -6,11 +6,6 @@ const LoadingSection = () => {
   const {
     state: { isLoading },
   } = useContext(AppContext);
-  console.log(
-    "🚀 ~ file: LoadingSection.tsx:8 ~ LoadingSection ~ isLoading:",
-    isLoading
-  );
-
   if (isLoading) {
     return (
       <div className="grid-card justify-center gap-6 w-full">

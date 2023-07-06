@@ -22,7 +22,7 @@ function PremiumCard({
   return (
     <Tilt option={tiltOptions}>
       <div className="rounded p-4 card max-w-[350px] overflow-hidden border border-gray-800 mb-2 text-sm">
-        <div className="h-44 object-contain">
+        <div className="h-52 object-contain">
           <img className="h-full w-full" src={source} alt="" />
         </div>
         <div className="p-4">

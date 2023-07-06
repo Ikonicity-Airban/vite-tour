@@ -7,25 +7,22 @@ export default function FooterComponent() {
     <Footer container className="text-sm bg-[#003355] z-10 text-white relative">
       <div className="w-full">
         <div className="grid w-full justify-between sm:flex sm:justify-between md:flex md:grid-cols-1">
-          <div>
+          <div className="pb-10">
             <LogoComponent />
           </div>
-          <div
-            className="grid grid-cols-2 gap-8 sm:mt-4 sm:grid-cols-3 sm:gap-6 "
-            all-white
-          >
+          <div className="grid grid-cols-2 gap-8 sm:mt-4 sm:grid-cols-3 sm:gap-6 ">
             <div className="">
               <Footer.Title title="about" className="" />
               <Footer.LinkGroup col>
-                <Footer.Link href="#">Flowbite</Footer.Link>
-                <Footer.Link href="#">Tailwind CSS</Footer.Link>
+                <Footer.Link href="#">Services</Footer.Link>
+                <Footer.Link href="#">Sites</Footer.Link>
               </Footer.LinkGroup>
             </div>
             <div>
               <Footer.Title title="Follow us" />
               <Footer.LinkGroup col>
-                <Footer.Link href="#">Github</Footer.Link>
-                <Footer.Link href="#">Discord</Footer.Link>
+                <Footer.Link href="#">Facebook</Footer.Link>
+                <Footer.Link href="#">LinkedIn</Footer.Link>
               </Footer.LinkGroup>
             </div>
             <div>

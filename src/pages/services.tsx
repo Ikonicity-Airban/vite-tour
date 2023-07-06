@@ -1,34 +1,25 @@
-import React from "react";
+import { useContext } from "react";
 import Section from "../components/Section";
 import SearchBar from "../components/SearchBar";
-import { Card } from "flowbite-react";
 import LoadingSection from "../components/LoadingSection";
 import CardComponent from "../components/Card";
+import BreadcrumbComponents from "../components/BreadcrumbComponents";
+import { useFetchCollection } from "../api/fetchSites";
+import { IService } from "../api/@types";
+import { AppContext } from "../api/context";
 
 function ServicesPage() {
-  const [services, setServices] = React.useState<string[] | null>();
-  const [loading, setLoading] = React.useState(false);
+  const {
+    state: { carousel },
+  } = useContext(AppContext);
+  const services = useFetchCollection<IService>("services");
 
-  React.useEffect(() => {
-    setLoading(false);
-    setServices(null);
-  }, []);
-
-  const sources = React.useMemo(
-    () => [
-      "https://flowbite.s3.amazonaws.com/docs/gallery/square/image.jpg",
-      "https://flowbite.s3.amazonaws.com/docs/gallery/square/image-1.jpg",
-      "https://flowbite.s3.amazonaws.com/docs/gallery/square/image-2.jpg",
-      "https://flowbite.s3.amazonaws.com/docs/gallery/square/image-3.jpg",
-      "https://flowbite.s3.amazonaws.com/docs/gallery/square/image-4.jpg",
-      "https://flowbite.s3.amazonaws.com/docs/gallery/square/image-5.jpg",
-    ],
-    []
-  );
   return (
-    <div className="">
+    <div className="md:mt-20">
+      <BreadcrumbComponents />
       <SearchBar
         list={[]}
+        placeholder="Looking for a service?"
         onSearch={() => null}
         searchKeys={["service", "name", "price"]}
       />
@@ -37,15 +28,17 @@ function ServicesPage() {
         title="Our services"
         subtitle="Search our services"
       >
-        {services?.length ? (
+        {carousel?.length ? (
           <div className="grid grid-cols-1 text-center w-full smallscreens:grid-cols-2 md:grid-cols-3 desktop:grid-cols-4 gap-4 justify-center">
             <LoadingSection />
-            {services.map((source) => (
-              <CardComponent key={source}></CardComponent>
+            {carousel.map((source, i) => (
+              <CardComponent key={i} source={source}></CardComponent>
             ))}
           </div>
         ) : (
-          <h4 className="w-full text-center">No Services</h4>
+          <div className="outline-dashed outline-1 outline-[whitesmoke] shadow-none h-[30vh] mt-10 ">
+            <h4 className="w-full text-center">No Services Available</h4>
+          </div>
         )}
       </Section>
     </div>

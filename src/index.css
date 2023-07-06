@@ -24,6 +24,7 @@ a {
   text-decoration: none;
   -webkit-tap-highlight-color: transparent;
   transition: border 200ms ease-in;
+  /* color: white; */
 }
 html {
   scroll-behavior: smooth;

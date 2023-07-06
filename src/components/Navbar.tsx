@@ -2,8 +2,12 @@ import { Avatar, Navbar } from "flowbite-react";
 import React from "react";
 import { Link, NavLink } from "react-router-dom";
 import LogoComponent from "./LogoComponent";
+import { AppContext } from "../api/context";
 
 function NavbarComponent() {
+  const {
+    state: { user },
+  } = React.useContext(AppContext);
   const navLinks = React.useMemo(
     () => [
       {
@@ -16,7 +20,7 @@ function NavbarComponent() {
       },
       {
         title: "Tours & Packages",
-        link: "/packages",
+        link: "/tours",
       },
       {
         title: "Services",
@@ -57,7 +61,14 @@ function NavbarComponent() {
           to="/login"
           className="cursor-pointer -my-1 px-4 md:order-3 order-0"
         >
-          <Avatar rounded />
+          <Avatar
+            alt="User settings"
+            img={user?.photoURL || ""}
+            rounded
+            placeholderInitials={
+              user?.photoURL || user?.email?.slice(0, 2).toUpperCase()
+            }
+          />
         </Link>
       </Navbar>
     </div>
