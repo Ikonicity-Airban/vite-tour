@@ -3,6 +3,7 @@ import LogoComponent from "./LogoComponent";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useContext } from "react";
 import { AppContext } from "../api/context";
+import { DebounceInput } from "react-debounce-input";
 
 interface IForm {
   name: string;
@@ -21,6 +22,8 @@ function BookNowComponent() {
       data
     );
   };
+
+  function handleClick(params: type) {}
   return (
     <Card className="w-full">
       <form
@@ -41,11 +44,21 @@ function BookNowComponent() {
               </Label>
             }
           >
-            {places.map((place) => (
-              <Dropdown.Item key={place.about}>{place.name}</Dropdown.Item>
-            ))}
+            <DebounceInput type="text" {...register("destination")} />
+            {places && (
+              <ul className="w-full space-y-2">
+                {places?.map(({ name, tags }, i) => (
+                  <li
+                    key={i}
+                    className="h-fit bg-[whitesmoke] p-2 rounded cursor-pointer"
+                    onClick={() => handleClick(name)}
+                  >
+                    <span className="bg-gray-100 text-[11px]">{tags}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
           </Dropdown>
-          <TextInput type="text" {...register("destination")} />
         </div>
         <div className="w-full mt-4">
           <Button className="w-full" type="submit">
