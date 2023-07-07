@@ -173,7 +173,7 @@ function LoginPage() {
           ) : (
             <Button
               disabled={loading}
-              gradientDuoTone={"purpleToBlue"}
+              gradientDuoTone={"greenToBlue"}
               className="w-full"
               type="submit"
             >

@@ -11,6 +11,7 @@ import AboutPage from "./pages/about";
 import ToursPages from "./pages/tours";
 import TourPage from "./pages/tour";
 import FourOhFour from "./pages/404";
+import ProfilePage from "./pages/profile";
 
 export const router = createBrowserRouter([
   {
@@ -52,12 +53,16 @@ export const router = createBrowserRouter([
         ],
       },
       {
-        path: "/dashboard",
+        path: "/",
         element: <DashboardLayout />,
         children: [
           {
-            path: "",
+            path: "dashboard",
             element: <Dashboard />,
+          },
+          {
+            path: "profile",
+            element: <ProfilePage />,
           },
         ],
       },

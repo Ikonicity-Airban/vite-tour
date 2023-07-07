@@ -82,37 +82,41 @@ function GoogleMap({ query = "Enugu", withSearch = true }: Props) {
   };
 
   return (
-    <Section id={query} title="google Maps" subtitle="Search For your location">
+    <Section id={query} title="google Maps" subtitle={query}>
       <div className="relative h-full grid">
-        <Card className="h-fit w-full absolute z-10">
-          {withSearch && (
-            <form onSubmit={handleSubmit} className="flex gap-4">
-              <DebounceInput
-                required
-                type="search"
-                debounceTimeout={500}
-                value={locate}
-                className="flex-1 ring-1 border-primary rounded px-4 focus:outline-primary"
-                onChange={handleChange}
-              />
-              <Button type="submit">Submit</Button>
-            </form>
-          )}
-          {places && (
-            <ul className="w-full space-y-2">
-              {places?.map(({ formatted, address_line1 }, i) => (
-                <li
-                  key={i}
-                  className="h-fit bg-[whitesmoke] p-2 rounded cursor-pointer"
-                  onClick={() => handleClick(address_line1)}
-                >
-                  <span className="bg-gray-100 text-[11px]">{formatted}</span>
-                </li>
-              ))}
-            </ul>
-          )}
-        </Card>
-        <Card className="w-full flex mt-32">
+        {withSearch && (
+          <div className="relative mb-20">
+            <Card className="h-fit w-full mb-20 absolute z-10">
+              <form onSubmit={handleSubmit} className="flex gap-4">
+                <DebounceInput
+                  required
+                  type="search"
+                  debounceTimeout={500}
+                  value={locate}
+                  className="flex-1 ring-1 border-primary rounded px-4 focus:outline-primary"
+                  onChange={handleChange}
+                />
+                <Button type="submit">Submit</Button>
+              </form>
+              {places && (
+                <ul className="w-full space-y-2">
+                  {places?.map(({ formatted, address_line1 }, i) => (
+                    <li
+                      key={i}
+                      className="h-fit bg-[whitesmoke] p-2 rounded cursor-pointer"
+                      onClick={() => handleClick(address_line1)}
+                    >
+                      <span className="bg-gray-100 text-[11px]">
+                        {formatted}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </Card>
+          </div>
+        )}
+        <Card className="w-full flex mt-12">
           <div className="mapouter">
             <div className="gmap_canvas">
               <iframe

@@ -4,6 +4,7 @@ import CardComponent from "../components/Card";
 import Section from "../components/Section";
 import { CardSkeleton } from "../components/Skeletons";
 import { AppContext } from "../api/context";
+import GoogleMap from "../components/GoogleMap";
 
 function Dashboard() {
   const {
@@ -24,6 +25,7 @@ function Dashboard() {
               ))}
         </div>
       </Section>
+      <GoogleMap withSearch={true} />
     </div>
   );
 }

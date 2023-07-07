@@ -36,11 +36,16 @@ function HomePage() {
       <Tabs.Group
         onActiveTabChange={() => filterBy}
         style="underline"
-        className="justify-center space-x-4 focus:ring-0 overflow-x-auto"
+        className="justify-center h-auto space-x-4 focus:ring-0 overflow-x-auto"
       >
         {["All sites", "Lounge", "Relaxation"].map((item) => (
           // <div className="" key={item} onClick={() => filterBy(item)}>
-          <Tabs.Item key={item} title={item}></Tabs.Item>
+          <Tabs.Item
+            className=" focus:ring-0 border-none px-4
+            "
+            key={item}
+            title={item}
+          ></Tabs.Item>
           // </div>
         ))}
       </Tabs.Group>
@@ -76,18 +81,19 @@ function HomePage() {
           subtitle="Tourist Site and Services"
         >
           <div className="mx-auto container">
-            {services?.length &&
-              services.map((source: IService, i: number) => (
-                <ServicesCard
-                  detail={source}
-                  position={i % 2 === 0 ? 1 : -1}
-                  key={i}
-                />
-              ))}
+            {services?.length
+              ? services.map((source: IService, i: number) => (
+                  <ServicesCard
+                    detail={source}
+                    position={i % 2 === 0 ? 1 : -1}
+                    key={i}
+                  />
+                ))
+              : null}
             <Link to="/services">
               <div className="w-full flex justify-center">
                 <Button
-                  outline
+                  // outline
                   className="w-full md:w-3/5"
                   gradientDuoTone="greenToBlue"
                 >
@@ -119,20 +125,7 @@ function HomePage() {
         {/* Book now */}
         <Section id="book-now" title="book now" subtitle="Make A Reservation">
           <div className="w-full max-w-3xl mx-auto">
-            <BookNowComponent />
-          </div>
-        </Section>
-
-        {/* Tours and Guides */}
-        <Section
-          title="Tour Guides"
-          subtitle="Our Amazing Tour Guides"
-          id="guides"
-        >
-          <div className="grid sm:grid-cols-2  laptop:grid-cols-4 gap-4">
-            {carousel.map((source) => (
-              <Card source={source} key={source} />
-            ))}
+            <BookNowComponent destination="" places={places} />
           </div>
         </Section>
       </div>

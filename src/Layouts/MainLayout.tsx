@@ -16,10 +16,12 @@ function MainLayout() {
     <section className="tablet:px-6 dark:bg-slate-900 2xl:container mx-auto">
       {isLoading && (
         <div
-          className="bg-[#002a]
+          className="bg-[#000022d5]
       flex items-center justify-center dark:from-blue-950 w-full h-full fixed inset-0 select-none z-[999]"
         >
-          <LogoComponent />
+          <div className="animate-ping w-fit text-white">
+            <LogoComponent />
+          </div>
         </div>
       )}
       <div className="bg-gradient-to-b from-blue-50 to-transparent dark:from-blue-950 w-full h-full absolute top-0 left-0 -z-[]"></div>

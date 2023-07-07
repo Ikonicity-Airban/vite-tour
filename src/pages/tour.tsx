@@ -2,11 +2,13 @@ import { useState } from "react";
 import { useLocation } from "react-router-dom";
 import Section from "../components/Section";
 import BreadcrumbComponents from "../components/BreadcrumbComponents";
+import BookNowComponent from "../components/BookNowComponent";
+import GoogleMap from "../components/GoogleMap";
 
 function TourPage() {
   const [mainPhoto, setMainPhoto] = useState(1);
   const {
-    state: { name, images, tags },
+    state: { name = "Enugu", images = [""] },
   } = useLocation();
   return (
     <div className="mx-auto md:container mt-20">
@@ -36,6 +38,10 @@ function TourPage() {
             ))}
           </div>
         </div>
+      </Section>
+      <GoogleMap withSearch={false} query={name} />
+      <Section>
+        <BookNowComponent destination={name} />
       </Section>
     </div>
   );

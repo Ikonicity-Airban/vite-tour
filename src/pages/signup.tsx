@@ -135,7 +135,7 @@ function SignUpPage() {
           <LogoComponent />
         </div>
         <span className="flex place-content-center">
-          <h3 className="text-primary max-w-md">Sign Up</h3>
+          <h3 className="text-primary max-w-md">Create Account</h3>
         </span>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
@@ -188,7 +188,7 @@ function SignUpPage() {
           </div>
           <Button
             disabled={loading}
-            gradientDuoTone={"purpleToBlue"}
+            gradientDuoTone={"greenToBlue"}
             className="w-full"
             type="submit"
           >

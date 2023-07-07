@@ -1,14 +1,13 @@
 import React from "react";
-import { Outlet, useNavigate } from "react-router-dom";
-import { Avatar, Dropdown, Modal, Navbar } from "flowbite-react";
+import { Link, Outlet, useNavigate } from "react-router-dom";
+import { Avatar, Dropdown, Navbar } from "flowbite-react";
 import LogoComponent from "../components/LogoComponent";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../firebase";
 import { AppContext } from "../api/context";
 import { Types } from "../api/reducer";
 import BreadcrumbComponents from "../components/BreadcrumbComponents";
-
-import Drawer from "../components/Drawer";
+// import Drawer from "../components/Drawer";
 import FooterComponent from "../components/Footer";
 import useFetchSites from "../api/fetchSites";
 
@@ -71,37 +70,17 @@ function DashboardLayout() {
     });
   }, [navigate, dispatch]);
 
-  if (isLoggedIn)
+  if (!isLoggedIn)
     return (
-      <div className="w-full relative tablet:px-4 pb-[56px]">
-        {/* <Modal
-          popup
-          position="bottom-right"
-          className="my-auto"
-          // show
-          dismissible
-        >
-          <Modal.Header>Header</Modal.Header>
-          <Modal.Body>Error</Modal.Body>
-          <Modal.Footer>Error</Modal.Footer>
-        </Modal> */}
+      <div className="w-full relative tablet:px-4">
         <Navbar
-          className="w-full py-6 px-4 fixed left-0 z-[999]"
+          className="w-full py-6 px-4 fixed top-0 left-0 z-[999]"
           border
           fluid
           rounded
         >
           <Navbar.Brand>
-            <Navbar.Toggle
-              data-drawer-target="drawer-swipe"
-              // data-drawer-show="drawer-swipe"
-              data-drawer-toggle="drawer-swipe"
-              data-drawer-placement="bottom"
-              data-drawer-edge="true"
-              data-drawer-edge-offset="bottom-[60px]"
-              aria-controls="drawer-swipe"
-              className="mr-3"
-            />
+            <Navbar.Toggle className="mr-3" />
             <LogoComponent />
           </Navbar.Brand>
           <div className="flex md:order-2">
@@ -125,8 +104,16 @@ function DashboardLayout() {
                   {user?.email}
                 </span>
               </Dropdown.Header>
-              <Dropdown.Item>Dashboard</Dropdown.Item>
-              <Dropdown.Item>profile</Dropdown.Item>
+              <Dropdown.Item>
+                <Link className="text-sm" to="/dashboard">
+                  Dashboard
+                </Link>
+              </Dropdown.Item>
+              <Dropdown.Item>
+                <Link className="text-sm" to="profile">
+                  profile
+                </Link>
+              </Dropdown.Item>
               <Dropdown.Divider />
               <Dropdown.Item
                 onClick={() => {
@@ -139,11 +126,14 @@ function DashboardLayout() {
             </Dropdown>
           </div>
         </Navbar>
-        <BreadcrumbComponents />
-        <section className=" tablet:px-6 py-20 min-h-[70vh]">
+        <div className="mt-24">
+          <BreadcrumbComponents />
+        </div>
+        <section className=" tablet:px-6 min-h-[70vh]">
           <Outlet></Outlet>
         </section>
-        <Drawer />
+
+        {/* <Drawer /> */}
         <FooterComponent />
       </div>
     );
