@@ -70,7 +70,7 @@ function DashboardLayout() {
     });
   }, [navigate, dispatch]);
 
-  if (!isLoggedIn)
+  if (isLoggedIn)
     return (
       <div className="w-full relative tablet:px-4">
         <Navbar

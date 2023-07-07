@@ -1,4 +1,11 @@
-import { Button, Card, Checkbox, Label, TextInput } from "flowbite-react";
+import {
+  Alert,
+  Button,
+  Card,
+  Checkbox,
+  Label,
+  TextInput,
+} from "flowbite-react";
 import { useState, useContext } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import LogoComponent from "../components/LogoComponent";
@@ -114,8 +121,7 @@ function SignUpPage() {
         },
       });
       navigate("/dashboard", {
-        state: userCredential,
-        replace: true,
+        state: JSON.stringify(userCredential),
       });
     } catch (error) {
       if (error instanceof Error) {
@@ -130,6 +136,16 @@ function SignUpPage() {
 
   return (
     <section className="grid place-items-center min-h-screen py-32">
+      {errMsg && (
+        <Alert color="failure">
+          <span>
+            <p>
+              <span className="font-medium">Info alert!</span>
+              {errMsg}
+            </p>
+          </span>
+        </Alert>
+      )}
       <Card className="smallScreens:min-w-[320px] ">
         <div className="mx-auto mb-10">
           <LogoComponent />
