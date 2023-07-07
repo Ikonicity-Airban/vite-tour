@@ -1,8 +1,7 @@
 import { ReactNode } from "react";
-import { Link } from "react-router-dom";
 import { truncateString } from "../api/helper";
 import { Button } from "flowbite-react";
-// import "../App.css";
+
 interface ICardProps {
   heading?: string;
   source?: string;
