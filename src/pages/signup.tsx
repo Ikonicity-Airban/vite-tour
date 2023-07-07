@@ -23,6 +23,7 @@ function SignUpPage() {
   const [loading, setLoading] = useState(false);
   const { register, handleSubmit } = useForm<IFormInput>();
   const navigate = useNavigate();
+  const [errMsg, setErrMsg] = useState("");
   const { dispatch } = useContext(AppContext);
   auth.setPersistence(inMemoryPersistence);
 
@@ -33,7 +34,7 @@ function SignUpPage() {
     password,
   }) => {
     if (password !== confirmPassword) {
-      alert("Password doesn't Match");
+      setErrMsg("Password doesn't Match");
       return;
     }
     try {
@@ -76,7 +77,7 @@ function SignUpPage() {
       if (error instanceof Error) {
         const errorMessage = error.message;
         console.log(errorMessage);
-        alert(errorMessage);
+        setErrMsg(errorMessage);
       }
     } finally {
       setLoading(false);
@@ -120,7 +121,7 @@ function SignUpPage() {
       if (error instanceof Error) {
         const errorMessage = error.message;
         console.log(errorMessage);
-        alert(errorMessage);
+        setErrMsg(errorMessage);
       }
     } finally {
       setLoading(false);
@@ -145,7 +146,7 @@ function SignUpPage() {
             <TextInput
               autoFocus
               id="email1"
-              placeholder="name@flowbite.com"
+              placeholder="john@doe.com"
               required
               type="email"
               {...register("email")}
@@ -201,7 +202,7 @@ function SignUpPage() {
           onClick={googleSignIn}
         >
           <span className="w-6 object-contain mr-2">
-            <img src="vite.svg" alt="logo" className="object-contain" />
+            <img src="google.svg" alt="logo" className="object-contain" />
           </span>
           Sign up with google
         </button>

@@ -27,7 +27,11 @@ const CarouselItem = ({
           href="#explore"
           className="btn btn-primary mx-auto py-md-3 px-md-5 mt-2"
         >
-          {button ?? <Button size="xl">Explore Now</Button>}
+          {button ?? (
+            <Button size="xl" gradientDuoTone="greenToBlue">
+              Explore Now
+            </Button>
+          )}
         </a>
       </div>
     </div>

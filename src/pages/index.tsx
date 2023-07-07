@@ -6,25 +6,21 @@ import Card from "../components/Card";
 import BookNowComponent from "../components/BookNowComponent";
 import { AppContext } from "../api/context";
 import Hr from "../components/HR";
-import { Tabs } from "flowbite-react";
+import { Button, Tabs } from "flowbite-react";
 import ServicesCard from "../components/ServicesCard";
-import { IPlace } from "../api/@types";
+import { IPlace, IService } from "../api/@types";
 import LoadingSection from "../components/LoadingSection";
 import { useFetchCollection } from "../api/fetchSites";
 import BreadcrumbComponents from "../components/BreadcrumbComponents";
+import { Link } from "react-router-dom";
 
 function HomePage() {
   const {
     state: { places, carousel },
   } = useContext(AppContext);
 
-  const services = useFetchCollection<{
-    name: string;
-    icon: string;
-    desc: string;
-  }>("services");
+  const services = useFetchCollection<IService>("services");
   const [filtered, setFiltered] = useState<IPlace[]>();
-
   function filterBy(param: string) {
     const newPlaces = places.filter((item) =>
       item.tags.split(",").includes(param)
@@ -80,15 +76,25 @@ function HomePage() {
           subtitle="Tourist Site and Services"
         >
           <div className="mx-auto container">
-            {services?.length ||
-              carousel.map((source, i) => (
+            {services?.length &&
+              services.map((source: IService, i: number) => (
                 <ServicesCard
-                  icon={source}
+                  detail={source}
                   position={i % 2 === 0 ? 1 : -1}
                   key={i}
-                  info={""}
                 />
               ))}
+            <Link to="/services">
+              <div className="w-full flex justify-center">
+                <Button
+                  outline
+                  className="w-full md:w-3/5"
+                  gradientDuoTone="greenToBlue"
+                >
+                  Go to services
+                </Button>
+              </div>
+            </Link>
           </div>
         </Section>
         <Hr />
@@ -99,7 +105,7 @@ function HomePage() {
           title="tours packages"
           subtitle="Premium Packages"
         >
-          <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-10 justify-center">
+          <div className="grid sm:grid-cols-2 laptop:grid-cols-3 gap-10 justify-center">
             {places
               .sort()
               .slice(8, 14)
@@ -123,13 +129,10 @@ function HomePage() {
           subtitle="Our Amazing Tour Guides"
           id="guides"
         >
-          <div className="grid sm:grid-cols-2 md:grid-cols-3 laptop:grid-cols-4 gap-4">
-            {places
-              .sort()
-              .slice(8, 14)
-              .map((source) => (
-                <Card source={source.images[0]} key={source.about} />
-              ))}
+          <div className="grid sm:grid-cols-2  laptop:grid-cols-4 gap-4">
+            {carousel.map((source) => (
+              <Card source={source} key={source} />
+            ))}
           </div>
         </Section>
       </div>

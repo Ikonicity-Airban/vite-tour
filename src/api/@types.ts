@@ -37,6 +37,7 @@ export type IPlace = {
   tags: string;
   id: string;
   name: string;
+  other?: undefined;
 };
 export interface IUserResponse {
   displayName?: string | null;

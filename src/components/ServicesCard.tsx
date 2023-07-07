@@ -1,18 +1,17 @@
-import { Button, Card } from "flowbite-react";
+import { Card } from "flowbite-react";
 import { truncateString } from "../api/helper";
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
-import { Link } from "react-router-dom";
+import { IService } from "../api/@types";
 
 type Props = {
   position: number;
-  info: string;
-  icon: string;
+  detail: IService;
 };
 
 const placeholder =
   "Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt beatae necessitatibus ducimus consequuntur enim, qui ad iste sint numquam ab, aliquam mollitia quo magni. Iste facere possimus labore! Atque, assumenda.";
-const ServicesCard = ({ position, info, icon }: Props) => {
+const ServicesCard = ({ position, detail: { name, desc, icon } }: Props) => {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref);
   return (
@@ -29,18 +28,18 @@ const ServicesCard = ({ position, info, icon }: Props) => {
         position > 0 ? "tablet:flex-row-reverse" : ""
       } flex flex-col tablet:flex-row items-center w-full my-10`}
     >
-      <div
-        className={`-mb-20 rounded-2xl overflow-hidden object-fill
-         h-40 w-40  tablet:hidden z-10`}
+      <Card
+        className={`-mb-14 rounded-2xl overflow-hidden 
+         h-40 w-40  tablet:hidden z-10 flex items-center justify-center`}
       >
         <img
           src={icon || "vite.svg"}
           alt={icon}
-          className="object-cover h-full w-full"
+          className="object-contain h-full w-full"
         />
-      </div>
+      </Card>
       <Card
-        className={`h-92 pt-10 tablet:pt-0 text-gray-300 max-w-fit flex justify-end tablet:min-w-[500px] min-w-[280px] relative bg-primary ${
+        className={` pt-10 tablet:pt-0 text-gray-300 max-w-3xl flex justify-end tablet:min-w-[500px] min-w-[260px] relative bg-primary ${
           position < 0 ? "justify-end" : "justify-start"
         }`}
       >
@@ -49,26 +48,22 @@ const ServicesCard = ({ position, info, icon }: Props) => {
             position < 0 ? "tablet:mr-10" : "tablet:ml-24"
           } tablet:w-5/6 p-4 leading-loose whitespace-break-spaces`}
         >
-          <p>{truncateString(info || placeholder, 70)}</p>
+          <h2>{name}</h2>
+          <p>{truncateString(desc || placeholder, 120)}</p>
         </div>
-        <Link to="/services">
-          <div className="w-full flex justify-center">
-            <Button className="w-full md:w-3/5">View</Button>
-          </div>
-        </Link>
       </Card>
-      <div
+      <Card
         className={`${
           position < 0 ? "tablet:-ml-[100px]" : "tablet:-mr-[100px]"
         }
-         h-60 w-60 hidden tablet:flex min-w-[200px] z-10  rounded-2xl overflow-hidden`}
+         h-40 w-40 hidden tablet:flex min-w-[200px] z-10  rounded-2xl overflow-hidden`}
       >
         <img
           src={icon || "vite.svg"}
           alt={icon}
-          className="w-full h-full object-cover"
+          className="w-full h-full object-contain"
         />
-      </div>
+      </Card>
     </motion.div>
   );
 };

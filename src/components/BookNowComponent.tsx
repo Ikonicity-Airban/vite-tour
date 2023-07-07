@@ -1,9 +1,8 @@
-import { Button, Card, Dropdown, Label, TextInput } from "flowbite-react";
+import { Button, Card } from "flowbite-react";
 import LogoComponent from "./LogoComponent";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useContext } from "react";
 import { AppContext } from "../api/context";
-import { DebounceInput } from "react-debounce-input";
 
 interface IForm {
   name: string;
@@ -22,8 +21,6 @@ function BookNowComponent() {
       data
     );
   };
-
-  function handleClick(params: type) {}
   return (
     <Card className="w-full">
       <form
@@ -33,35 +30,35 @@ function BookNowComponent() {
         <div className="mx-auto mb-6">
           <LogoComponent />
         </div>
-        <div className="w-full">
-          <Dropdown
-            className="min-w-full"
-            outline
-            inline
-            label={
-              <Label className="" htmlFor="name">
-                Destination
-              </Label>
-            }
-          >
-            <DebounceInput type="text" {...register("destination")} />
-            {places && (
-              <ul className="w-full space-y-2">
-                {places?.map(({ name, tags }, i) => (
-                  <li
-                    key={i}
-                    className="h-fit bg-[whitesmoke] p-2 rounded cursor-pointer"
-                    onClick={() => handleClick(name)}
-                  >
-                    <span className="bg-gray-100 text-[11px]">{tags}</span>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </Dropdown>
+        <div className="w-full space-y-3 relative">
+          <i className="fa fa-location absolute bottom-[25%] left-3 z-10"></i>
+          {places && (
+            <select
+              required
+              defaultValue="Choose your Destination"
+              className="w-full space-y-2 block  p-3 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-white focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              {...register("destination")}
+            >
+              <option value="">Choose your Destination</option>
+              {places?.map(({ name }, i) => (
+                <option
+                  key={i}
+                  value={name}
+                  className="h-fit grid p-2 rounded cursor-pointer bg-gray-200 hover:bg-gray-300"
+                  // onClick={() => handleClick(name)}
+                >
+                  {name}
+                </option>
+              ))}
+            </select>
+          )}
         </div>
         <div className="w-full mt-4">
-          <Button className="w-full" type="submit">
+          <Button
+            className="w-full"
+            gradientDuoTone="greenToBlue"
+            type="submit"
+          >
             Book
           </Button>
         </div>

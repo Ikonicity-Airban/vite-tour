@@ -71,10 +71,10 @@ function DashboardLayout() {
     });
   }, [navigate, dispatch]);
 
-  if (!isLoggedIn)
+  if (isLoggedIn)
     return (
       <div className="w-full relative tablet:px-4 pb-[56px]">
-        <Modal
+        {/* <Modal
           popup
           position="bottom-right"
           className="my-auto"
@@ -84,7 +84,7 @@ function DashboardLayout() {
           <Modal.Header>Header</Modal.Header>
           <Modal.Body>Error</Modal.Body>
           <Modal.Footer>Error</Modal.Footer>
-        </Modal>
+        </Modal> */}
         <Navbar
           className="w-full py-6 px-4 fixed left-0 z-[999]"
           border

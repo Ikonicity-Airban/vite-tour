@@ -14,7 +14,7 @@ interface ICardProps {
 function CardComponent({ source, place, about = "" }: ICardProps) {
   return (
     <div className="max-w-sm text-sm leading-snug p-4 border border-gray-200 rounded shadow md:p-6 dark:border-gray-700 relative card overflow-hidden">
-      <div className="flex items-center justify-center h-52 backdrop-blur-sm mb-4 bg-gray-300 rounded dark:bg-gray-700 ring-[.5rem] dark:ring-slate-800 ring-[whitesmoke] overflow-hidden">
+      <div className="flex items-center justify-center h-56 backdrop-blur-sm mb-4 bg-gray-300 rounded dark:bg-gray-700 ring-[.5rem] dark:ring-slate-800 ring-[whitesmoke] overflow-hidden">
         <img
           className="w-full h-full hover:scale-105 duration-150"
           src={source}

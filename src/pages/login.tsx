@@ -63,9 +63,7 @@ function LoginPage() {
           },
         },
       });
-      navigate("/dashboard", {
-        replace: true,
-      });
+      navigate("/dashboard", {});
     } catch (error) {
       if (error instanceof Error) {
         const errorMessage = error.message;
@@ -106,10 +104,7 @@ function LoginPage() {
           },
         },
       });
-      navigate("/dashboard", {
-        state: userCredential,
-        replace: true,
-      });
+      navigate("/dashboard");
     } catch (error) {
       if (error instanceof Error) {
         const errorMessage = error.message;
@@ -123,7 +118,7 @@ function LoginPage() {
   //return
   return (
     <section className="grid place-items-center min-h-screen mt-10 mb-20">
-      <Card className="smallScreens:min-w-[320px] mt-20">
+      <Card className="smallScreens:min-w-[320px] w-5/6 max-w-md mt-20">
         <div className="mx-auto mb-10">
           <LogoComponent />
         </div>
@@ -168,7 +163,7 @@ function LoginPage() {
             Don't have an account?
             <Link
               to="/create-account"
-              className="text-xs underline bg-slate-100 p-1"
+              className="text-xs underline dark:bg-transparent bg-slate-100 p-1"
             >
               Sign up
             </Link>
@@ -193,7 +188,7 @@ function LoginPage() {
           onClick={googleSignIn}
         >
           <span className="w-6 object-contain mr-2">
-            <img src="vite.svg" alt="logo" className="object-contain" />
+            <img src="google.svg" alt="logo" className="object-contain" />
           </span>
           Sign in with google
         </button>
