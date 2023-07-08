@@ -5,6 +5,7 @@ import FooterComponent from "../components/Footer";
 import useFetchSites from "../api/fetchSites";
 import { AppContext } from "../api/context";
 import LogoComponent from "../components/LogoComponent";
+import { Toast } from "flowbite-react";
 
 function MainLayout() {
   const {
@@ -13,7 +14,10 @@ function MainLayout() {
   useFetchSites();
 
   return (
-    <section className="tablet:px-6 dark:bg-slate-900 2xl:container mx-auto">
+    <section className="tablet:px-6 dark:bg-slate-900 mx-auto">
+      <Toast>
+        <Toast.Toggle></Toast.Toggle>
+      </Toast>
       {isLoading && (
         <div
           className="bg-[#000022d5]

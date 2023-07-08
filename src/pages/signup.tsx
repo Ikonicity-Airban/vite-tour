@@ -146,7 +146,7 @@ function SignUpPage() {
           </span>
         </Alert>
       )}
-      <Card className="smallScreens:min-w-[320px] ">
+      <Card className="smallScreens:min-w-[320px] w-5/6 max-w-md mt-20">
         <div className="mx-auto mb-10">
           <LogoComponent />
         </div>
