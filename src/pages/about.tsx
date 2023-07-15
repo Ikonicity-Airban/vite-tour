@@ -13,8 +13,8 @@ function AboutPage() {
           <span className="text-xs bg-blue-600 rounded-full text-white px-4 py-1.5 mr-3">
             New
           </span>{" "}
-          <span className="text-sm font-medium">
-            Exploration Services was launched! See what's new
+          <span className="text-xs md:text-sm font-medium">
+            Services was launched! See what's new
           </span>
           <i className="fa fa-angle-right px-2"></i>
         </Link>
@@ -45,7 +45,7 @@ function AboutPage() {
               type="email"
               id="default-email"
               className="block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-white focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              placeholder="Enter your email here..."
+              placeholder="Say something nice..."
               required
             />
             <button

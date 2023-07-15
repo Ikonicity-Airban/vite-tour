@@ -28,6 +28,7 @@ const SearchBar: React.FC<PropsType> = ({
   const fuse = new Fuse(list, {
     keys: searchKeys,
     includeScore: true,
+    threshold: 0.3,
   });
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -35,7 +36,7 @@ const SearchBar: React.FC<PropsType> = ({
     setSearchTerm(term);
 
     if (term === "") {
-      onSearch([]);
+      onSearch(list);
     } else {
       const searchResults = fuse.search(term).map((result) => result.item);
       onSearch(searchResults);

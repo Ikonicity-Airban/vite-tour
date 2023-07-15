@@ -9,7 +9,7 @@ function ServicesPage() {
   const services = useFetchCollection<IService>("services");
 
   return (
-    <div className="md:mt-20">
+    <div className="md:mt-20 p-1">
       <BreadcrumbComponents />
       <Section id="our-services" subtitle="All our services">
         <LoadingSection />
@@ -39,7 +39,7 @@ function ServicesPage() {
             </Accordion>
           </div>
         ) : (
-          <div className="flex items-center justify-center rounded outline-dashed dark:outline-slate-400 outline-1 outline-[#c5c5c5] shadow-none h-[30vh] mt-10 ">
+          <div className="flex items-center justify-center rounded outline-dashed dark:outline-slate-400 outline-1 outline-[#c5c5c5] shadow-none h-[10rem] mt-10 ">
             <h4 className="w-full text-center">No Services Available</h4>
           </div>
         )}

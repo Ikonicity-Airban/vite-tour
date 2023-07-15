@@ -13,27 +13,30 @@ import LoadingSection from "../components/LoadingSection";
 import { useFetchCollection } from "../api/fetchSites";
 import BreadcrumbComponents from "../components/BreadcrumbComponents";
 import { Link } from "react-router-dom";
+import SearchBar from "../components/SearchBar";
 
 function HomePage() {
   const {
     state: { places, carousel },
   } = useContext(AppContext);
 
-  const services = useFetchCollection<IService>("services");
+  const services: IService[] = [];
+  // const services = useFetchCollection<IService>("services");
   const [filtered, setFiltered] = useState<IPlace[]>();
-  function filterBy(param: string) {
-    const newPlaces = places.filter((item) =>
-      item.tags.split(",").includes(param)
-    );
-    setFiltered(newPlaces);
-  }
 
   return (
     <div className="flex flex-col">
       <CarouselComponent sources={carousel} />
       <Hr />
       <BreadcrumbComponents />
-      <Tabs.Group
+
+      <SearchBar
+        list={places}
+        onSearch={setFiltered}
+        searchKeys={["name", "tags", "about"]}
+        placeholder="Quick Search"
+      />
+      {/* <Tabs.Group
         onActiveTabChange={() => filterBy}
         style="underline"
         className="justify-center h-auto space-x-4 focus:ring-0 overflow-x-auto"
@@ -46,9 +49,8 @@ function HomePage() {
             key={item}
             title={item}
           ></Tabs.Item>
-          // </div>
         ))}
-      </Tabs.Group>
+      </Tabs.Group> */}
       <div className="md:container mx-auto max-w-screen-desktop">
         <Section
           id="destination"
@@ -56,21 +58,41 @@ function HomePage() {
           subtitle="Explore Our Top Sites"
         >
           <LoadingSection />
-          <div className="grid-card gap-6">
-            {(filtered ? filtered : places)
-              .sort()
-              .slice(6, 14)
-              .map((source, i) => (
-                <div className={`${i == 0 || i == 2 ? "hidden" : ""} lg:block`}>
-                  <Card
-                    source={source.images[1]}
-                    place={source.name}
-                    key={source.about}
-                    about={source.about}
-                  />
-                </div>
+          {filtered?.length ? (
+            <div className="grid-card gap-6">
+              {filtered.sort().map((source, i) => (
+                <Link to={`/tours/${i}`} state={source} key={source.about}>
+                  <div
+                    className={`${
+                      i % 2 == Math.floor(Math.random() * 1) ? "hidden" : ""
+                    } lg:block`}
+                  >
+                    <Card
+                      source={source.images[1]}
+                      place={source.name}
+                      about={source.about}
+                    />
+                  </div>
+                </Link>
               ))}
-          </div>
+            </div>
+          ) : (
+            <div className="flex items-center mx-auto container justify-center min-h-[20rem] p-6 border-[1px] rounded-2xl my-10">
+              <h5 className="text-red-500">No item matches your search</h5>
+            </div>
+          )}
+
+          <Link to="/tours">
+            <div className="w-full flex justify-center">
+              <Button
+                // outline
+                className="w-full md:w-3/5"
+                gradientDuoTone="greenToBlue"
+              >
+                Browse our full catalogue here
+              </Button>
+            </div>
+          </Link>
         </Section>
         <Hr />
 

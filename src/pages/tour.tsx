@@ -6,10 +6,11 @@ import BookNowComponent from "../components/BookNowComponent";
 import GoogleMap from "../components/GoogleMap";
 
 function TourPage() {
-  const [mainPhoto, setMainPhoto] = useState(1);
+  const [mainPhoto, setMainPhoto] = useState(0);
   const {
     state: { name = "Enugu", images = [""] },
   } = useLocation();
+
   return (
     <div className="mx-auto md:container mt-20">
       <BreadcrumbComponents />
@@ -39,7 +40,9 @@ function TourPage() {
           </div>
         </div>
       </Section>
-      <GoogleMap withSearch={false} query={name} />
+      <div className="overflow-auto">
+        <GoogleMap withSearch={false} query={name} />
+      </div>
       <Section>
         <BookNowComponent destination={name} />
       </Section>

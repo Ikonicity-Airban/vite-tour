@@ -22,7 +22,7 @@ function ToursPages() {
   };
 
   return (
-    <div className="md:mt-20 space-y-10">
+    <div className="md:mt-20 space-y-10 p-4">
       <BreadcrumbComponents />
       <SearchBar
         list={places}
@@ -40,7 +40,7 @@ function ToursPages() {
         searchResults.map((source) => {
           return (
             <Section subtitle={source.name} key={source.name}>
-              <div className="min-h-fit flex overflow-x-auto gap-4 snap-x snap-center">
+              <div className="min-h-fit flex overflow-x-auto gap-4 slider snap-x snap-center">
                 {source.images?.map((src, i) => (
                   <Card className="w-1/3 min-w-[260px] snap-center">
                     <Link to={i + ""} state={{ source }}>
@@ -62,7 +62,7 @@ function ToursPages() {
         </div>
       )}
       <Section subtitle="Suggestions">
-        <div className="grid">
+        <div className="flex flex-wrap gap-4">
           {places.length
             ? places.map((source, i) => {
                 const randomNum = Math.floor(
@@ -70,12 +70,12 @@ function ToursPages() {
                 );
                 return (
                   <div className="" key={source.name}>
-                    <Card className="w-1/3 min-w-[260px] snap-center">
+                    <Card className="w-1/3 h-60 min-w-[260px] snap-center">
                       <Link to={i + 1 + ""} state={{ source }}>
                         <img
                           src={source.images[randomNum]}
                           alt={source.name}
-                          className="block h-auto object-cover object-bottom"
+                          className="block h-full object-cover object-bottom"
                         />
                       </Link>
                     </Card>

@@ -3,7 +3,7 @@ import "./App.css";
 
 function App() {
   return (
-    <section>
+    <section className="3xl:container mx-auto w-full">
       <Outlet />
     </section>
   );
