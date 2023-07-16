@@ -13,3 +13,15 @@ export const tiltOptions = {
 export function truncateString(str: string, maxLength: number): string {
   return str?.length > maxLength ? `${str.slice(0, maxLength)}...` : str;
 }
+
+export function shuffleArray<T>(array: T[]) {
+  const shuffledArray = [...array];
+  for (let i = shuffledArray.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]];
+  }
+  return shuffledArray;
+}
+
+export const generateRandomNum = (num: number) =>
+  Math.floor(Math.random() * num);

@@ -1,27 +1,28 @@
 import { useContext, useState } from "react";
 import CarouselComponent from "../components/Carousel";
 import Section from "../components/Section";
-import PremiumCard from "../components/PremiumCard";
 import Card from "../components/Card";
 import BookNowComponent from "../components/BookNowComponent";
 import { AppContext } from "../api/context";
 import Hr from "../components/HR";
-import { Button, Tabs } from "flowbite-react";
+import { Button } from "flowbite-react";
 import ServicesCard from "../components/ServicesCard";
 import { IPlace, IService } from "../api/@types";
 import LoadingSection from "../components/LoadingSection";
-import { useFetchCollection } from "../api/fetchSites";
 import BreadcrumbComponents from "../components/BreadcrumbComponents";
 import { Link } from "react-router-dom";
 import SearchBar from "../components/SearchBar";
+import { shuffleArray } from "../api/helper";
+import { useFetchCollection } from "../api/fetchSites";
+import PremiumCardList from "../components/PremiumCard";
 
 function HomePage() {
   const {
     state: { places, carousel },
   } = useContext(AppContext);
 
-  const services: IService[] = [];
-  // const services = useFetchCollection<IService>("services");
+  // const services: IService[] = [];
+  const services = useFetchCollection<IService>("services");
   const [filtered, setFiltered] = useState<IPlace[]>();
 
   return (
@@ -36,21 +37,7 @@ function HomePage() {
         searchKeys={["name", "tags", "about"]}
         placeholder="Quick Search"
       />
-      {/* <Tabs.Group
-        onActiveTabChange={() => filterBy}
-        style="underline"
-        className="justify-center h-auto space-x-4 focus:ring-0 overflow-x-auto"
-      >
-        {["All sites", "Lounge", "Relaxation"].map((item) => (
-          // <div className="" key={item} onClick={() => filterBy(item)}>
-          <Tabs.Item
-            className=" focus:ring-0 border-none px-4
-            "
-            key={item}
-            title={item}
-          ></Tabs.Item>
-        ))}
-      </Tabs.Group> */}
+
       <div className="md:container mx-auto max-w-screen-desktop">
         <Section
           id="destination"
@@ -58,27 +45,28 @@ function HomePage() {
           subtitle="Explore Our Top Sites"
         >
           <LoadingSection />
-          {filtered?.length ? (
+          {places.length && (
             <div className="grid-card gap-6">
-              {filtered.sort().map((source, i) => (
-                <Link to={`/tours/${i}`} state={source} key={source.about}>
+              {(filtered ?? places).sort().map((source, i) => (
+                <Link
+                  to={`/tours/${source.name.split(" ").join("-")}`}
+                  state={source}
+                  key={source.about}
+                >
                   <div
                     className={`${
                       i % 2 == Math.floor(Math.random() * 1) ? "hidden" : ""
                     } lg:block`}
                   >
                     <Card
-                      source={source.images[1]}
-                      place={source.name}
-                      about={source.about}
+                      source={{
+                        ...source,
+                        source: shuffleArray(source.images)[0],
+                      }}
                     />
                   </div>
                 </Link>
               ))}
-            </div>
-          ) : (
-            <div className="flex items-center mx-auto container justify-center min-h-[20rem] p-6 border-[1px] rounded-2xl my-10">
-              <h5 className="text-red-500">No item matches your search</h5>
             </div>
           )}
 
@@ -126,22 +114,8 @@ function HomePage() {
           </div>
         </Section>
         <Hr />
-
         {/* Tours Packages */}
-        <Section
-          id="tours-packages"
-          title="tours packages"
-          subtitle="Premium Packages"
-        >
-          <div className="grid sm:grid-cols-2 laptop:grid-cols-3 gap-10 justify-center">
-            {places
-              .sort()
-              .slice(8, 14)
-              .map((source) => (
-                <PremiumCard source={source.images[0]} key={source.about} />
-              ))}
-          </div>
-        </Section>
+        <PremiumCardList />
         <Hr />
 
         {/* Book now */}

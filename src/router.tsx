@@ -12,6 +12,7 @@ import ToursPages from "./pages/tours";
 import TourPage from "./pages/tour";
 import FourOhFour from "./pages/404";
 import ProfilePage from "./pages/profile";
+import Bookings from "./pages/bookings";
 
 export const router = createBrowserRouter([
   {
@@ -63,6 +64,10 @@ export const router = createBrowserRouter([
           {
             path: "profile",
             element: <ProfilePage />,
+          },
+          {
+            path: "book",
+            element: <Bookings />,
           },
         ],
       },

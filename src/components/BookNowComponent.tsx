@@ -2,6 +2,7 @@ import { Button, Card } from "flowbite-react";
 import LogoComponent from "./LogoComponent";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { IPlace } from "../api/@types";
+import { useNavigate } from "react-router-dom";
 
 interface IProps {
   destination: string;
@@ -15,11 +16,15 @@ interface IForm {
 function BookNowComponent({ destination, places }: IProps) {
   const { register, handleSubmit } = useForm<IForm>();
 
+  const navigate = useNavigate();
   const onSubmit: SubmitHandler<IForm> = (data) => {
     console.log(
       "🚀 ~ file: BookNowComponent.tsx:19 ~ BookNowComponent ~ data:",
       data
     );
+    navigate("/book", {
+      state: places?.find((place) => place.name == destination),
+    });
   };
   return (
     <Card className="w-full">
@@ -61,7 +66,7 @@ function BookNowComponent({ destination, places }: IProps) {
             gradientDuoTone="greenToBlue"
             type="submit"
           >
-            Book
+            Book a tour
           </Button>
         </div>
       </form>

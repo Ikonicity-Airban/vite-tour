@@ -18,14 +18,13 @@ type Places = {
   };
 };
 
-const baseUrl = `https://maps.google.com/maps?width=600&height=400&hl=en&q=Enugu&t=&z=14&ie=UTF8&iwloc=B&output=embed`;
-//
-
 // google map search with location completion
 
 //
 function GoogleMap({ query = "Enugu", withSearch = true }: Props) {
-  const [searchQuery, setQuery] = useState(baseUrl);
+  const [searchQuery, setQuery] = useState(
+    `https://maps.google.com/maps?width=600&height=400&hl=en&q=${query}&t=&z=14&ie=UTF8&iwloc=B&output=embed`
+  );
   const [locate, setLocate] = useState("");
   const [places, setPlaces] = useState<Places["properties"][]>([]);
 

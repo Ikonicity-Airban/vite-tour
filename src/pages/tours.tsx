@@ -9,6 +9,8 @@ import LoadingSection from "../components/LoadingSection";
 import BreadcrumbComponents from "../components/BreadcrumbComponents";
 import { Link } from "react-router-dom";
 import { Card } from "flowbite-react";
+import { generateRandomNum, shuffleArray } from "../api/helper";
+import CardComponent from "../components/Card";
 
 function ToursPages() {
   const {
@@ -37,20 +39,24 @@ function ToursPages() {
         <LoadingSection />
       </div>
       {searchResults.length ? (
-        searchResults.map((source) => {
+        shuffleArray(searchResults).map((source) => {
           return (
             <Section subtitle={source.name} key={source.name}>
-              <div className="min-h-fit flex overflow-x-auto gap-4 slider snap-x snap-center">
-                {source.images?.map((src, i) => (
-                  <Card className="w-1/3 min-w-[260px] snap-center">
-                    <Link to={i + ""} state={{ source }}>
+              <div className="h-52 flex overflow-x-auto overflow-y-clip gap-4 slider snap-x snap-center">
+                {source.images?.map((src, idx) => (
+                  <Link
+                    to={source.name.split(" ").join("-")}
+                    key={idx}
+                    state={source}
+                  >
+                    <Card className="h-full w-1/3 min-w-[260px] snap-center object-cover">
                       <img
                         src={src}
                         alt={src}
-                        className="block h-auto object-cover object-bottom"
+                        className="block h-full w-full object-bottom"
                       ></img>
-                    </Link>
-                  </Card>
+                    </Card>
+                  </Link>
                 ))}
               </div>
             </Section>
@@ -62,26 +68,25 @@ function ToursPages() {
         </div>
       )}
       <Section subtitle="Suggestions">
-        <div className="flex flex-wrap gap-4">
+        <div className="grid-card gap-4">
           {places.length
-            ? places.map((source, i) => {
-                const randomNum = Math.floor(
-                  Math.random() * source.images.length
-                );
-                return (
+            ? shuffleArray(places)
+                .splice(0, 6)
+                .map((source) => (
                   <div className="" key={source.name}>
-                    <Card className="w-1/3 h-60 min-w-[260px] snap-center">
-                      <Link to={i + 1 + ""} state={{ source }}>
-                        <img
-                          src={source.images[randomNum]}
-                          alt={source.name}
-                          className="block h-full object-cover object-bottom"
-                        />
-                      </Link>
-                    </Card>
+                    <Link to={source.name.split(" ").join("-")} state={source}>
+                      <CardComponent
+                        source={{
+                          ...source,
+                          source:
+                            source.images[
+                              generateRandomNum(source.images.length)
+                            ],
+                        }}
+                      />
+                    </Link>
                   </div>
-                );
-              })
+                ))
             : null}
         </div>
       </Section>

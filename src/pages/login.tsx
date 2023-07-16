@@ -3,13 +3,14 @@ import {
   Card,
   Checkbox,
   Label,
+  Spinner,
   TextInput,
   Toast,
 } from "flowbite-react";
 import LogoComponent from "../components/LogoComponent";
 import { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { Link, redirect } from "react-router-dom";
+import { Link, redirect, useNavigate } from "react-router-dom";
 import {
   GoogleAuthProvider,
   browserLocalPersistence,
@@ -33,6 +34,7 @@ function LoginPage() {
   const { dispatch } = useContext(AppContext);
   const [errMsg, setErrMsg] = useState("");
 
+  const navigate = useNavigate();
   const onSubmit: SubmitHandler<IFormInput> = async ({
     email: Email,
     password,
@@ -70,7 +72,7 @@ function LoginPage() {
           },
         },
       });
-      redirect("/dashboard");
+      navigate("/dashboard");
     } catch (error) {
       if (error instanceof Error) {
         const errorMessage = error.message;
@@ -112,7 +114,7 @@ function LoginPage() {
           },
         },
       });
-      redirect("/dashboard");
+      navigate("/dashboard");
     } catch (error) {
       if (error instanceof Error) {
         const errorMessage = error.message;
@@ -183,18 +185,21 @@ function LoginPage() {
               Sign up
             </Link>
           </div>
-          {loading ? (
-            <LoadingButton />
-          ) : (
-            <Button
-              disabled={loading}
-              gradientDuoTone={"greenToBlue"}
-              className="w-full"
-              type="submit"
-            >
-              Submit
-            </Button>
-          )}
+
+          <Button
+            disabled={loading}
+            gradientDuoTone={"greenToBlue"}
+            className="w-full"
+            type="submit"
+          >
+            {loading ? (
+              <center>
+                <Spinner></Spinner>
+              </center>
+            ) : (
+              "Submit"
+            )}
+          </Button>
         </form>
         <button
           disabled={loading}

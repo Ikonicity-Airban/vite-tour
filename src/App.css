@@ -1,6 +1,9 @@
 .card__overlay {
-  background-color: #fff1;
+  position: absolute;
+  inset: 0;
+  background-color: rgba(2, 21, 36, 0.822);
   backdrop-filter: blur(2px);
+  transform: translateY(100%);
   transition: all 500ms ease;
 }
 
