@@ -10,7 +10,7 @@ import {
 import LogoComponent from "../components/LogoComponent";
 import { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { Link, redirect, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   GoogleAuthProvider,
   browserLocalPersistence,
@@ -22,7 +22,6 @@ import { AppContext } from "../api/context";
 import { useContext } from "react";
 import { Types } from "../api/reducer";
 
-import { LoadingButton } from "../components/Buttons";
 interface IFormInput {
   email: string;
   password: string;
