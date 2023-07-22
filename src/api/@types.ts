@@ -49,8 +49,44 @@ export interface IUserResponse {
     lastSignInTime?: string | null | undefined;
   } | null;
   photoURL?: string | null;
+  uid: string;
 }
 export interface ILoginResponse {
   refreshToken: string;
   user: IUserResponse;
+}
+
+export interface Tour {
+  id: string;
+  title: string;
+  description: string;
+  bookings: Booking[];
+  Plan: PackagePlan;
+}
+
+interface Booking {
+  id: string;
+  tourId: string;
+  userId: string;
+  date: Date;
+  numGuests: number;
+}
+interface PackagePlan {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  features: string[];
+}
+
+export interface Plan {
+  id: string;
+  title: string;
+  description: string;
+  image: string;
+  price: number;
+  rate: string;
+  days: number;
+  color: string;
+  person: number;
 }

@@ -28,6 +28,25 @@ const topBarLinks = [
   },
 ];
 
+const navLinks = [
+  {
+    title: "Home",
+    link: "/",
+  },
+  {
+    title: "Tour sites",
+    link: "/tours",
+  },
+  {
+    title: "Packages and Services",
+    link: "/services",
+  },
+  {
+    title: "About Us",
+    link: "/about",
+  },
+];
+
 function Header() {
   return (
     <header className="flex flex-col top-0 w-full text-base z-50 dark:text-white">
@@ -60,7 +79,7 @@ function Header() {
           </div>
         </div>
       </div>
-      <NavbarComponent />
+      <NavbarComponent links={navLinks} />
     </header>
   );
 }

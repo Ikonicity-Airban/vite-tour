@@ -81,7 +81,7 @@ function GoogleMap({ query = "Enugu", withSearch = true }: Props) {
   };
 
   return (
-    <Section id={query} title="google Maps" subtitle={query}>
+    <Section title="google Maps" subtitle={query}>
       <div className="relative h-full grid">
         {withSearch && (
           <div className="relative mb-20">

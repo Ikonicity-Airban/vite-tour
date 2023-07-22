@@ -28,7 +28,7 @@ const SearchBar: React.FC<PropsType> = ({
   const fuse = new Fuse(list, {
     keys: searchKeys,
     includeScore: true,
-    threshold: 0.3,
+    // threshold: 0.,
   });
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -40,6 +40,10 @@ const SearchBar: React.FC<PropsType> = ({
     } else {
       const searchResults = fuse.search(term).map((result) => result.item);
       onSearch(searchResults);
+      console.log(
+        "🚀 ~ file: SearchBar.tsx:43 ~ handleSearch ~ searchResults:",
+        searchResults
+      );
     }
   };
 

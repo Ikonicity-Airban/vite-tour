@@ -1,69 +1,40 @@
-"use client";
-
+import { DocumentData } from "firebase/firestore";
 import { Table } from "flowbite-react";
+import { Tour } from "../api/@types";
 
-export default function TableComponent() {
+interface Props {
+  data: Tour[] | DocumentData;
+}
+
+const TourPlanTable = ({ data }: Props) => {
   return (
-    <Table hoverable>
+    <Table className="">
       <Table.Head>
-        <Table.HeadCell>Product name</Table.HeadCell>
-        <Table.HeadCell>Color</Table.HeadCell>
-        <Table.HeadCell>Category</Table.HeadCell>
+        <Table.HeadCell>Title</Table.HeadCell>
+        <Table.HeadCell>Description</Table.HeadCell>
         <Table.HeadCell>Price</Table.HeadCell>
-        <Table.HeadCell>
-          <span className="sr-only">Edit</span>
-        </Table.HeadCell>
+        <Table.HeadCell>duration</Table.HeadCell>
       </Table.Head>
-      <Table.Body className="divide-y">
-        <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
-          <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-            Apple MacBook Pro 17"
-          </Table.Cell>
-          <Table.Cell>Sliver</Table.Cell>
-          <Table.Cell>Laptop</Table.Cell>
-          <Table.Cell>$2999</Table.Cell>
-          <Table.Cell>
-            <a
-              className="font-medium text-cyan-600 hover:underline dark:text-cyan-500"
-              href="/tables"
-            >
-              <p>Edit</p>
-            </a>
-          </Table.Cell>
-        </Table.Row>
-        <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
-          <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-            <p>Microsoft Surface Pro</p>
-          </Table.Cell>
-          <Table.Cell>White</Table.Cell>
-          <Table.Cell>Laptop PC</Table.Cell>
-          <Table.Cell>$1999</Table.Cell>
-          <Table.Cell>
-            <a
-              className="font-medium text-cyan-600 hover:underline dark:text-cyan-500"
-              href="/tables"
-            >
-              <p>Edit</p>
-            </a>
-          </Table.Cell>
-        </Table.Row>
-        <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
-          <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-            Magic Mouse 2
-          </Table.Cell>
-          <Table.Cell>Black</Table.Cell>
-          <Table.Cell>Accessories</Table.Cell>
-          <Table.Cell>$99</Table.Cell>
-          <Table.Cell>
-            <a
-              className="font-medium text-cyan-600 hover:underline dark:text-cyan-500"
-              href="/tables"
-            >
-              <p>Edit</p>
-            </a>
-          </Table.Cell>
-        </Table.Row>
+      <Table.Body>
+        {data.length ? (
+          data?.map((tourPlan: Tour) => (
+            <Table.Row key={tourPlan.id}>
+              <Table.Cell>{tourPlan.title}</Table.Cell>
+              <Table.Cell>{tourPlan.description}</Table.Cell>
+              <Table.Cell></Table.Cell>
+              <Table.Cell></Table.Cell>
+            </Table.Row>
+          ))
+        ) : (
+          <Table.Row>
+            <Table.Cell colSpan={4} className="p-10 text-center">
+              No Bookings recorded
+            </Table.Cell>
+          </Table.Row>
+        )}
       </Table.Body>
     </Table>
   );
-}
+};
+
+export default TourPlanTable;

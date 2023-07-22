@@ -1,9 +1,10 @@
 import Section from "../components/Section";
 import LoadingSection from "../components/LoadingSection";
 import BreadcrumbComponents from "../components/BreadcrumbComponents";
-import { useFetchCollection } from "../api/fetchSites";
+import { useFetchCollection } from "../api/fetchCollections";
 import { IService } from "../api/@types";
 import { Accordion } from "flowbite-react";
+import PremiumCardList from "../components/PremiumCard";
 
 function ServicesPage() {
   const services = useFetchCollection<IService>("services");
@@ -11,6 +12,8 @@ function ServicesPage() {
   return (
     <div className="md:mt-20 p-1">
       <BreadcrumbComponents />
+      <LoadingSection />
+      <PremiumCardList />
       <Section id="our-services" subtitle="All our services">
         <LoadingSection />
         {services?.length ? (

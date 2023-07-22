@@ -128,6 +128,59 @@ h4 {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
+/* scroll */
+
+.scroll-to-top {
+  position: fixed;
+  bottom: 4rem;
+  right: 4rem;
+  padding: 1rem;
+  background-color: #003355;
+  z-index: 1000;
+  border: 2px solid white;
+  color: #fff;
+  border-radius: 9999px;
+  cursor: pointer;
+
+  transition: opacity 0.3s ease-in-out;
+}
+
+.scroll-to-top:hover {
+  opacity: 0.8;
+}
+
+.grid-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.grid-div {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 20px;
+}
+
+/* Set the container to snap-scrolling */
+.scroll-section {
+  scroll-snap-type: y mandatory;
+}
+
+/* Set each section to snap-align to the top of the container */
+.scroll-section__item {
+  scroll-snap-align: start;
+}
+
+/* .grid-item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #eee;
+  color: #333;
+  font-size: 2rem;
+  border-radius: 10px;
+} */
+
 /* map */
 .mapouter {
   position: relative;
@@ -157,7 +210,7 @@ h4 {
 
 @layer components {
   .grid-card {
-    @apply grid grid-cols-1 tablet:grid-cols-2 laptop:grid-cols-3 desktop:grid-cols-4;
+    @apply grid grid-cols-1 tablet:grid-cols-2 laptop:grid-cols-3 desktop:grid-cols-4 place-items-center;
   }
 }
 

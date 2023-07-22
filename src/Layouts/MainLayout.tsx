@@ -2,7 +2,7 @@ import { useContext } from "react";
 import { Outlet } from "react-router-dom";
 import Header from "../components/Header";
 import FooterComponent from "../components/Footer";
-import useFetchSites from "../api/fetchSites";
+import useFetchSites from "../api/fetchCollections";
 import { AppContext } from "../api/context";
 import LogoComponent from "../components/LogoComponent";
 

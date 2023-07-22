@@ -17,6 +17,7 @@ const initialState = {
     emailVerified: "",
     phoneNumber: "",
     photoURL: "",
+    uid: "",
     metadata: {
       createdAt: "",
       creationTime: "",

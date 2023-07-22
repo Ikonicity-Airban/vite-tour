@@ -21,7 +21,7 @@ export default function BreadcrumbComponents() {
           <Link
             to={`${i == pathArray.length - 1 ? "#" : "/" + path}`}
             className={
-              "first-letter:capitalize text-sm font-semibold shadow-lg dark:bg-slate-700 bg-white py-1 px-4 rounded-full " +
+              "first-letter:capitalize text-sm font-semibold shadow-lg dark:bg-slate-700 bg-white py-1 px-4 rounded-full break-keep " +
               `${i == pathArray.length - 1 ? "text-green-600" : "text-primary"}`
             }
           >

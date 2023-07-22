@@ -11,7 +11,7 @@ type Props = {
 const Section = ({ children, subtitle, id, title, ...props }: Props) => {
   return (
     <section
-      className="p-6 flex w-full flex-col place-content-center gap-6 scroll-mt-10 laptop:my-20"
+      className="p-6 flex w-full flex-col place-content-center gap-6 scroll-mt-10 laptop:my-20 max-w-screen-desktop mx-auto scroll-section-item"
       aria-label={title}
       id={id}
       {...props}

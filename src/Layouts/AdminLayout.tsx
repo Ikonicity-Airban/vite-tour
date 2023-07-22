@@ -13,7 +13,7 @@ import useFetchSites from "../api/fetchCollections";
 
 // import Drawer from "../components/Drawer";
 
-function DashboardLayout() {
+function AdminDashboardLayout() {
   const {
     dispatch,
     state: { isLoggedIn, user },
@@ -76,7 +76,7 @@ function DashboardLayout() {
 
   if (isLoggedIn)
     return (
-      <div className="w-full relative tablet:px-4">
+      <div className="w-full bg-inherit relative tablet:px-4">
         <Navbar
           className="w-full py-6 px-4 fixed top-0 left-0 z-[999]"
           border
@@ -144,4 +144,4 @@ function DashboardLayout() {
   else return null;
 }
 
-export default DashboardLayout;
+export default AdminDashboardLayout;

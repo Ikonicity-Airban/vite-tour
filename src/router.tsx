@@ -1,18 +1,21 @@
-import { createBrowserRouter } from "react-router-dom";
+import AboutPage from "./pages/about";
+import AdminDashboard from "./pages/admin/dashboard";
+import AdminDashboardLayout from "./Layouts/AdminLayout";
+import AdminLoginPage from "./pages/admin/login";
 import App from "./App";
-import MainLayout from "./Layouts/MainLayout";
+import Bookings from "./pages/bookings";
+import Dashboard from "./pages/dashboard";
+import DashboardLayout from "./Layouts/DashboardLayout";
+import FourOhFour from "./pages/404";
 import HomePage from "./pages/index";
 import LoginPage from "./pages/login";
-import SignUpPage from "./pages/signup";
-import ServicesPage from "./pages/services";
-import DashboardLayout from "./Layouts/DashboardLayout";
-import Dashboard from "./pages/dashboard";
-import AboutPage from "./pages/about";
-import ToursPages from "./pages/tours";
-import TourPage from "./pages/tour";
-import FourOhFour from "./pages/404";
+import MainLayout from "./Layouts/MainLayout";
 import ProfilePage from "./pages/profile";
-import Bookings from "./pages/bookings";
+import ServicesPage from "./pages/services";
+import SignUpPage from "./pages/signup";
+import TourPage from "./pages/tour";
+import ToursPages from "./pages/tours";
+import { createBrowserRouter } from "react-router-dom";
 
 export const router = createBrowserRouter([
   {
@@ -51,6 +54,10 @@ export const router = createBrowserRouter([
             path: "/create-account",
             element: <SignUpPage />,
           },
+          {
+            path: "/admin/login",
+            element: <AdminLoginPage />,
+          },
         ],
       },
       {
@@ -63,6 +70,33 @@ export const router = createBrowserRouter([
           },
           {
             path: "profile",
+            element: <ProfilePage />,
+          },
+          {
+            path: "book",
+            element: <Bookings />,
+          },
+        ],
+      },
+      {
+        path: "/admin",
+        element: <AdminDashboardLayout />,
+        children: [
+          {
+            path: "dashboard",
+            element: <AdminDashboard />,
+          },
+
+          {
+            path: "users",
+            element: <ProfilePage />,
+          },
+          {
+            path: "profile",
+            element: <ProfilePage />,
+          },
+          {
+            path: "user/:id",
             element: <ProfilePage />,
           },
           {

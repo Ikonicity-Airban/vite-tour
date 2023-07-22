@@ -1,20 +1,21 @@
-import { useContext, useState } from "react";
-import CarouselComponent from "../components/Carousel";
-import Section from "../components/Section";
-import Card from "../components/Card";
-import BookNowComponent from "../components/BookNowComponent";
-import { AppContext } from "../api/context";
-import Hr from "../components/HR";
-import { Button } from "flowbite-react";
-import ServicesCard from "../components/ServicesCard";
 import { IPlace, IService } from "../api/@types";
-import LoadingSection from "../components/LoadingSection";
+import { useContext, useState } from "react";
+
+import { AppContext } from "../api/context";
+import BookNowComponent from "../components/BookNowComponent";
 import BreadcrumbComponents from "../components/BreadcrumbComponents";
+import { Button } from "flowbite-react";
+import CarouselComponent from "../components/Carousel";
+import GridInViewAnimation from "../components/Framer.Section";
+import Hr from "../components/HR";
 import { Link } from "react-router-dom";
-import SearchBar from "../components/SearchBar";
-import { shuffleArray } from "../api/helper";
-import { useFetchCollection } from "../api/fetchSites";
+import LoadingSection from "../components/LoadingSection";
 import PremiumCardList from "../components/PremiumCard";
+import SearchBar from "../components/SearchBar";
+import Section from "../components/Section";
+import ServicesCard from "../components/ServicesCard";
+import { shuffleArray } from "../api/helper";
+import { useFetchCollection } from "../api/fetchCollections";
 
 function HomePage() {
   const {
@@ -45,39 +46,24 @@ function HomePage() {
           subtitle="Explore Our Top Sites"
         >
           <LoadingSection />
+
           {places.length && (
-            <div className="grid-card gap-6">
-              {(filtered ?? places).sort().map((source, i) => (
-                <Link
-                  to={`/tours/${source.name.split(" ").join("-")}`}
-                  state={source}
-                  key={source.about}
-                >
-                  <div
-                    className={`${
-                      i % 2 == Math.floor(Math.random() * 1) ? "hidden" : ""
-                    } lg:block`}
-                  >
-                    <Card
-                      source={{
-                        ...source,
-                        source: shuffleArray(source.images)[0],
-                      }}
-                    />
-                  </div>
-                </Link>
-              ))}
+            <div>
+              <GridInViewAnimation
+                list={filtered ?? shuffleArray(places)}
+              ></GridInViewAnimation>
             </div>
           )}
 
           <Link to="/tours">
-            <div className="w-full flex justify-center">
+            <div className="w-full flex justify-center animate-bounce my-4">
               <Button
                 // outline
                 className="w-full md:w-3/5"
                 gradientDuoTone="greenToBlue"
               >
-                Browse our full catalogue here
+                Browse our full catalogue here{" "}
+                <i className="fa fa-arrow-right ml-10"></i>
               </Button>
             </div>
           </Link>
