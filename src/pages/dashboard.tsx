@@ -30,11 +30,6 @@ function Dashboard() {
         collection(db, "bookings"),
         where("email", "==", user.email)
       );
-      console.log(
-        "🚀 ~ file: dashboard.tsx:32 ~ useEffect ~ user.uid:",
-        user.email
-      );
-
       const fetchCollection = async () => {
         const querySnapshot = await getDocs(q);
         setBookings(querySnapshot.docs.map((doc) => doc.data()));
@@ -44,8 +39,13 @@ function Dashboard() {
       alert(error);
     }
   }, [user]);
+
   return (
     <div className="block w-full mx-auto">
+      {/* <Helmet>
+        <title>{user.email}</title>
+      </Helmet>
+       */}
       <Section title="Your Recent booking">
         <TableComponent data={bookings} />
       </Section>
