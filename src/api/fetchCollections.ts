@@ -1,9 +1,16 @@
-import { useEffect, useContext, useState, useCallback } from "react";
-import { DocumentData, collection, getDocs } from "firebase/firestore";
-import { db } from "../firebase";
+import {
+  DocumentData,
+  collection,
+  getDocs,
+  query,
+  where,
+} from "firebase/firestore";
+import { useCallback, useContext, useEffect, useState } from "react";
+
 import { AppContext } from "./context";
-import { Types } from "./reducer";
 import { IPlaceResponse } from "./@types";
+import { Types } from "./reducer";
+import { db } from "../firebase";
 
 //
 function useFetchSites() {
@@ -57,6 +64,37 @@ export function useFetchCollection<T>(colName: string) {
       dispatch({ type: Types.setIsLoading, payload: false });
     }
   }, [dispatch, colName]);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
+
+  return col;
+}
+export function useQueryCollection<T>(
+  colName: string,
+  queryStr: string,
+  to: string
+) {
+  const [col, setCol] = useState<T[] | DocumentData>([]);
+  const { dispatch } = useContext(AppContext);
+
+  const fetchData = useCallback(async () => {
+    dispatch({ type: Types.setIsLoading, payload: true });
+
+    try {
+      const q = query(collection(db, colName), where(queryStr, "==", to));
+      const fetchCollection = async () => {
+        const querySnapshot = await getDocs(q);
+        setCol(querySnapshot.docs.map((doc) => doc.data()));
+      };
+      fetchCollection();
+    } catch (e) {
+      console.error("Error adding document: ", e);
+    } finally {
+      dispatch({ type: Types.setIsLoading, payload: false });
+    }
+  }, [dispatch, colName, queryStr, to]);
 
   useEffect(() => {
     fetchData();

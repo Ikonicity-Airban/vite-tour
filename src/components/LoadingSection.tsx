@@ -1,15 +1,15 @@
-import { useContext } from "react";
 import { AppContext } from "../api/context";
 import { CardSkeleton } from "./Skeletons";
+import { useContext } from "react";
 
-const LoadingSection = () => {
+const LoadingSection = ({ arrLen = 9 }: { arrLen?: number }) => {
   const {
     state: { isLoading },
   } = useContext(AppContext);
   if (isLoading) {
     return (
       <div className="grid-card justify-center gap-6 w-full">
-        {Array(12)
+        {Array(arrLen)
           .fill(null)
           .map((_, i) => (
             <CardSkeleton key={i} />

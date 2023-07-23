@@ -1,26 +1,33 @@
-import { Card } from "flowbite-react";
-import { truncateString } from "../api/helper";
 import { motion, useInView } from "framer-motion";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+
+import { Card } from "flowbite-react";
 import { IService } from "../api/@types";
+import { truncateString } from "../api/helper";
 
 type Props = {
   position: number;
   detail: IService;
 };
 
-const placeholder =
-  "Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt beatae necessitatibus ducimus consequuntur enim, qui ad iste sint numquam ab, aliquam mollitia quo magni. Iste facere possimus labore! Atque, assumenda.";
 const ServicesCard = ({ position, detail: { name, desc, icon } }: Props) => {
+  const [hasPlayed, setHasPlayed] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref);
+
+  useEffect(() => {
+    if (!hasPlayed) {
+      setHasPlayed(true);
+    }
+  }, [hasPlayed]);
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{
-        opacity: inView ? 1 : 0,
-        y: inView ? 0 : 20,
-        x: inView ? 0 : 20 * position,
+        opacity: inView || hasPlayed ? 1 : 0,
+        y: inView || hasPlayed ? 0 : 20,
+        x: inView || hasPlayed ? 0 : 20 * position,
       }}
       transition={{ duration: 1 }}
       ref={ref}
@@ -49,7 +56,7 @@ const ServicesCard = ({ position, detail: { name, desc, icon } }: Props) => {
           } tablet:w-5/6 p-4 leading-loose whitespace-break-spaces`}
         >
           <h2>{name}</h2>
-          <p>{truncateString(desc || placeholder, 120)}</p>
+          <p>{truncateString(desc, 120)}</p>
         </div>
       </Card>
       <Card

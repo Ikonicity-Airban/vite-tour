@@ -1,13 +1,14 @@
-import Section from "../components/Section";
-import PremiumCardList from "../components/PremiumCard";
-import { db } from "../firebase";
-import { useForm } from "react-hook-form";
-import { Tour } from "../api/@types";
-import { addDoc, collection } from "firebase/firestore";
 import { Button, Card, Label, TextInput } from "flowbite-react";
 import { Form, useNavigate } from "react-router-dom";
-import { useContext } from "react";
+import { addDoc, collection } from "firebase/firestore";
+
 import { AppContext } from "../api/context";
+import PremiumCardList from "../components/PremiumCard";
+import Section from "../components/Section";
+import { Tour } from "../api/@types";
+import { db } from "../firebase";
+import { useContext } from "react";
+import { useForm } from "react-hook-form";
 
 function Bookings() {
   // const {
@@ -69,7 +70,7 @@ const TourForm = () => {
                 <TextInput
                   required
                   id={key}
-                  defaultValue={value}
+                  // defaultValue={value}
                   style={{ width: "100%" }}
                   {...register(key as keyof Tour, {
                     valueAsNumber: key == "price" || key == "duration",

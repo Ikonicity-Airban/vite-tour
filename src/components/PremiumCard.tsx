@@ -1,5 +1,6 @@
 import { Button, Card, Rating } from "flowbite-react";
 
+import LoadingSection from "./LoadingSection";
 import { Plan } from "../api/@types";
 import Section from "./Section";
 import { useFetchCollection } from "../api/fetchCollections";
@@ -59,6 +60,7 @@ export default function PremiumCardList() {
 
   return (
     <Section title=" check it out" subtitle="Our Amazing Tourist Package Plans">
+      <LoadingSection arrLen={3} />
       <div className="flex flex-wrap gap-10 justify-center">
         {plans.map((plan: Plan) => (
           <PlanCard plan={plan} />

@@ -1,17 +1,18 @@
-import { AppContext } from "../api/context";
-import { useContext, useState } from "react";
-import Section from "../components/Section";
-import Heading from "../components/Heading";
-import SearchBar from "../components/SearchBar";
-import { IPlace } from "../api/@types";
-import LoadingSection from "../components/LoadingSection";
-import BreadcrumbComponents from "../components/BreadcrumbComponents";
-import { Link } from "react-router-dom";
-import { Card } from "flowbite-react";
+import { Button, Card } from "flowbite-react";
 import { generateRandomNum, shuffleArray } from "../api/helper";
+import { useContext, useState } from "react";
+
+import { AppContext } from "../api/context";
+import BreadcrumbComponents from "../components/BreadcrumbComponents";
 import CardComponent from "../components/Card";
-import { Parallax } from "react-parallax";
 import DivScrollToView from "../components/Framer.div";
+import Heading from "../components/Heading";
+import { IPlace } from "../api/@types";
+import { Link } from "react-router-dom";
+import LoadingSection from "../components/LoadingSection";
+import { Parallax } from "react-parallax";
+import SearchBar from "../components/SearchBar";
+import Section from "../components/Section";
 
 function ToursPages() {
   const {
@@ -19,10 +20,18 @@ function ToursPages() {
   } = useContext(AppContext);
 
   const [searchResults, setSearchResults] = useState<IPlace[]>();
+  const [next, setNext] = useState<number>(0);
   const handleSearch = (results: IPlace[]) => {
     setSearchResults(results);
   };
 
+  function handleClick() {
+    if (next == places.length) {
+      setNext(0);
+    } else {
+      setNext((prev) => prev + 1);
+    }
+  }
   return (
     <div className="md:mt-20 space-y-10 p-4">
       <BreadcrumbComponents />
@@ -35,13 +44,19 @@ function ToursPages() {
 
       <Heading heading="All Our Tour Sites" />
       <div className="mx-auto">
-        <LoadingSection />
+        <LoadingSection arrLen={9} />
       </div>
+      <Button
+        className="animate-bounce fixed bottom-8 z-50"
+        onClick={handleClick}
+      >
+        <a href={`#${next}`}>Scroll to Next</a>
+      </Button>
       {places.length ? (
-        shuffleArray(searchResults ?? places).map((source) => {
+        (searchResults ?? shuffleArray(places)).map((source, i) => {
           return (
             <div className="scroll-section" key={source.name}>
-              <Section>
+              <Section id={`${i}`}>
                 <Parallax
                   bgImage={source.images[0]}
                   blur={5}

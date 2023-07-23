@@ -1,8 +1,9 @@
-import { useEffect, useRef, useState } from "react";
 import { AnimationDefinition, motion, useAnimation } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+
+import CardComponent from "./Card";
 import { IPlace } from "../api/@types";
 import { Link } from "react-router-dom";
-import CardComponent from "./Card";
 import { shuffleArray } from "../api/helper";
 
 interface GridInViewAnimationProps {
@@ -44,6 +45,7 @@ function GridInViewAnimation({ list }: GridInViewAnimationProps) {
     <motion.div
       className="grid-container snap-y"
       initial={{ opacity: 1 }}
+      animate={controls}
       transition={{ duration: 0.5 }}
       ref={gridRef}
     >
@@ -63,7 +65,7 @@ function GridInViewAnimation({ list }: GridInViewAnimationProps) {
           },
         }}
         initial="hidden"
-        animate={isVisible || !hasPlayed ? "visible" : "hidden"}
+        animate={isVisible || hasPlayed ? "visible" : "hidden"}
       >
         {list.slice(0, 12).map((source, index) => (
           <motion.div
