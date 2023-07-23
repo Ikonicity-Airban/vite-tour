@@ -20,30 +20,10 @@ function AdminLoginPage() {
       setLoading(true);
       const provider = new GoogleAuthProvider();
       const userCredential = await signInWithPopup(auth, provider);
-      const {
-        displayName,
-        email,
-        emailVerified,
-        phoneNumber,
-        metadata,
-        photoURL,
-        refreshToken,
-        uid,
-      } = userCredential.user;
-
       dispatch({
         type: Types.login,
         payload: {
-          refreshToken,
-          user: {
-            displayName,
-            email,
-            emailVerified,
-            metadata,
-            phoneNumber,
-            photoURL,
-            uid,
-          },
+          ...userCredential.user,
         },
       });
       navigate("/admin/dashboard");
