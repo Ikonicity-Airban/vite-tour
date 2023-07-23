@@ -1,20 +1,17 @@
-import { Button, Card, Label, Modal, Table, TextInput } from "flowbite-react";
-import React, { useEffect, useState } from "react";
+import { Button, Modal, Table } from "flowbite-react";
 import {
-  addDoc,
   collection,
   deleteDoc,
   doc,
   getDocs,
   updateDoc,
 } from "firebase/firestore";
+import { useEffect, useState } from "react";
 
-import { Form } from "react-router-dom";
 import { Plan } from "../../api/@types";
 import Section from "../../components/Section";
 import { db } from "../../firebase";
 import { useFetchCollection } from "../../api/fetchCollections";
-import { useForm } from "react-hook-form";
 
 const defaultTourPlan: Plan = {
   id: "",
@@ -28,98 +25,98 @@ const defaultTourPlan: Plan = {
   person: 0,
 };
 
-interface Props {
-  tourPlan?: Plan;
-  onSave: (tourPlan: Plan) => void;
-  onCancel: () => void;
-  show: () => void;
-}
+/* // interface Props {
+//   tourPlan?: Plan;
+//   onSave: (tourPlan: Plan) => void;
+//   onCancel: () => void;
+//   show: () => void;
+// }
 
-interface FormData extends Plan {
-  time: Date;
-}
+// interface FormData extends Plan {
+//   time: Date;
+// }
 
-const TourPlanForm = ({ tourPlan, onSave, onCancel }: Props) => {
-  const { register, handleSubmit, setValue } = useForm<FormData>();
+// const TourPlanForm = ({ tourPlan, onSave, onCancel }: Props) => {
+//   const { register, handleSubmit, setValue } = useForm<FormData>();
 
-  const onSubmit = async (formData: FormData) => {
-    const {
-      title,
-      description,
-      color,
-      days,
-      image,
-      person,
-      price,
-      rate,
-      time,
-    } = formData;
-    const newTourPlan = {
-      title,
-      description,
-      color,
-      days,
-      image,
-      person,
-      price,
-      rate,
-      time,
-    };
+//   const onSubmit = async (formData: FormData) => {
+//     const {
+//       title,
+//       description,
+//       color,
+//       days,
+//       image,
+//       person,
+//       price,
+//       rate,
+//       time,
+//     } = formData;
+//     const newTourPlan = {
+//       title,
+//       description,
+//       color,
+//       days,
+//       image,
+//       person,
+//       price,
+//       rate,
+//       time,
+//     };
 
-    if (tourPlan) {
-      const tourPlanRef = doc(db, "tourPlans", tourPlan.id);
-      await updateDoc(tourPlanRef, newTourPlan);
-      onSave({ ...tourPlan, ...newTourPlan });
-    } else {
-      await addDoc(collection(db, "tourPlans"), newTourPlan);
-      onSave({ ...newTourPlan, id: "" });
-    }
-  };
+//     if (tourPlan) {
+//       const tourPlanRef = doc(db, "tourPlans", tourPlan.id);
+//       await updateDoc(tourPlanRef, newTourPlan);
+//       onSave({ ...tourPlan, ...newTourPlan });
+//     } else {
+//       await addDoc(collection(db, "tourPlans"), newTourPlan);
+//       onSave({ ...newTourPlan, id: "" });
+//     }
+//   };
 
-  const onCancelClick = () => {
-    onCancel();
-  };
+//   const onCancelClick = () => {
+//     onCancel();
+//   };
 
-  React.useEffect(() => {
-    if (tourPlan) {
-      setValue("title", tourPlan.title);
-      setValue("description", tourPlan.description);
-    }
-  }, [tourPlan]);
+//   React.useEffect(() => {
+//     if (tourPlan) {
+//       setValue("title", tourPlan.title);
+//       setValue("description", tourPlan.description);
+//     }
+//   }, [tourPlan, setValue]);
 
-  return (
-    <Card>
-      <Form onSubmit={handleSubmit(onSubmit)}>
-        <div>
-          <Label htmlFor="title">Name</Label>
-          <TextInput
-            type="text"
-            id="title"
-            {...register("title", { required: true })}
-          />
-        </div>
-        <div>
-          <Label htmlFor="description">Description</Label>
-          <TextInput
-            type="text"
-            id="description"
-            {...register("description", { required: true })}
-          />
-        </div>
-        <div>
-          <Button type="submit">Save</Button>
-          <Button type="Button" onClick={onCancelClick}>
-            Cancel
-          </Button>
-        </div>
-      </Form>
-    </Card>
-  );
-};
+//   return (
+//     <Card>
+//       <Form onSubmit={handleSubmit(onSubmit)}>
+//         <div>
+//           <Label htmlFor="title">Name</Label>
+//           <TextInput
+//             type="text"
+//             id="title"
+//             {...register("title", { required: true })}
+//           />
+//         </div>
+//         <div>
+//           <Label htmlFor="description">Description</Label>
+//           <TextInput
+//             type="text"
+//             id="description"
+//             {...register("description", { required: true })}
+//           />
+//         </div>
+//         <div>
+//           <Button type="submit">Save</Button>
+//           <Button type="Button" onClick={onCancelClick}>
+//             Cancel
+//           </Button>
+//         </div>
+//       </Form>
+//     </Card>
+//   );
+// }; */
 
 const TourPlanList = () => {
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
+  // const [name, setName] = useState("");
+  // const [description, setDescription] = useState("");
 
   const plans = useFetchCollection<Plan>("plans");
   const [tourPlans, setTourPlans] = useState(plans);
@@ -137,18 +134,18 @@ const TourPlanList = () => {
     fetchTourPlans();
   }, []);
 
-  const handleAddTourPlan = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const tourPlansRef = collection(db, "tourPlans");
-    await addDoc(tourPlansRef, { name, description });
-    const snapshot = await getDocs(tourPlansRef);
-    const data = snapshot.docs.map(
-      (doc) => ({ id: doc.id, ...doc.data() } as Plan)
-    );
-    setTourPlans(data);
-    setName("");
-    setDescription("");
-  };
+  // const handleAddTourPlan = async (event: React.FormEvent<HTMLFormElement>) => {
+  //   event.preventDefault();
+  //   const tourPlansRef = collection(db, "tourPlans");
+  //   await addDoc(tourPlansRef, { name, description });
+  //   const snapshot = await getDocs(tourPlansRef);
+  //   const data = snapshot.docs.map(
+  //     (doc) => ({ id: doc.id, ...doc.data() } as Plan)
+  //   );
+  //   setTourPlans(data);
+  //   setName("");
+  //   setDescription("");
+  // };
 
   const handleEditTourPlan = async (
     id: string,

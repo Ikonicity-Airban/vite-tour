@@ -1,4 +1,4 @@
-import { Button, Card, Modal, Rating } from "flowbite-react";
+import { Button, Card, Rating } from "flowbite-react";
 
 import LoadingSection from "./LoadingSection";
 import { Plan } from "../api/@types";

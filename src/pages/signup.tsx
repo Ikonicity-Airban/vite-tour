@@ -6,19 +6,20 @@ import {
   Label,
   TextInput,
 } from "flowbite-react";
-import { useState, useContext } from "react";
-import { useForm, SubmitHandler } from "react-hook-form";
-import LogoComponent from "../components/LogoComponent";
 import {
   GoogleAuthProvider,
   createUserWithEmailAndPassword,
   inMemoryPersistence,
   signInWithPopup,
 } from "firebase/auth";
-import { auth } from "../firebase";
 import { NavLink, useNavigate } from "react-router-dom";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { useContext, useState } from "react";
+
 import { AppContext } from "../api/context";
+import LogoComponent from "../components/LogoComponent";
 import { Types } from "../api/reducer";
+import { auth } from "../firebase";
 
 interface IFormInput {
   email: string;
@@ -52,28 +53,12 @@ function SignUpPage() {
         password
       );
 
-      const {
-        displayName,
-        email,
-        emailVerified,
-        phoneNumber,
-        metadata,
-        photoURL,
-        refreshToken,
-      } = userCredentials.user;
+      userCredentials.user;
 
       dispatch({
         type: Types.login,
         payload: {
-          refreshToken,
-          user: {
-            displayName,
-            email,
-            emailVerified,
-            metadata,
-            phoneNumber,
-            photoURL,
-          },
+          ...userCredentials.user,
         },
       });
       navigate("/dashboard", {
@@ -96,28 +81,11 @@ function SignUpPage() {
       setLoading(true);
       const provider = new GoogleAuthProvider();
       const userCredential = await signInWithPopup(auth, provider);
-      const {
-        displayName,
-        email,
-        emailVerified,
-        phoneNumber,
-        metadata,
-        photoURL,
-        refreshToken,
-      } = userCredential.user;
 
       dispatch({
         type: Types.login,
         payload: {
-          refreshToken,
-          user: {
-            displayName,
-            email,
-            emailVerified,
-            metadata,
-            phoneNumber,
-            photoURL,
-          },
+          ...userCredential.user,
         },
       });
       navigate("/dashboard", {

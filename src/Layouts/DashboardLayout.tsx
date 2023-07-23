@@ -33,29 +33,11 @@ function DashboardLayout() {
       if (userCredentials) {
         // User is signed in, see docs for a list of available properties
         // https://firebase.google.com/docs/reference/js/firebase.User
-        const {
-          displayName,
-          email,
-          emailVerified,
-          phoneNumber,
-          metadata,
-          photoURL,
-          refreshToken,
-          uid,
-        } = userCredentials;
+
         dispatch({
           type: Types.login,
           payload: {
-            refreshToken,
-            user: {
-              displayName,
-              email,
-              emailVerified,
-              metadata,
-              phoneNumber,
-              photoURL,
-              uid,
-            },
+            ...userCredentials,
           },
         });
       } else {

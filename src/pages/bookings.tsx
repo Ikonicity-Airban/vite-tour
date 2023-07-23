@@ -64,7 +64,7 @@ const TourForm = () => {
   return (
     <div className="w-full flex items-center justify-center">
       <Card className="w-full max-w-md ">
-        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
+        <Form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
           {tourEntries
             .filter((item) => item[0] !== "userId")
             .map(([key, value]) => (
@@ -84,7 +84,7 @@ const TourForm = () => {
           <Button type="submit" className="btn btn-primary">
             Save tour
           </Button>
-        </form>
+        </Form>
       </Card>
     </div>
   );
