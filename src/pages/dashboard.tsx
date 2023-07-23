@@ -1,12 +1,3 @@
-import {
-  DocumentData,
-  collection,
-  getDocs,
-  query,
-  where,
-} from "firebase/firestore";
-import { useContext, useEffect, useState } from "react";
-
 import { AppContext } from "../api/context";
 import CardComponent from "../components/Card";
 import GoogleMap from "../components/GoogleMap";
@@ -14,31 +5,16 @@ import { Link } from "react-router-dom";
 import LoadingSection from "../components/LoadingSection";
 import Section from "../components/Section";
 import TableComponent from "../components/TableComponent";
-import { Tour } from "../api/@types";
-import { db } from "../firebase";
 import { shuffleArray } from "../api/helper";
+import { useContext } from "react";
+import { useQueryCollection } from "../api/fetchCollections";
 
 function Dashboard() {
   const {
     state: { places, user },
   } = useContext(AppContext);
-  const [bookings, setBookings] = useState<Tour[] | DocumentData>([]);
-
-  useEffect(() => {
-    try {
-      const q = query(
-        collection(db, "bookings"),
-        where("email", "==", user.email)
-      );
-      const fetchCollection = async () => {
-        const querySnapshot = await getDocs(q);
-        setBookings(querySnapshot.docs.map((doc) => doc.data()));
-      };
-      fetchCollection();
-    } catch (error) {
-      alert(error);
-    }
-  }, [user]);
+  const bookings = useQueryCollection("bookings", "userId", user.uid);
+  console.log("🚀 ~ file: dashboard.tsx:17 ~ Dashboard ~ bookings:", bookings);
 
   return (
     <div className="block w-full mx-auto">

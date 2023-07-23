@@ -1,4 +1,4 @@
-import { Button, Card, Rating } from "flowbite-react";
+import { Button, Card, Modal, Rating } from "flowbite-react";
 
 import LoadingSection from "./LoadingSection";
 import { Plan } from "../api/@types";
@@ -53,21 +53,21 @@ const PlanCard: React.FC<{ plan: Plan }> = ({ plan }) => {
 
 export default function PremiumCardList() {
   const plans = useFetchCollection<Plan>("plans");
-  console.log(
-    "🚀 ~ file: PremiumCard.tsx:95 ~ PremiumCardList ~ plans:",
-    plans
-  );
-
   return (
-    <Section title=" check it out" subtitle="Our Amazing Tourist Package Plans">
-      <LoadingSection arrLen={3} />
-      <div className="flex flex-wrap gap-10 justify-center">
-        {plans.map((plan: Plan) => (
-          <PlanCard plan={plan} />
-        ))}
-        {/* <PlanCard plan={premiumPlan} />
-        <PlanCard plan={additionalPlan} /> */}
-      </div>
-    </Section>
+    <div className="w-full">
+      <Section
+        title=" check it out"
+        subtitle="Our Amazing Tourist Package Plans"
+      >
+        <LoadingSection arrLen={3} />
+        <div className="flex flex-wrap gap-10 justify-center">
+          {plans.map((plan: Plan) => (
+            <PlanCard plan={plan} />
+          ))}
+          {/* <PlanCard plan={premiumPlan} />
+          <PlanCard plan={additionalPlan} /> */}
+        </div>
+      </Section>
+    </div>
   );
 }

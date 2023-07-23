@@ -1,4 +1,4 @@
-import { ILoginResponse, IPlaceResponse } from "./@types";
+import { IPlaceResponse, IUserResponse } from "./@types";
 
 type ActionMap<M extends { [index: string]: unknown }> = {
   [Key in keyof M]: M[Key] extends undefined
@@ -20,9 +20,7 @@ export enum Types {
 }
 
 type AuthPayload = {
-  [Types.login]: {
-    [key in keyof ILoginResponse]: ILoginResponse[key];
-  };
+  [Types.login]: IUserResponse;
   [Types.logout]: unknown;
 };
 
@@ -52,7 +50,9 @@ export const authReducer = <S>(
     case Types.login:
       return {
         ...state,
-        ...action.payload,
+        user: {
+          ...action.payload,
+        },
         isLoggedIn: true,
       };
 

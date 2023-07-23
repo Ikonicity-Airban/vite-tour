@@ -26,7 +26,7 @@ function ToursPages() {
   };
 
   function handleClick() {
-    if (next == places.length) {
+    if (next >= places.length) {
       setNext(0);
     } else {
       setNext((prev) => prev + 1);
@@ -66,7 +66,7 @@ function ToursPages() {
                   <div className="h-72 md:h-[80vh] p-6 flex items-center justify-center card">
                     <div className="card__overlay"></div>
                     <DivScrollToView>
-                      <Heading heading={source.name} />
+                      <h1 className="">{source.name}</h1>
                     </DivScrollToView>
                   </div>
                 </Parallax>

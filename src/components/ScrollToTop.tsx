@@ -13,11 +13,12 @@ const ScrollToTopButton: React.FC<Props> = ({ threshold }) => {
     const handleScroll = () => {
       setIsVisible(window.scrollY > threshold);
     };
-    setTimeout(() => {
-      setIsVisible(false);
+    const timerId = setTimeout(() => {
+      setIsVisible(() => false);
     }, 2000);
     window.addEventListener("scroll", handleScroll);
     return () => {
+      clearTimeout(timerId);
       window.removeEventListener("scroll", handleScroll);
     };
   }, [threshold]);

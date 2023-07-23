@@ -30,22 +30,25 @@ function Bookings() {
   );
 }
 
-const defaultTour = {};
+const defaultTour = {
+  description: "",
+  price: 0,
+  rate: "",
+  days: 0,
+  color: "",
+  person: 0,
+};
 
 const TourForm = () => {
   const navigate = useNavigate();
   const { register, handleSubmit } = useForm<Tour>();
 
-  const {
-    state: { places },
-  } = useContext(AppContext);
   const tourEntries = Object.entries(defaultTour);
   const {
     state: { user },
   } = useContext(AppContext);
 
   const onSubmit = async (tour: Tour) => {
-    console.log("🚀 ~ file: bookings.tsx:51 ~ onSubmit ~ Tour:", tour);
     try {
       const docRef = await addDoc(collection(db, "bookings"), {
         ...tour,
@@ -61,7 +64,7 @@ const TourForm = () => {
   return (
     <div className="w-full flex items-center justify-center">
       <Card className="w-full max-w-md ">
-        <Form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
           {tourEntries
             .filter((item) => item[0] !== "userId")
             .map(([key, value]) => (
@@ -70,8 +73,8 @@ const TourForm = () => {
                 <TextInput
                   required
                   id={key}
-                  // defaultValue={value}
-                  style={{ width: "100%" }}
+                  defaultValue={value}
+                  // style={{ width: "100%" }}
                   {...register(key as keyof Tour, {
                     valueAsNumber: key == "price" || key == "duration",
                   })}
@@ -81,7 +84,7 @@ const TourForm = () => {
           <Button type="submit" className="btn btn-primary">
             Save tour
           </Button>
-        </Form>
+        </form>
       </Card>
     </div>
   );

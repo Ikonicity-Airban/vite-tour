@@ -51,11 +51,6 @@ export interface IUserResponse {
   photoURL?: string | null;
   uid: string;
 }
-export interface ILoginResponse {
-  refreshToken: string;
-  user: IUserResponse;
-}
-
 export interface Tour {
   id: string;
   title: string;

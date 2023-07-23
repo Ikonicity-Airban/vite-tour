@@ -7,20 +7,21 @@ import {
   TextInput,
   Toast,
 } from "flowbite-react";
-import LogoComponent from "../components/LogoComponent";
-import { useState } from "react";
-import { useForm, SubmitHandler } from "react-hook-form";
-import { Link, useNavigate } from "react-router-dom";
 import {
   GoogleAuthProvider,
   browserLocalPersistence,
   signInWithEmailAndPassword,
   signInWithPopup,
 } from "firebase/auth";
-import { auth } from "../firebase";
+import { Link, useNavigate } from "react-router-dom";
+import { SubmitHandler, useForm } from "react-hook-form";
+
 import { AppContext } from "../api/context";
-import { useContext } from "react";
+import LogoComponent from "../components/LogoComponent";
 import { Types } from "../api/reducer";
+import { auth } from "../firebase";
+import { useContext } from "react";
+import { useState } from "react";
 
 interface IFormInput {
   email: string;
@@ -47,28 +48,10 @@ function LoginPage() {
         password
       );
 
-      const {
-        displayName,
-        email,
-        emailVerified,
-        phoneNumber,
-        metadata,
-        photoURL,
-        refreshToken,
-      } = userCredentials.user;
-
       dispatch({
         type: Types.login,
         payload: {
-          refreshToken,
-          user: {
-            displayName,
-            email,
-            emailVerified,
-            metadata,
-            phoneNumber,
-            photoURL,
-          },
+          ...userCredentials.user,
         },
       });
       navigate("/dashboard");
@@ -89,28 +72,11 @@ function LoginPage() {
       setLoading(true);
       const provider = new GoogleAuthProvider();
       const userCredential = await signInWithPopup(auth, provider);
-      const {
-        displayName,
-        email,
-        emailVerified,
-        phoneNumber,
-        metadata,
-        photoURL,
-        refreshToken,
-      } = userCredential.user;
 
       dispatch({
         type: Types.login,
         payload: {
-          refreshToken,
-          user: {
-            displayName,
-            email,
-            emailVerified,
-            metadata,
-            phoneNumber,
-            photoURL,
-          },
+          ...userCredential.user,
         },
       });
       navigate("/dashboard");
@@ -125,6 +91,7 @@ function LoginPage() {
       setLoading(false);
     }
   };
+
   //return
   return (
     <section className="grid place-items-center min-h-screen mt-10 mb-20">
