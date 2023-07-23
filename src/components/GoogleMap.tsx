@@ -1,8 +1,10 @@
 import { Button, Card } from "flowbite-react";
 import { ChangeEvent, useState } from "react";
-import Section from "./Section";
-// import { URLSearchParams } from "url";
+
 import { DebounceInput } from "react-debounce-input";
+import Section from "./Section";
+
+// import { URLSearchParams } from "url";
 
 type Props = {
   withSearch?: boolean;
@@ -81,56 +83,58 @@ function GoogleMap({ query = "Enugu", withSearch = true }: Props) {
   };
 
   return (
-    <Section title="google Maps" subtitle={query}>
-      <div className="relative h-full grid">
-        {withSearch && (
-          <div className="relative mb-20">
-            <Card className="h-fit w-full mb-20 absolute z-10">
-              <form onSubmit={handleSubmit} className="flex gap-4">
-                <DebounceInput
-                  required
-                  type="search"
-                  debounceTimeout={500}
-                  value={locate}
-                  className="flex-1 ring-1 border-primary rounded px-4 focus:outline-primary"
-                  onChange={handleChange}
-                />
-                <Button type="submit">Submit</Button>
-              </form>
-              {places && (
-                <ul className="w-full space-y-2">
-                  {places?.map(({ formatted, address_line1 }, i) => (
-                    <li
-                      key={i}
-                      className="h-fit bg-[whitesmoke] p-2 rounded cursor-pointer"
-                      onClick={() => handleClick(address_line1)}
-                    >
-                      <span className="bg-gray-100 text-[11px]">
-                        {formatted}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </Card>
-          </div>
-        )}
-        <Card className="w-full flex mt-12">
-          <div className="mapouter">
-            <div className="gmap_canvas">
-              <iframe
-                className="gmap_iframe"
-                allowFullScreen
-                // height="100%"
-                // width="100%"
-                src={searchQuery}
-              ></iframe>
-              <a href="https://capcuttemplate.org/">Capcuttemplate.org</a>
+    <div className="overflow-x-auto">
+      <Section title="google Maps" subtitle={query}>
+        <div className="relative h-full grid">
+          {withSearch && (
+            <div className="relative mb-20">
+              <Card className="h-fit w-full mb-20 absolute z-10">
+                <form onSubmit={handleSubmit} className="flex gap-4">
+                  <DebounceInput
+                    required
+                    type="search"
+                    debounceTimeout={500}
+                    value={locate}
+                    className="flex-1 ring-1 border-primary rounded px-4 focus:outline-primary"
+                    onChange={handleChange}
+                  />
+                  <Button type="submit">Submit</Button>
+                </form>
+                {places && (
+                  <ul className="w-full space-y-2">
+                    {places?.map(({ formatted, address_line1 }, i) => (
+                      <li
+                        key={i}
+                        className="h-fit bg-[whitesmoke] p-2 rounded cursor-pointer"
+                        onClick={() => handleClick(address_line1)}
+                      >
+                        <span className="bg-gray-100 text-[11px]">
+                          {formatted}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </Card>
             </div>
-          </div>
-        </Card>
-      </div>
-    </Section>
+          )}
+          <Card className="w-full flex mt-12">
+            <div className="mapouter">
+              <div className="gmap_canvas">
+                <iframe
+                  className="gmap_iframe"
+                  allowFullScreen
+                  // height="100%"
+                  // width="100%"
+                  src={searchQuery}
+                ></iframe>
+                <a href="https://capcuttemplate.org/">Capcuttemplate.org</a>
+              </div>
+            </div>
+          </Card>
+        </div>
+      </Section>
+    </div>
   );
 }
 /* <style></style> */
