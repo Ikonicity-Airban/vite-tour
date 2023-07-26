@@ -1,5 +1,5 @@
-import { ReactNode } from "react";
 import Heading from "./Heading";
+import { ReactNode } from "react";
 
 type Props = {
   title?: string;
