@@ -8,7 +8,7 @@ export type IUser = {
   displayName?: strNull;
   photoURL?: strNull;
   phone?: strNull;
-  plan?: Plan | null;
+  plan: Plan | null;
   bookings?: Booking[];
 };
 
