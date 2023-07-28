@@ -1,13 +1,16 @@
-import { useState } from "react";
-import { useLocation } from "react-router-dom";
-import Section from "../components/Section";
-import BreadcrumbComponents from "../components/BreadcrumbComponents";
-import BookNowComponent from "../components/BookNowComponent";
-import GoogleMap from "../components/GoogleMap";
-import { scrollIntoView, truncateString } from "../api/helper";
 import { Button, Card } from "flowbite-react";
+import { scrollIntoView, truncateString } from "../api/helper";
+
+import BookNowComponent from "../components/BookNowComponent";
+import BreadcrumbComponents from "../components/BreadcrumbComponents";
 import DivScrollToView from "../components/Framer.div";
+import { FaHandPointUp } from "react-icons/fa6";
+import GoogleMap from "../components/GoogleMap";
+import { Helmet } from "react-helmet";
 import PremiumCardList from "../components/PremiumCard";
+import Section from "../components/Section";
+import { useLocation } from "react-router-dom";
+import { useState } from "react";
 
 function TourPage() {
   const [mainPhoto, setMainPhoto] = useState(0);
@@ -16,9 +19,13 @@ function TourPage() {
   } = useLocation();
 
   return (
-    <div className="mx-auto md:container mt-20">
+    <div className="mx-auto desktop:container mt-20">
+      <Helmet>
+        <meta name="description" content={truncateString(about, 100)} />
+        <title>ESTC | {name}</title>
+      </Helmet>
       <BreadcrumbComponents />
-      <Section subtitle={name}>
+      <Section subtitle={name} id={name}>
         <Card className="grid gap-4 overflow-hidden">
           <div className="relative card overflow-hidden">
             <div className="card__overlay w-full flex flex-col p-2 items-center rounded-2xl justify-center">
@@ -49,11 +56,10 @@ function TourPage() {
                   src={src}
                   alt=""
                 />
-                {i == mainPhoto && (
-                  <div className="relative bg-[#fff]">
-                    <div className="absolute bottom-[100%] left-[30%] flex flex-col text-2xl text-slate-900 justify-center">
-                      <i className="fa fa-hand-pointer animate-bounce text-center text-2xl"></i>
-
+                {i == mainPhoto + 1 && (
+                  <div className="relative bg-[#fff] hidden md:block">
+                    <div className="absolute bottom-[100%] left-[30%] flex flex-col text-2xl text-white justify-center">
+                      <FaHandPointUp />
                       <span className="font-semibold">Click me!</span>
                     </div>
                   </div>

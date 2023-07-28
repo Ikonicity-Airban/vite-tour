@@ -1,5 +1,7 @@
 import {
   DocumentData,
+  WithFieldValue,
+  addDoc,
   collection,
   getDocs,
   query,
@@ -101,6 +103,14 @@ export function useQueryCollection<T>(
   }, [fetchData]);
 
   return col;
+}
+
+export async function saveToFirestore<T extends WithFieldValue<DocumentData>>(
+  colName: string,
+  data: T
+) {
+  const userRef = collection(db, colName);
+  return await addDoc(userRef, data);
 }
 
 export default useFetchSites;

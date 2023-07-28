@@ -86,6 +86,14 @@ h4 {
   line-height: 1.1;
 }
 
+optgroup {
+  margin-bottom: 10px !important;
+}
+
+html > option {
+  padding: 10px;
+}
+
 /* img {
   /* object-fit: cover;
 } */

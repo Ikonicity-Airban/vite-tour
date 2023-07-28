@@ -1,5 +1,7 @@
-import { Breadcrumb } from "flowbite-react";
 import { Link, useLocation } from "react-router-dom";
+
+import { Breadcrumb } from "flowbite-react";
+import { IoHome } from "react-icons/io5";
 
 export default function BreadcrumbComponents() {
   const location = useLocation();
@@ -12,7 +14,7 @@ export default function BreadcrumbComponents() {
     >
       <Link to="/">
         <Breadcrumb.Item className="text">
-          <i className="fa fa-home px-2 text-primary dark:text-white"></i>
+          <IoHome className="px-2 text-base text-primary   w-full"></IoHome>
           <p className="text-sm font-semibold text-primary">Home</p>
         </Breadcrumb.Item>
       </Link>

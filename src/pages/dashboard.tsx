@@ -1,6 +1,8 @@
 import { AppContext } from "../api/context";
+import { BookNowComponent } from "../components";
 import CardComponent from "../components/Card";
 import GoogleMap from "../components/GoogleMap";
+import { Helmet } from "react-helmet";
 import { Link } from "react-router-dom";
 import LoadingSection from "../components/LoadingSection";
 import Section from "../components/Section";
@@ -14,19 +16,16 @@ function Dashboard() {
     state: { places, user },
   } = useContext(AppContext);
   const bookings = useQueryCollection("bookings", "userId", user.uid);
-  console.log("🚀 ~ file: dashboard.tsx:17 ~ Dashboard ~ bookings:", bookings);
-
   return (
     <div className="block w-full mx-auto">
-      {/* <Helmet>
-        <title>{user.email}</title>
+      <Helmet>
+        <title>Dashboard | {user.email}</title>
       </Helmet>
-       */}
-      <Section title="Your Recent booking">
+
+      <Section title="Your Recent booking" id="">
         <TableComponent data={bookings} />
       </Section>
       <Section id="places" subtitle="Tourism Centers">
-        {/* <GoogleMap query="Enugu" /> */}
         <LoadingSection />
         <div className="grid sm:grid-cols-2 place-items-center md:grid-cols-2 laptop:grid-cols-3 desktop:grid-cols-4 gap-6">
           {shuffleArray(places)
@@ -43,6 +42,9 @@ function Dashboard() {
               </Link>
             ))}
         </div>
+      </Section>
+      <Section subtitle="Start Booking Now" title="We are waiting">
+        <BookNowComponent destination="" places={places} />
       </Section>
       <GoogleMap withSearch={true} />
     </div>

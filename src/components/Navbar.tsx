@@ -1,8 +1,9 @@
 import { Avatar, Navbar } from "flowbite-react";
-import React from "react";
 import { Link, NavLink } from "react-router-dom";
-import LogoComponent from "./LogoComponent";
+
 import { AppContext } from "../api/context";
+import LogoComponent from "./LogoComponent";
+import React from "react";
 
 interface Props {
   links: {
@@ -44,7 +45,7 @@ function NavbarComponent({ links: navLinks }: Props) {
           ))}
         </Navbar.Collapse>
         <Link
-          to="/login"
+          to="/dashboard"
           className="cursor-pointer -my-1 px-4 md:order-3 order-0"
         >
           <Avatar

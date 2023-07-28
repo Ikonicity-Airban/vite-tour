@@ -1,6 +1,7 @@
 import React, { FormEvent, useState } from "react";
-import Fuse from "fuse.js";
+
 import { DebounceInput } from "react-debounce-input";
+import Fuse from "fuse.js";
 
 type ListType = {
   name: string;
@@ -17,12 +18,12 @@ type PropsType = {
   onSearch: (results: ListType[]) => void;
 };
 
-const SearchBar: React.FC<PropsType> = ({
+const SearchBar = ({
   list,
   searchKeys,
   placeholder = "Search",
   onSearch,
-}) => {
+}: PropsType) => {
   const [searchTerm, setSearchTerm] = useState("");
 
   const fuse = new Fuse(list, {
@@ -40,10 +41,6 @@ const SearchBar: React.FC<PropsType> = ({
     } else {
       const searchResults = fuse.search(term).map((result) => result.item);
       onSearch(searchResults);
-      console.log(
-        "🚀 ~ file: SearchBar.tsx:43 ~ handleSearch ~ searchResults:",
-        searchResults
-      );
     }
   };
 

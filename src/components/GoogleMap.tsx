@@ -2,6 +2,7 @@ import { Button, Card } from "flowbite-react";
 import { ChangeEvent, useState } from "react";
 
 import { DebounceInput } from "react-debounce-input";
+import { FaSearch } from "react-icons/fa";
 import Section from "./Section";
 
 // import { URLSearchParams } from "url";
@@ -85,32 +86,33 @@ function GoogleMap({ query = "Enugu", withSearch = true }: Props) {
   return (
     <div className="overflow-x-auto">
       <Section title="google Maps" subtitle={query}>
-        <div className="relative h-full grid">
+        <div className="relative laptop:h-[80vh] grid">
           {withSearch && (
             <div className="relative mb-20">
               <Card className="h-fit w-full mb-20 absolute z-10">
-                <form onSubmit={handleSubmit} className="flex gap-4">
+                <form onSubmit={handleSubmit} className="flex gap-4 relative">
+                  <FaSearch className="absolute top-2 left-2" />
+
                   <DebounceInput
                     required
                     type="search"
+                    placeholder="Search for any location"
                     debounceTimeout={500}
                     value={locate}
-                    className="flex-1 ring-1 border-primary rounded px-4 focus:outline-primary"
+                    className="flex-1 ring-1 border-primary rounded pl-10 focus:outline-primary dark:bg-transparent block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                     onChange={handleChange}
                   />
                   <Button type="submit">Submit</Button>
                 </form>
                 {places && (
-                  <ul className="w-full space-y-2">
+                  <ul className="w-full space-y-2 text-primary">
                     {places?.map(({ formatted, address_line1 }, i) => (
                       <li
                         key={i}
-                        className="h-fit bg-[whitesmoke] p-2 rounded cursor-pointer"
+                        className="h-fit p-2 pl-6 rounded cursor-pointer bg-[#0001]"
                         onClick={() => handleClick(address_line1)}
                       >
-                        <span className="bg-gray-100 text-[11px]">
-                          {formatted}
-                        </span>
+                        <span className="text-[11px]">{formatted}</span>
                       </li>
                     ))}
                   </ul>

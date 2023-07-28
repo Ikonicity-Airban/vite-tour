@@ -1,15 +1,16 @@
 import { DocumentData } from "firebase/firestore";
 
-export interface IUser {
-  name: string;
-  email: string;
-  role: string;
-  _id: string;
-  id: string;
-  createdAt: string;
-  updatedAt: string;
-  __v: number;
-}
+type strNull = string | null;
+
+export type IUser = {
+  email: strNull;
+  uid?: strNull;
+  displayName?: strNull;
+  photoURL?: strNull;
+  phone?: strNull;
+  plan?: Plan | null;
+  bookings?: Booking[];
+};
 
 export interface IService {
   name: string;
@@ -59,14 +60,17 @@ export interface Tour {
   Plan: PackagePlan;
 }
 
-interface Booking {
+export interface Booking {
+  place: string;
   id: string;
   tourId: string;
+  duration: string;
   userId: string;
   date: Date;
   numGuests: number;
+  plan?: Plan["title"] | null;
 }
-interface PackagePlan {
+export interface PackagePlan {
   id: string;
   name: string;
   description: string;

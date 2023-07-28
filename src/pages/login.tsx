@@ -3,7 +3,6 @@ import {
   Card,
   Checkbox,
   Label,
-  Spinner,
   TextInput,
   Toast,
 } from "flowbite-react";
@@ -33,6 +32,7 @@ function LoginPage() {
   const [loading, setLoading] = useState(false);
   const { dispatch } = useContext(AppContext);
   const [errMsg, setErrMsg] = useState("");
+  const [showPass, setShowPass] = useState(true);
 
   const navigate = useNavigate();
   const onSubmit: SubmitHandler<IFormInput> = async ({
@@ -131,15 +131,15 @@ function LoginPage() {
             <TextInput
               id="password1"
               required
-              type="password"
+              type={showPass ? "password" : "text"}
               {...register("password")}
               // placeholder="help"
             />
           </div>
           <div className="flex items-center gap-2">
-            <Checkbox id="remember" />
-            <Label htmlFor="remember" className="cursor-pointer">
-              Remember me
+            <Checkbox id="showPass" onChange={() => setShowPass(!showPass)} />
+            <Label htmlFor="showPass" className="cursor-pointer">
+              Show Password
             </Label>
           </div>
           <div className="flex items-center gap-2 text-xs">
@@ -154,22 +154,20 @@ function LoginPage() {
 
           <Button
             disabled={loading}
+            isProcessing={loading}
             gradientDuoTone={"greenToBlue"}
             className="w-full"
             type="submit"
           >
-            {loading ? (
-              <center>
-                <Spinner></Spinner>
-              </center>
-            ) : (
-              "Submit"
-            )}
+            Submit
           </Button>
         </form>
-        <button
+        <Button
+          outline
+          color="success"
           disabled={loading}
-          className="w-full flex items-center space-x-3 justify-center rounded-lg p-3 text-sm my-4 border-[1px] border-slate-200"
+          isProcessing={loading}
+          className="w-full flex items-center space-x-3 justify-center rounded-lg text-sm my-4 border-[1px] border-slate-200"
           type="button"
           onClick={googleSignIn}
         >
@@ -177,7 +175,7 @@ function LoginPage() {
             <img src="google.svg" alt="logo" className="object-contain" />
           </span>
           Sign in with google
-        </button>
+        </Button>
       </Card>
     </section>
   );

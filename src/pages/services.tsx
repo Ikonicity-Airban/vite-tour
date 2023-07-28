@@ -1,10 +1,10 @@
-import Section from "../components/Section";
-import LoadingSection from "../components/LoadingSection";
-import BreadcrumbComponents from "../components/BreadcrumbComponents";
-import { useFetchCollection } from "../api/fetchCollections";
-import { IService } from "../api/@types";
 import { Accordion } from "flowbite-react";
+import BreadcrumbComponents from "../components/BreadcrumbComponents";
+import { IService } from "../api/@types";
+import LoadingSection from "../components/LoadingSection";
 import PremiumCardList from "../components/PremiumCard";
+import Section from "../components/Section";
+import { useFetchCollection } from "../api/fetchCollections";
 
 function ServicesPage() {
   const services = useFetchCollection<IService>("services");
@@ -12,10 +12,10 @@ function ServicesPage() {
   return (
     <div className="md:mt-20 p-1">
       <BreadcrumbComponents />
-      <LoadingSection />
+      <LoadingSection arrLen={4} />
       <PremiumCardList />
       <Section id="our-services" subtitle="All our services">
-        <LoadingSection />
+        <LoadingSection arrLen={4} />
         {services?.length ? (
           <div className="grid grid-cols-1 text-center w-full justify-center">
             <Accordion collapseAll className="w-full">
@@ -42,8 +42,10 @@ function ServicesPage() {
             </Accordion>
           </div>
         ) : (
-          <div className="flex items-center justify-center rounded outline-dashed dark:outline-slate-400 outline-1 outline-[#c5c5c5] shadow-none h-[10rem] mt-10 ">
-            <h4 className="w-full text-center">No Services Available</h4>
+          <div className="flex items-center justify-center rounded outline-dashed w-full max-w-2xl dark:outline-slate-400 outline-1 outline-[#c5c5c5] shadow-none h-[10rem] mt-10 ">
+            <h4 className="w-full text-sm md:text-lg text-center">
+              No Services Available
+            </h4>
           </div>
         )}
       </Section>

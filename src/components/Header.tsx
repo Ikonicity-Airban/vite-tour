@@ -1,29 +1,39 @@
+import {
+  FaEnvelope,
+  FaFacebookF,
+  FaInstagram,
+  FaLinkedinIn,
+  FaPhone,
+  FaTwitter,
+  FaYoutube,
+} from "react-icons/fa6";
+
 import NavbarComponent from "./Navbar";
 
 const topBarLinks = [
   {
     id: 1,
-    icon: "fab fa-facebook-f",
+    Icon: FaFacebookF,
     link: "https://m.facebook.com",
   },
   {
     id: 2,
-    icon: "fab fa-linkedin-in",
+    Icon: FaLinkedinIn,
     link: "https://linkedin.com/in/ikonicityairban",
   },
   {
     id: 3,
-    icon: "fab fa-instagram",
+    Icon: FaInstagram,
     link: "https://instagram.com",
   },
   {
     id: 4,
-    icon: "fab fa-twitter",
+    Icon: FaTwitter,
     link: "https://twitter.com",
   },
   {
     id: 5,
-    icon: "fab fa-youtube",
+    Icon: FaYoutube,
     link: "https://youtube.com",
   },
 ];
@@ -53,26 +63,24 @@ function Header() {
       <div className="hidden md:flex w-full p-4 z-20">
         <div className="flex w-full md:container max-w-screen-desktop mx-auto justify-between p-4 pb-10">
           <div className="text-center text-lg-left mb-2 mb-lg-0">
-            <div className="inline-flex items-center">
-              <p>
-                <i className="fa fa-envelope mr-2"></i>info@estb.com
-              </p>
+            <div className="inline-flex items-center space-x-3">
+              <FaEnvelope />
+              <p>info@estb.com</p>
               <p className="text-body px-3">|</p>
-              <p>
-                <i className="fa fa-phone-alt mr-2"></i>+234 0816 986 2852
-              </p>
+              <FaPhone />
+              <p>+234 0816 986 2852</p>
             </div>
           </div>
           <div className="text-center">
             <div className="flex align-items-center gap-2">
-              {topBarLinks.map(({ link, icon, id }) => (
+              {topBarLinks.map(({ link, Icon, id }) => (
                 <a
                   href={link}
                   target="_blank"
                   key={id}
                   className="p-2 icon-button hover:text-white dark:hover:text-slate-800 hover:bg-primary transition-all rounded"
                 >
-                  <i className={icon}></i>
+                  <Icon />
                 </a>
               ))}
             </div>

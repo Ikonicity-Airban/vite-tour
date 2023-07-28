@@ -1,9 +1,9 @@
 import { motion, useInView } from "framer-motion";
-import { useEffect, useRef, useState } from "react";
 
 import { Card } from "flowbite-react";
 import { IService } from "../api/@types";
 import { truncateString } from "../api/helper";
+import { useRef } from "react";
 
 type Props = {
   position: number;
@@ -11,23 +11,16 @@ type Props = {
 };
 
 const ServicesCard = ({ position, detail: { name, desc, icon } }: Props) => {
-  const [hasPlayed, setHasPlayed] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref);
-
-  useEffect(() => {
-    if (!hasPlayed) {
-      setHasPlayed(true);
-    }
-  }, [hasPlayed]);
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{
-        opacity: inView || hasPlayed ? 1 : 0,
-        y: inView || hasPlayed ? 0 : 20,
-        x: inView || hasPlayed ? 0 : 20 * position,
+        opacity: inView ? 1 : 0,
+        y: inView ? 0 : 20,
+        x: inView ? 0 : 20 * position,
       }}
       transition={{ duration: 1 }}
       ref={ref}

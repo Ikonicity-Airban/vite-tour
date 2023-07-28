@@ -58,7 +58,7 @@ function DashboardLayout() {
 
   if (isLoggedIn)
     return (
-      <div className="w-full relative tablet:px-4">
+      <main className="w-full relative tablet:px-4 dark:bg-slate-900">
         <Navbar
           className="w-full py-6 px-4 fixed top-0 left-0 z-[999]"
           border
@@ -66,7 +66,7 @@ function DashboardLayout() {
           rounded
         >
           <Navbar.Brand>
-            <Navbar.Toggle className="mr-3" />
+            {/* <Navbar.Toggle className="mr-3" /> */}
             <LogoComponent />
           </Navbar.Brand>
           <div className="flex md:order-2">
@@ -97,7 +97,12 @@ function DashboardLayout() {
               </Dropdown.Item>
               <Dropdown.Item>
                 <Link className="text-sm" to="profile">
-                  profile
+                  Bookings
+                </Link>
+              </Dropdown.Item>
+              <Dropdown.Item>
+                <Link className="text-sm" to="profile">
+                  Profile
                 </Link>
               </Dropdown.Item>
               <Dropdown.Divider />
@@ -112,7 +117,7 @@ function DashboardLayout() {
             </Dropdown>
           </div>
         </Navbar>
-        <div className="mt-24">
+        <div className="mt-20 pt-10">
           <BreadcrumbComponents />
         </div>
         <section className=" tablet:px-6 min-h-[70vh]">
@@ -121,7 +126,7 @@ function DashboardLayout() {
 
         {/* <Drawer /> */}
         <FooterComponent />
-      </div>
+      </main>
     );
   else return null;
 }

@@ -1,14 +1,16 @@
 .card__overlay {
   position: absolute;
   inset: 0;
+  height: 50%;
   background-color: rgba(2, 21, 36, 0.822);
   backdrop-filter: blur(2px);
-  transform: translateY(100%);
-  transition: all 500ms ease;
+  transform: translateY(200%);
+  transition: all 250ms ease-out;
+  transition-delay: 250ms;
 }
 
 .card:hover .card__overlay {
-  transform: translateY(0);
+  transform: translateY(100%);
 }
 
 .link-button {

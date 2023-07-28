@@ -1,19 +1,21 @@
+import {
+  BookNowComponent,
+  BreadcrumbComponents,
+  CarouselComponent,
+  GridInViewAnimation,
+  Hr,
+  LoadingSection,
+  PremiumCardList,
+  SearchBar,
+  Section,
+  ServicesCard,
+} from "../components";
 import { IPlace, IService } from "../api/@types";
 import { useContext, useState } from "react";
 
 import { AppContext } from "../api/context";
-import BookNowComponent from "../components/BookNowComponent";
-import BreadcrumbComponents from "../components/BreadcrumbComponents";
 import { Button } from "flowbite-react";
-import CarouselComponent from "../components/Carousel";
-import GridInViewAnimation from "../components/Framer.Section";
-import Hr from "../components/HR";
 import { Link } from "react-router-dom";
-import LoadingSection from "../components/LoadingSection";
-import PremiumCardList from "../components/PremiumCard";
-import SearchBar from "../components/SearchBar";
-import Section from "../components/Section";
-import ServicesCard from "../components/ServicesCard";
 import { shuffleArray } from "../api/helper";
 import { useFetchCollection } from "../api/fetchCollections";
 
@@ -56,13 +58,13 @@ function HomePage() {
           )}
 
           <Link to="/tours">
-            <div className="w-full flex justify-center animate-bounce my-4">
+            <div className="w-full animate-bounce my-4">
               <Button
                 // outline
-                className="w-full md:w-3/5"
+                className="w-full text-center"
                 gradientDuoTone="greenToBlue"
               >
-                Browse our full catalogue here{" "}
+                Browse our full catalogue here
                 <i className="fa fa-arrow-right ml-10"></i>
               </Button>
             </div>

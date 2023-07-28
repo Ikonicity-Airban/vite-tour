@@ -1,5 +1,6 @@
 import { Button, Card } from "flowbite-react";
-import { generateRandomNum, shuffleArray } from "../api/helper";
+import { FaArrowDown, FaArrowUp } from "react-icons/fa";
+import { generateRandomNum, scrollIntoView, shuffleArray } from "../api/helper";
 import { useContext, useState } from "react";
 
 import { AppContext } from "../api/context";
@@ -7,6 +8,7 @@ import BreadcrumbComponents from "../components/BreadcrumbComponents";
 import CardComponent from "../components/Card";
 import DivScrollToView from "../components/Framer.div";
 import Heading from "../components/Heading";
+import { Helmet } from "react-helmet";
 import { IPlace } from "../api/@types";
 import { Link } from "react-router-dom";
 import LoadingSection from "../components/LoadingSection";
@@ -25,15 +27,29 @@ function ToursPages() {
     setSearchResults(results);
   };
 
-  function handleClick() {
-    if (next >= places.length) {
+  function handleClick(dir: "next" | "prev") {
+    if (next >= (searchResults ?? places).length - 1) {
       setNext(0);
+      return;
+    } else if (next < 0) {
+      setNext((searchResults ?? places).length - 1);
+      return;
     } else {
-      setNext((prev) => prev + 1);
+      if (dir == "next") {
+        setNext((prev) => prev + 1);
+      } else if (dir == "prev") {
+        setNext((prev) => prev - 1);
+      }
     }
+
+    scrollIntoView("Section" + next);
   }
+
   return (
     <div className="md:mt-20 space-y-10 p-4">
+      <Helmet>
+        <title>ESTC | Tours</title>
+      </Helmet>
       <BreadcrumbComponents />
       <SearchBar
         list={places}
@@ -46,17 +62,31 @@ function ToursPages() {
       <div className="mx-auto">
         <LoadingSection arrLen={9} />
       </div>
-      <Button
-        className="animate-bounce fixed bottom-8 z-50"
-        onClick={handleClick}
-      >
-        <a href={`#${next}`}>Scroll to Next</a>
-      </Button>
+      <div>
+        <Button
+          pill
+          gradientDuoTone="greenToBlue"
+          className="fixed bottom-8 left-20 laptop:left-[40%] z-50 bg-[#333366]"
+          onClick={() => handleClick("prev")}
+        >
+          Prev
+          <FaArrowUp className="ml-4" />
+        </Button>
+        <Button
+          pill
+          gradientDuoTone="greenToBlue"
+          className="fixed bottom-8 right-20 laptop:right-[40%] z-50 "
+          onClick={() => handleClick("next")}
+        >
+          <FaArrowDown className="mr-4" />
+          Next
+        </Button>
+      </div>
       {places.length ? (
         (searchResults ?? shuffleArray(places)).map((source, i) => {
           return (
             <div className="scroll-section" key={source.name}>
-              <Section id={`${i}`}>
+              <Section id={`Section${i}`}>
                 <Parallax
                   bgImage={source.images[0]}
                   blur={5}
@@ -64,9 +94,23 @@ function ToursPages() {
                   className="rounded-xl"
                 >
                   <div className="h-72 md:h-[80vh] p-6 flex items-center justify-center card">
-                    <div className="card__overlay"></div>
+                    <div className="card__overlay">
+                      <Button
+                        pill
+                        size="xs"
+                        gradientDuoTone="greenToBlue"
+                        className="fixed bottom-8 right-[42%] z-50 "
+                        onClick={() => handleClick("next")}
+                      >
+                        Next
+                        <FaArrowDown className="ml-4" />
+                      </Button>
+                    </div>
                     <DivScrollToView>
-                      <h1 className="">{source.name}</h1>
+                      <Heading
+                        section_title={source.name}
+                        heading={source.name}
+                      ></Heading>
                     </DivScrollToView>
                   </div>
                 </Parallax>
@@ -94,31 +138,30 @@ function ToursPages() {
           );
         })
       ) : (
-        <div className="flex items-center justify-center border-[1px] min-h-[10rem] p-6 border-gray-500 border-dashed ">
-          <h3 className="text-primary">Sorry, No result matches your search</h3>
+        <div className="flex items-center justify-center border-[1px] min-h-[10rem] w-full md:mx-auto md:max-w-2xl p-6 border-gray-200  border-dashed ">
+          <h3 className="text-primary text-sm md:text-xl">
+            Sorry, No result matches your search
+          </h3>
         </div>
       )}
       <Section subtitle="Suggestions" title="">
         <div className="grid-card gap-4 place-items-center">
-          {places.length
-            ? shuffleArray(places)
-                .splice(0, 6)
-                .map((source) => (
-                  <div className="" key={source.name}>
-                    <Link to={source.name.split(" ").join("-")} state={source}>
-                      <CardComponent
-                        source={{
-                          ...source,
-                          source:
-                            source.images[
-                              generateRandomNum(source.images.length)
-                            ],
-                        }}
-                      />
-                    </Link>
-                  </div>
-                ))
-            : null}
+          <LoadingSection />
+          {shuffleArray(places)
+            .splice(0, 6)
+            .map((source) => (
+              <div className="" key={source.name}>
+                <Link to={source.name.split(" ").join("-")} state={source}>
+                  <CardComponent
+                    source={{
+                      ...source,
+                      source:
+                        source.images[generateRandomNum(source.images.length)],
+                    }}
+                  />
+                </Link>
+              </div>
+            ))}
         </div>
       </Section>
     </div>

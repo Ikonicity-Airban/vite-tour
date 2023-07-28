@@ -1,10 +1,10 @@
-import { useContext } from "react";
-import { Outlet } from "react-router-dom";
-import Header from "../components/Header";
-import FooterComponent from "../components/Footer";
-import useFetchSites from "../api/fetchCollections";
 import { AppContext } from "../api/context";
+import FooterComponent from "../components/Footer";
+import Header from "../components/Header";
 import LogoComponent from "../components/LogoComponent";
+import { Outlet } from "react-router-dom";
+import { useContext } from "react";
+import useFetchSites from "../api/fetchCollections";
 
 function MainLayout() {
   const {
@@ -26,7 +26,10 @@ function MainLayout() {
       )}
       <div className="bg-gradient-to-b from-blue-50 to-transparent dark:from-blue-950 w-full h-full absolute top-0 left-0 -z-[]"></div>
       <Header />
-      <div className="relative min-h-[80vh]">
+      <div
+        className="relative min-h-[80vh]"
+        data-testid="flowbite-navbar-toggle"
+      >
         <Outlet></Outlet>
       </div>
       <FooterComponent />

@@ -1,5 +1,7 @@
 import { Button, Carousel } from "flowbite-react";
+
 import { ReactNode } from "react";
+
 interface ICCProps {
   title?: string;
   subtitle?: string;
@@ -20,7 +22,7 @@ const CarouselItem = ({
         <h4 className="text-white text-base font-bold mb-3 uppercase tablet:text-3xl">
           {title}
         </h4>
-        <h1 className="text-white text-3xl laptop:text-7xl font-bold md:mb-4">
+        <h1 className="text-white text-[2.25em] sm:text-5xl laptop:text-7xl font-bold md:mb-4">
           {subtitle}
         </h1>
         <a
@@ -28,7 +30,7 @@ const CarouselItem = ({
           className="btn btn-primary mx-auto py-md-3 px-md-5 mt-2"
         >
           {button ?? (
-            <Button size="xl" gradientDuoTone="greenToBlue">
+            <Button size="sm" gradientDuoTone="greenToBlue">
               Explore Now
             </Button>
           )}

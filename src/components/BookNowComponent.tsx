@@ -1,7 +1,9 @@
 import { Button, Card } from "flowbite-react";
-import LogoComponent from "./LogoComponent";
 import { SubmitHandler, useForm } from "react-hook-form";
+
+import { FaMapLocation } from "react-icons/fa6";
 import { IPlace } from "../api/@types";
+import LogoComponent from "./LogoComponent";
 import { useNavigate } from "react-router-dom";
 
 interface IProps {
@@ -18,12 +20,8 @@ function BookNowComponent({ destination, places }: IProps) {
 
   const navigate = useNavigate();
   const onSubmit: SubmitHandler<IForm> = (data) => {
-    console.log(
-      "🚀 ~ file: BookNowComponent.tsx:19 ~ BookNowComponent ~ data:",
-      data
-    );
     navigate("/book", {
-      state: places?.find((place) => place.name == destination),
+      state: places?.find((place) => place.name == data.destination),
     });
   };
   return (
@@ -36,25 +34,25 @@ function BookNowComponent({ destination, places }: IProps) {
           <LogoComponent />
         </div>
         <div className="w-full space-y-3 relative">
-          <i className="fa fa-location absolute bottom-[25%] left-3 z-10"></i>
+          <FaMapLocation className="absolute bottom-[25%] left-3 z-10" />
           {
             <select
               required
               defaultValue={destination}
-              className="w-full space-y-2 block  p-3 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-white focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              className="w-full space-y-2 block outline-none p-3 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-white focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               {...register("destination")}
             >
-              <option value={destination}>
+              <option value={destination} className="text-gray-500" disabled>
                 {destination || "Choose your Destination"}
               </option>
               {places?.map(({ name }, i) => (
                 <option
                   key={i}
                   value={name}
-                  className="h-fit grid p-2 rounded cursor-pointer bg-gray-200 hover:bg-gray-300"
+                  className="h-fit grid p-6 rounded cursor-pointer"
                   // onClick={() => handleClick(name)}
                 >
-                  {name}
+                  <div className="p-6">{name}</div>
                 </option>
               ))}
             </select>
