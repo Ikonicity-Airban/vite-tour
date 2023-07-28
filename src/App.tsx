@@ -7,7 +7,7 @@ import { Toaster } from "react-hot-toast";
 
 function App() {
   return (
-    <section className="3xl:container mx-auto w-full scroll-section">
+    <section className="3xl:container dark:bg-slate-800 mx-auto w-full scroll-section">
       <Toaster />
       <NetworkStatusIndicator />
       <Outlet />

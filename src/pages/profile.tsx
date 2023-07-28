@@ -1,6 +1,7 @@
 import { Avatar, Checkbox, Label, TextInput } from "flowbite-react";
 
 import { AppContext } from "../api/context";
+import { IUser } from "../api/@types";
 import { PlanCard } from "../components/PremiumCard";
 import React from "react";
 import Section from "../components/Section";
@@ -11,7 +12,12 @@ function ProfilePage() {
     state: { user: userDetails },
   } = React.useContext(AppContext);
 
-  const userInfo = useQueryCollection("users", "userId", userDetails.email);
+  const userInfo = useQueryCollection<IUser>(
+    "users",
+    "userId",
+    userDetails.email
+  ) as IUser;
+
   const ProfileForm = () => (
     <div className="mx-auto max-w-xl w-full min-w-[280px] space-y-3">
       <Avatar
@@ -72,7 +78,7 @@ function ProfilePage() {
         <ProfileForm />
       </Section>
       <Section title="Current Plan">
-        <PlanCard plan={{}} />
+        {userInfo.plan ? <PlanCard plan={userInfo?.plan} /> : null}
       </Section>
     </div>
   );

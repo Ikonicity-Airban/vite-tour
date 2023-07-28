@@ -13,7 +13,7 @@ function MainLayout() {
   useFetchSites();
 
   return (
-    <section className="tablet:px-6 dark:bg-slate-900 mx-auto">
+    <section className="tablet:px-6 mx-auto">
       {isLoading && (
         <div
           className="bg-[#000022d5]

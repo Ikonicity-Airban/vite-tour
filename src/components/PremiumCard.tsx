@@ -1,5 +1,5 @@
 import { Button, Card, Rating } from "flowbite-react";
-import { FaClock, FaNairaSign, FaUsers } from "react-icons/fa6";
+import { FaCheck, FaClock, FaNairaSign, FaUsers } from "react-icons/fa6";
 import { IUser, Plan } from "../api/@types";
 
 import LoadingSection from "./LoadingSection";
@@ -54,7 +54,14 @@ export const PlanCard: React.FC<{ plan: Plan; user?: IUser }> = ({
           </li>
         </ul>
         <Button outline pill disabled={alreadySubscribed}>
-          {alreadySubscribed ? "already" : "Book Now"}
+          {alreadySubscribed ? (
+            <>
+              <FaCheck color="green" size={20} className="mr-4" />
+              Already Paid
+            </>
+          ) : (
+            "Choose Now"
+          )}
         </Button>
       </div>
     </Card>

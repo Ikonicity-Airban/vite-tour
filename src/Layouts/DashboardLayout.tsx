@@ -6,6 +6,7 @@ import BreadcrumbComponents from "../components/BreadcrumbComponents";
 import FooterComponent from "../components/Footer";
 import LogoComponent from "../components/LogoComponent";
 import React from "react";
+import ThemeToggler from "../components/ToggleTheme";
 import { Types } from "../api/reducer";
 import { auth } from "../firebase";
 import { onAuthStateChanged } from "firebase/auth";
@@ -21,6 +22,67 @@ function DashboardLayout() {
   const navigate = useNavigate();
 
   // fetching places
+
+  const UserNavbar = () => (
+    <Navbar
+      className="w-full py-6 px-4 fixed top-0 left-0 z-[999]"
+      border
+      fluid
+      rounded
+    >
+      <Navbar.Brand>
+        <LogoComponent />
+      </Navbar.Brand>
+      <div className="flex md:order-2 space-x-10">
+        <ThemeToggler />
+        <Dropdown
+          arrowIcon={false}
+          inline
+          label={
+            <Avatar
+              alt="User settings"
+              img={user?.photoURL || ""}
+              rounded
+              placeholderInitials={
+                user?.photoURL || user?.email?.slice(0, 2).toUpperCase()
+              }
+            />
+          }
+        >
+          <Dropdown.Header>
+            <span className="block text-sm">{user?.displayName}</span>
+            <span className="block truncate text-sm font-medium">
+              {user?.email}
+            </span>
+          </Dropdown.Header>
+          <Dropdown.Item>
+            <Link className="text-sm" to="/dashboard">
+              Dashboard
+            </Link>
+          </Dropdown.Item>
+          <Dropdown.Item>
+            <Link className="text-sm" to="profile">
+              Bookings
+            </Link>
+          </Dropdown.Item>
+          <Dropdown.Item>
+            <Link className="text-sm" to="profile">
+              Profile
+            </Link>
+          </Dropdown.Item>
+          <Dropdown.Divider />
+          <Dropdown.Item
+            onClick={() => {
+              dispatch({ type: Types.logout, payload: null });
+              auth.signOut();
+            }}
+          >
+            Sign out
+          </Dropdown.Item>
+        </Dropdown>
+      </div>
+    </Navbar>
+  );
 
   useFetchSites();
   //useEffect
@@ -58,65 +120,8 @@ function DashboardLayout() {
 
   if (isLoggedIn)
     return (
-      <main className="w-full relative tablet:px-4 dark:bg-slate-900">
-        <Navbar
-          className="w-full py-6 px-4 fixed top-0 left-0 z-[999]"
-          border
-          fluid
-          rounded
-        >
-          <Navbar.Brand>
-            {/* <Navbar.Toggle className="mr-3" /> */}
-            <LogoComponent />
-          </Navbar.Brand>
-          <div className="flex md:order-2">
-            <Dropdown
-              arrowIcon={false}
-              inline
-              label={
-                <Avatar
-                  alt="User settings"
-                  img={user?.photoURL || ""}
-                  rounded
-                  placeholderInitials={
-                    user?.photoURL || user?.email?.slice(0, 2).toUpperCase()
-                  }
-                />
-              }
-            >
-              <Dropdown.Header>
-                <span className="block text-sm">{user?.displayName}</span>
-                <span className="block truncate text-sm font-medium">
-                  {user?.email}
-                </span>
-              </Dropdown.Header>
-              <Dropdown.Item>
-                <Link className="text-sm" to="/dashboard">
-                  Dashboard
-                </Link>
-              </Dropdown.Item>
-              <Dropdown.Item>
-                <Link className="text-sm" to="profile">
-                  Bookings
-                </Link>
-              </Dropdown.Item>
-              <Dropdown.Item>
-                <Link className="text-sm" to="profile">
-                  Profile
-                </Link>
-              </Dropdown.Item>
-              <Dropdown.Divider />
-              <Dropdown.Item
-                onClick={() => {
-                  dispatch({ type: Types.logout, payload: null });
-                  auth.signOut();
-                }}
-              >
-                Sign out
-              </Dropdown.Item>
-            </Dropdown>
-          </div>
-        </Navbar>
+      <main className="w-full relative tablet:px-4">
+        <UserNavbar />
         <div className="mt-20 pt-10">
           <BreadcrumbComponents />
         </div>

@@ -29,8 +29,8 @@ const ServicesCard = ({ position, detail: { name, desc, icon } }: Props) => {
       } flex flex-col tablet:flex-row items-center w-full my-10`}
     >
       <Card
-        className={`-mb-14 rounded-2xl overflow-hidden 
-         h-40 w-40  tablet:hidden z-10 flex items-center justify-center`}
+        className="-mb-14 rounded-2xl overflow-hidden bg-green-200
+         h-40 w-40 tablet:hidden z-10 flex items-center justify-center"
       >
         <img
           src={icon || "vite.svg"}
