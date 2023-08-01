@@ -3,7 +3,6 @@ import { SubmitHandler, useForm } from "react-hook-form";
 
 import { AppContext } from "../api/context";
 import { FaMapLocation } from "react-icons/fa6";
-import { IPlace } from "../api/@types";
 import LogoComponent from "./LogoComponent";
 import { useContext } from "react";
 import { useNavigate } from "react-router-dom";

@@ -234,7 +234,7 @@ export default function AdminDashdboard() {
 
   return (
     <Section title="Tours Plans" subtitle="">
-      {/* <TourPlanList /> */}
+      <TourPlanList />
       <Button onClick={() => props.setOpenModal("form-elements")}>
         Toggle modal
       </Button>

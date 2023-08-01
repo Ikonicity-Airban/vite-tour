@@ -1,4 +1,4 @@
-import { Booking, IUser, Tour } from "../api/@types";
+import { Booking, IUser } from "../api/@types";
 
 import { DocumentData } from "firebase/firestore";
 import { MaterialReactTable } from "material-react-table";

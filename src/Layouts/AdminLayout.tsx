@@ -32,7 +32,10 @@ function AdminDashboardLayout() {
       payload: true,
     });
     onAuthStateChanged(auth, (userCredentials) => {
-      if (userCredentials && userCredentials.email !== "sylva.iyke.si@gmail.com") {
+      if (
+        userCredentials &&
+        userCredentials.email !== "sylva.iyke.si@gmail.com"
+      ) {
         dispatch({
           type: Types.login,
           payload: {
@@ -45,7 +48,7 @@ function AdminDashboardLayout() {
           payload: {},
         });
 
-        navigate("/login");
+        navigate("admin/login");
         console.log("user is logged out");
       }
       dispatch({
