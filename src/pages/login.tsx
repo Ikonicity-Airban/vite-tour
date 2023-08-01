@@ -14,11 +14,12 @@ import {
 } from "firebase/auth";
 import { Link, useNavigate } from "react-router-dom";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { auth, db } from "../firebase";
+import { doc, setDoc } from "firebase/firestore";
 
 import { AppContext } from "../api/context";
 import LogoComponent from "../components/LogoComponent";
 import { Types } from "../api/reducer";
-import { auth } from "../firebase";
 import { useContext } from "react";
 import { useState } from "react";
 
@@ -71,12 +72,32 @@ function LoginPage() {
     try {
       setLoading(true);
       const provider = new GoogleAuthProvider();
-      const userCredential = await signInWithPopup(auth, provider);
+      const { user } = await signInWithPopup(auth, provider);
 
+      const usersRef = doc(db, "users", user.uid);
+
+      const userData = {
+        displayName: user.displayName,
+        email: user.email,
+        bookings: [],
+        plan: null,
+        role: "user",
+        photoURL: user.photoURL,
+        phone: user.phoneNumber,
+      };
+
+      // Use setDoc() with merge option to avoid overwriting existing data
+      await setDoc(usersRef, userData, { merge: true });
       dispatch({
         type: Types.login,
         payload: {
-          ...userCredential.user,
+          ...user,
+        },
+      });
+      dispatch({
+        type: Types.login,
+        payload: {
+          ...user,
         },
       });
       navigate("/dashboard");
