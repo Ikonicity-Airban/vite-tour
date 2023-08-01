@@ -5,7 +5,6 @@ import {
   arrayUnion,
   collection,
   doc,
-  setDoc,
   updateDoc,
 } from "firebase/firestore";
 import { useContext, useMemo, useState } from "react";
