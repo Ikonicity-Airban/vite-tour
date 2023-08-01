@@ -49,7 +49,6 @@ const TourPlanTable = ({ data }: Props) => {
 export default TourPlanTable;
 
 import { type MRT_ColumnDef } from "material-react-table";
-import Bookings from "../pages/bookings";
 import { truncateString } from "../api/helper";
 // If using TypeScript (optional, but recommended)
 
@@ -76,10 +75,6 @@ const userColumns: MRT_ColumnDef<IUser>[] = [
   {
     header: "Email",
     accessorKey: "email",
-  },
-  {
-    header: "Phone",
-    accessorKey: "phone",
   },
   {
     header: "Phone",

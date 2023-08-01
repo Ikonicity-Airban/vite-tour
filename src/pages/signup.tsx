@@ -69,6 +69,7 @@ function SignUpPage() {
         email: user.email ?? "",
         bookings: [],
         plan: null,
+        photoURL: user.photoURL,
         phone: user.phoneNumber,
       });
 
@@ -108,6 +109,7 @@ function SignUpPage() {
         email: user.email,
         bookings: [],
         plan: null,
+        photoURL: user.photoURL,
         phone: user.phoneNumber,
       };
 
