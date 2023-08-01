@@ -64,7 +64,7 @@ function SignUpPage() {
 
       await updateProfile(user, { displayName: name });
 
-      await saveToFirestore<IUser>("users", {
+      await saveToFirestore<IUser & { role: string }>("users", {
         displayName: user.displayName,
         email: user.email ?? "",
         bookings: [],
