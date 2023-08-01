@@ -3,7 +3,7 @@ import { DocumentData } from "firebase/firestore";
 type strNull = string | null;
 
 export type IUser = {
-  email: strNull;
+  email: string;
   uid?: strNull;
   displayName?: strNull;
   photoURL?: strNull;
@@ -66,8 +66,8 @@ export interface Booking {
   tourId: string;
   duration: string;
   userId: string;
-  date: Date;
-  numGuests: number;
+  date: string;
+  numGuests: string;
   plan?: Plan["title"] | null;
 }
 export interface PackagePlan {

@@ -1,9 +1,10 @@
 import { Avatar, Dropdown, Navbar } from "flowbite-react";
-import { Link, Outlet, useNavigate } from "react-router-dom";
+import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 
 import { AppContext } from "../api/context";
 import BreadcrumbComponents from "../components/BreadcrumbComponents";
 import FooterComponent from "../components/Footer";
+import { Helmet } from "react-helmet";
 import LogoComponent from "../components/LogoComponent";
 import React from "react";
 import { Types } from "../api/reducer";
@@ -19,10 +20,11 @@ function AdminDashboardLayout() {
     state: { isLoggedIn, user },
   } = React.useContext(AppContext);
   const navigate = useNavigate();
+  const path = useLocation().pathname;
 
   // fetching places
-
   useFetchSites();
+
   //useEffect
   React.useLayoutEffect(() => {
     dispatch({
@@ -30,7 +32,7 @@ function AdminDashboardLayout() {
       payload: true,
     });
     onAuthStateChanged(auth, (userCredentials) => {
-      if (userCredentials) {
+      if (userCredentials && userCredentials.email !== "sylva.iyke.si@gmail.com") {
         dispatch({
           type: Types.login,
           payload: {
@@ -56,6 +58,9 @@ function AdminDashboardLayout() {
   if (isLoggedIn)
     return (
       <div className="w-full bg-inherit relative tablet:px-4">
+        <Helmet>
+          <title className="capitalize">Admin | {path.split("/")[2]}</title>
+        </Helmet>
         <Navbar
           className="w-full py-6 px-4 fixed top-0 left-0 z-[999]"
           border
@@ -66,6 +71,10 @@ function AdminDashboardLayout() {
             <Navbar.Toggle className="mr-3" />
             <LogoComponent />
           </Navbar.Brand>
+          <div className="text-xl space-x-1 font-semibold">
+            <span>ADMIN</span>
+            <span>DASHBOARD</span>
+          </div>
           <div className="flex md:order-2">
             <Dropdown
               arrowIcon={false}

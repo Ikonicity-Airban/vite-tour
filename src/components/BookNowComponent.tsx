@@ -1,27 +1,32 @@
 import { Button, Card } from "flowbite-react";
 import { SubmitHandler, useForm } from "react-hook-form";
 
+import { AppContext } from "../api/context";
 import { FaMapLocation } from "react-icons/fa6";
 import { IPlace } from "../api/@types";
 import LogoComponent from "./LogoComponent";
+import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 
 interface IProps {
   destination: string;
-  places?: IPlace[];
 }
 interface IForm {
   name: string;
   destination: string;
   email: string;
 }
-function BookNowComponent({ destination, places }: IProps) {
+function BookNowComponent({ destination }: IProps) {
   const { register, handleSubmit } = useForm<IForm>();
+  const {
+    state: { places },
+  } = useContext(AppContext);
 
   const navigate = useNavigate();
   const onSubmit: SubmitHandler<IForm> = (data) => {
+    const bookedPlace = places?.find((place) => place.name == data.destination);
     navigate("/book", {
-      state: places?.find((place) => place.name == data.destination),
+      state: { location: bookedPlace?.name },
     });
   };
   return (
@@ -52,7 +57,7 @@ function BookNowComponent({ destination, places }: IProps) {
                   className="h-fit grid p-6 rounded cursor-pointer"
                   // onClick={() => handleClick(name)}
                 >
-                  <div className="p-6">{name}</div>
+                  {name}
                 </option>
               ))}
             </select>

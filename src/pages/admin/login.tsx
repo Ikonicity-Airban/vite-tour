@@ -1,16 +1,13 @@
 import { Card, Toast } from "flowbite-react";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-import { useContext, useState } from "react";
 
-import { AppContext } from "../../api/context";
 import LogoComponent from "../../components/LogoComponent";
-import { Types } from "../../api/reducer";
 import { auth } from "../../firebase";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 function AdminLoginPage() {
   const [loading, setLoading] = useState(false);
-  const { dispatch } = useContext(AppContext);
   const [errMsg, setErrMsg] = useState("");
 
   const navigate = useNavigate();
@@ -19,14 +16,11 @@ function AdminLoginPage() {
     try {
       setLoading(true);
       const provider = new GoogleAuthProvider();
-      const userCredential = await signInWithPopup(auth, provider);
-      dispatch({
-        type: Types.login,
-        payload: {
-          ...userCredential.user,
-        },
-      });
-      navigate("/admin/dashboard");
+      const { user } = await signInWithPopup(auth, provider);
+
+      if (user.email == "ikonicityairban@gmail.com" || user.email == "")
+        navigate("/admin/dashboard");
+      else throw new Error("You are not authorized");
     } catch (error) {
       if (error instanceof Error) {
         const errorMessage = error.message;

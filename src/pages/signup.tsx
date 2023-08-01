@@ -66,7 +66,7 @@ function SignUpPage() {
 
       await saveToFirestore<IUser>("users", {
         displayName: user.displayName,
-        email: user.email,
+        email: user.email ?? "",
         bookings: [],
         plan: null,
         phone: user.phoneNumber,

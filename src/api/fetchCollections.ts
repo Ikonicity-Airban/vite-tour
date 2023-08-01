@@ -88,7 +88,14 @@ export function useQueryCollection<T>(
       const q = query(collection(db, colName), where(queryStr, "==", to));
       const fetchCollection = async () => {
         const querySnapshot = await getDocs(q);
-        setCol(querySnapshot.docs.map((doc) => doc.data()));
+        const dataWithIds: T[] & { id: string }[] = [];
+        querySnapshot.forEach((doc) => {
+          dataWithIds.push({
+            id: doc.id,
+            ...doc.data(),
+          });
+        });
+        setCol(dataWithIds);
       };
       fetchCollection();
     } catch (e) {

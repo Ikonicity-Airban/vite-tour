@@ -6,12 +6,12 @@ import BreadcrumbComponents from "../components/BreadcrumbComponents";
 import FooterComponent from "../components/Footer";
 import LogoComponent from "../components/LogoComponent";
 import React from "react";
-import ThemeToggler from "../components/ToggleTheme";
 import { Types } from "../api/reducer";
 import { auth } from "../firebase";
 import { onAuthStateChanged } from "firebase/auth";
 import useFetchSites from "../api/fetchCollections";
 
+// import ThemeToggler from "../components/ToggleTheme";
 // import Drawer from "../components/Drawer";
 
 function DashboardLayout() {
@@ -34,7 +34,7 @@ function DashboardLayout() {
         <LogoComponent />
       </Navbar.Brand>
       <div className="flex md:order-2 space-x-10">
-        <ThemeToggler />
+        {/* <ThemeToggler /> */}
         <Dropdown
           arrowIcon={false}
           inline
@@ -49,8 +49,8 @@ function DashboardLayout() {
             />
           }
         >
-          <Dropdown.Header>
-            <span className="block text-sm">{user?.displayName}</span>
+          <Dropdown.Header className="mr-10">
+            <span className="block font-semibold text-primary">{user?.displayName}</span>
             <span className="block truncate text-sm font-medium">
               {user?.email}
             </span>
@@ -61,7 +61,7 @@ function DashboardLayout() {
             </Link>
           </Dropdown.Item>
           <Dropdown.Item>
-            <Link className="text-sm" to="profile">
+            <Link className="text-sm" to="booking">
               Bookings
             </Link>
           </Dropdown.Item>

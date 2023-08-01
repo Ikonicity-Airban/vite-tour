@@ -16,12 +16,12 @@ function Dashboard() {
     state: { places, user },
   } = useContext(AppContext);
   const bookings = useQueryCollection("bookings", "userId", user.uid);
+  console.log("🚀 ~ file: dashboard.tsx:19 ~ Dashboard ~ bookings:", bookings);
   return (
     <div className="block w-full mx-auto">
       <Helmet>
         <title>Dashboard | {user.email}</title>
       </Helmet>
-
       <Section title="Your Recent booking" id="">
         <TableComponent data={bookings} />
       </Section>
@@ -44,7 +44,7 @@ function Dashboard() {
         </div>
       </Section>
       <Section subtitle="Start Booking Now" title="We are waiting">
-        <BookNowComponent destination="" places={places} />
+        <BookNowComponent destination="" />
       </Section>
       <GoogleMap withSearch={true} />
     </div>

@@ -1,4 +1,5 @@
 import { Button, Modal, Table } from "flowbite-react";
+import { IUser, Plan } from "../../api/@types";
 import {
   collection,
   deleteDoc,
@@ -8,8 +9,8 @@ import {
 } from "firebase/firestore";
 import { useEffect, useState } from "react";
 
-import { Plan } from "../../api/@types";
 import Section from "../../components/Section";
+import { UserTable } from "../../components/TableComponent";
 import { db } from "../../firebase";
 import { useFetchCollection } from "../../api/fetchCollections";
 
@@ -228,15 +229,17 @@ const TourPlanList = () => {
 export default function AdminDashdboard() {
   const [openModal, setOpenModal] = useState<string | undefined>();
 
+  const users = useFetchCollection<IUser[]>("users");
   const props = { openModal, setOpenModal };
 
   return (
     <Section title="Tours Plans" subtitle="">
-      <TourPlanList />
+      {/* <TourPlanList /> */}
       <Button onClick={() => props.setOpenModal("form-elements")}>
         Toggle modal
       </Button>
 
+      <UserTable users={users} />
       <Modal
         show={props.openModal === "form-elements"}
         size="md"

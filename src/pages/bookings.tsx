@@ -1,36 +1,34 @@
 import { Button, Card, Label, TextInput } from "flowbite-react";
-import { Form, useNavigate } from "react-router-dom";
-import { addDoc, collection } from "firebase/firestore";
+import { Form, useLocation, useNavigate } from "react-router-dom";
+import {
+  addDoc,
+  arrayUnion,
+  collection,
+  doc,
+  setDoc,
+  updateDoc,
+} from "firebase/firestore";
+import { useContext, useMemo, useState } from "react";
 
 import { AppContext } from "../api/context";
 import { Booking } from "../api/@types";
+import { LogoComponent } from "../components";
 import PremiumCardList from "../components/PremiumCard";
 import Section from "../components/Section";
 import { db } from "../firebase";
-import { useContext } from "react";
+import { toast } from "react-hot-toast";
 import { useForm } from "react-hook-form";
 
 type booking = Omit<Booking, "id" | "userId" | "tourId">;
 
-const defaultBooking: booking = {
-  place: "Enugu",
-  date: new Date(Date.now()),
-  duration: "",
-  numGuests: 3,
-  plan: null,
-};
-
 type IBookingForm = Omit<Booking, "id">;
 
-const bookingEntries = Object.keys(defaultBooking);
-
 function Bookings() {
-  // const {
-  //   state: { places, user },
-  // } = useContext(AppContext);
-  // const { state } = useLocation();
-
-  const TourForm = () => {
+  const [isLoading, setIsLoading] = useState(false);
+  const {
+    state: { location = "Enugu" },
+  } = useLocation();
+  const BookingForm = () => {
     const navigate = useNavigate();
     const { register, handleSubmit } = useForm<IBookingForm>();
 
@@ -38,45 +36,99 @@ function Bookings() {
       state: { user },
     } = useContext(AppContext);
 
+    const defautDate = useMemo(() => {
+      const nextWeek = new Date();
+      nextWeek.setDate(nextWeek.getDate() + 7);
+      return nextWeek.toISOString().substring(0, 10);
+    }, []);
+
     const onSubmit = async (book: booking) => {
+      setIsLoading(true);
       try {
-        const docRef = await addDoc(collection(db, "bookings"), {
+        const newBooking = await addDoc(collection(db, "bookings"), {
           ...book,
           userId: user.uid,
         });
-        console.log("Document written with ID: ", docRef.id);
+
+        const userRef = doc(db, "users", user.uid);
+        await updateDoc(userRef, { bookings: arrayUnion(newBooking) });
+
+        toast.success("Successfully Booked " + location);
+        navigate("/dashboard");
       } catch (e) {
-        console.error("Error adding document: ", e);
+        console.log("🚀 ~ file: bookings.tsx:59 ~ onSubmit ~ e:", e);
+        toast.error("Something went wrong");
+      } finally {
+        setIsLoading(false);
       }
-      navigate("/dashboard");
     };
 
     return (
       <div className="w-full flex items-center justify-center">
         <Card className="w-full max-w-md ">
+          <span className="mx-auto">
+            <LogoComponent />
+          </span>
           <Form
             onSubmit={handleSubmit(onSubmit)}
             className="flex flex-col gap-4"
           >
-            
-            {bookingEntries.map((key) => {
-              return (
-                <div className="mb-2 block" key={key}>
-                  <Label htmlFor={key}>{key}</Label>
-                  <TextInput
-                    type={key === "date" ? "date" : "text"}
-                    required
-                    id={key}
-                    // style={{ width: "100%" }}
-                    {...register(key as keyof booking, {
-                      valueAsDate: key === "date",
-                    })}
-                  />
-                </div>
-              );
-            })}
-            <Button type="submit" className="btn btn-primary">
-              Save tour
+            <div className="mb-2 block">
+              <Label htmlFor="location" className="capitalize">
+                Location
+              </Label>
+              <TextInput
+                readOnly
+                step={1}
+                defaultValue={location}
+                required
+                id="location"
+                {...register("place")}
+              />
+            </div>
+            <div className="mb-2 block">
+              <Label htmlFor="date" className="capitalize">
+                Date
+              </Label>
+              <TextInput
+                type="date"
+                required
+                id="date"
+                defaultValue={defautDate}
+                {...register("date")}
+              />
+            </div>
+            <div className="mb-2 block">
+              <Label htmlFor="numOfGuest" className="capitalize">
+                Number of Guest
+              </Label>
+              <TextInput
+                type="number"
+                step={1}
+                required
+                defaultValue={3}
+                id="numOfGuest"
+                {...register("numGuests")}
+              />
+            </div>
+            <div className="mb-2 block">
+              <Label htmlFor="duration" className="capitalize">
+                Duration
+              </Label>
+              <TextInput
+                type="number"
+                defaultValue={3}
+                required
+                id="duration"
+                {...register("duration")}
+              />
+            </div>
+            <Button
+              isProcessing={isLoading}
+              type="submit"
+              className="btn btn-primary"
+            >
+              Book
             </Button>
           </Form>
         </Card>
@@ -88,7 +140,7 @@ function Bookings() {
     <>
       <PremiumCardList />
       <Section id="" subtitle="Book a tour" title="Almost there">
-        <TourForm />
+        <BookingForm />
       </Section>
     </>
   );

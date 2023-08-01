@@ -86,10 +86,10 @@ function GoogleMap({ query = "Enugu", withSearch = true }: Props) {
   return (
     <div className="overflow-x-auto">
       <Section title="google Maps" subtitle={query}>
-        <div className="relative laptop:h-[80vh] grid">
+        <div className="relative laptop:h-[80vh] grid overflow-x-auto">
           {withSearch && (
             <div className="relative mb-20">
-              <Card className="h-fit w-full mb-20 absolute z-10">
+              <Card className="h-fit w-full mb-20 absolute z-10 p-0">
                 <form onSubmit={handleSubmit} className="flex gap-4 relative">
                   <FaSearch className="absolute top-2 left-2" />
 
@@ -120,7 +120,7 @@ function GoogleMap({ query = "Enugu", withSearch = true }: Props) {
               </Card>
             </div>
           )}
-          <Card className="w-full flex mt-12">
+          <Card className="w-full flex mt-12 p-0">
             <div className="mapouter">
               <div className="gmap_canvas">
                 <iframe

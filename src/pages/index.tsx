@@ -109,7 +109,7 @@ function HomePage() {
         {/* Book now */}
         <Section id="book-now" title="book now" subtitle="Make A Reservation">
           <div className="w-full max-w-3xl mx-auto">
-            <BookNowComponent destination="" places={places} />
+            <BookNowComponent destination="" />
           </div>
         </Section>
       </div>

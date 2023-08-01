@@ -59,11 +59,7 @@ function ProfilePage() {
             />
           </div>
           <div className="flex items-center space-x-2">
-            <Checkbox
-              disabled
-              id={userDetails.emailVerified}
-              defaultValue={userDetails.emailVerified}
-            />
+            <Checkbox disabled defaultValue={userDetails.emailVerified} />
             <Label htmlFor={userDetails.emailVerified}>Verified Email</Label>
           </div>
         </>
