@@ -34,7 +34,8 @@ function AdminDashboardLayout() {
     onAuthStateChanged(auth, (userCredentials) => {
       if (
         userCredentials &&
-        userCredentials.email !== "sylva.iyke.si@gmail.com"
+        userCredentials.email !== "sylva.iyke.si@gmail.com" &&
+        userCredentials.email !== "ikonicityairban@gmail.com"
       ) {
         dispatch({
           type: Types.login,
@@ -48,7 +49,7 @@ function AdminDashboardLayout() {
           payload: {},
         });
 
-        navigate("admin/login");
+        // navigate("/admin/login");
         console.log("user is logged out");
       }
       dispatch({
@@ -58,11 +59,11 @@ function AdminDashboardLayout() {
     });
   }, [navigate, dispatch]);
 
-  if (isLoggedIn)
+  if (!isLoggedIn)
     return (
       <div className="w-full bg-inherit relative tablet:px-4">
         <Helmet>
-          <title className="capitalize">Admin | {path.split("/")[2]}</title>
+          <title className="capitalize">Admin | {path.split("/")[1]}</title>
         </Helmet>
         <Navbar
           className="w-full py-6 px-4 fixed top-0 left-0 z-[999]"
@@ -94,21 +95,13 @@ function AdminDashboardLayout() {
               }
             >
               <Dropdown.Header>
-                <span className="block text-sm">{user?.displayName}</span>
+                <span className="block text-sm font-bold text-primary">
+                  ADMIN {user?.displayName}
+                </span>
                 <span className="block truncate text-sm font-medium">
                   {user?.email}
                 </span>
               </Dropdown.Header>
-              <Dropdown.Item>
-                <Link className="text-sm" to="/dashboard">
-                  Dashboard
-                </Link>
-              </Dropdown.Item>
-              <Dropdown.Item>
-                <Link className="text-sm" to="profile">
-                  profile
-                </Link>
-              </Dropdown.Item>
               <Dropdown.Divider />
               <Dropdown.Item
                 onClick={() => {
@@ -125,7 +118,7 @@ function AdminDashboardLayout() {
           <BreadcrumbComponents />
         </div>
         <section className=" tablet:px-6 min-h-[70vh]">
-          <Outlet></Outlet>
+          <Outlet />
         </section>
 
         {/* <Drawer /> */}

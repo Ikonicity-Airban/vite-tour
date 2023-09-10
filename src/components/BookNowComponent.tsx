@@ -24,10 +24,11 @@ function BookNowComponent({ destination }: IProps) {
   const navigate = useNavigate();
   const onSubmit: SubmitHandler<IForm> = (data) => {
     const bookedPlace = places?.find((place) => place.name == data.destination);
-    navigate("/book", {
+    navigate("/booking", {
       state: { location: bookedPlace?.name },
     });
   };
+
   return (
     <Card className="w-full">
       <form

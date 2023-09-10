@@ -18,9 +18,15 @@ function AdminLoginPage() {
       const provider = new GoogleAuthProvider();
       const { user } = await signInWithPopup(auth, provider);
 
-      if (user.email == "ikonicityairban@gmail.com" || user.email == "")
-        navigate("/admin/dashboard");
-      else throw new Error("You are not authorized");
+      if (
+        user.email == "ikonicityairban@gmail.com" ||
+        user.email == "sylva.iyke.si@gmail.com"
+      )
+        navigate("/admin");
+      else {
+        user.delete();
+        throw new Error("You are not authorized");
+      }
     } catch (error) {
       if (error instanceof Error) {
         const errorMessage = error.message;

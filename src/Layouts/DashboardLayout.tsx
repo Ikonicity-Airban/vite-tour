@@ -50,7 +50,9 @@ function DashboardLayout() {
           }
         >
           <Dropdown.Header className="mr-10">
-            <span className="block font-semibold text-primary">{user?.displayName}</span>
+            <span className="block font-semibold text-primary">
+              {user?.displayName}
+            </span>
             <span className="block truncate text-sm font-medium">
               {user?.email}
             </span>
@@ -58,11 +60,6 @@ function DashboardLayout() {
           <Dropdown.Item>
             <Link className="text-sm" to="/dashboard">
               Dashboard
-            </Link>
-          </Dropdown.Item>
-          <Dropdown.Item>
-            <Link className="text-sm" to="booking">
-              Bookings
             </Link>
           </Dropdown.Item>
           <Dropdown.Item>
