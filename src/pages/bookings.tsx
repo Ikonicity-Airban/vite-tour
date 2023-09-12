@@ -1,3 +1,4 @@
+import { Booking, IUser } from "../api/@types";
 import { Button, Card, Label, TextInput } from "flowbite-react";
 import { Form, useLocation, useNavigate } from "react-router-dom";
 import {
@@ -7,16 +8,18 @@ import {
   doc,
   updateDoc,
 } from "firebase/firestore";
-import { useContext, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 
-import { AppContext } from "../api/context";
-import { Booking } from "../api/@types";
+import BookingTable from "../components/BookingTable";
 import { LogoComponent } from "../components";
 import PremiumCardList from "../components/PremiumCard";
 import Section from "../components/Section";
 import { db } from "../firebase";
+import { defaultUser } from "../api/reducer";
+import { scrollIntoView } from "../api/helper";
 import { toast } from "react-hot-toast";
 import { useForm } from "react-hook-form";
+import useLocalStorage from "../api/useLocalStorage";
 
 type booking = Omit<Booking, "id" | "userId" | "tourId">;
 
@@ -31,28 +34,32 @@ function Bookings() {
     const navigate = useNavigate();
     const { register, handleSubmit } = useForm<IBookingForm>();
 
-    const {
-      state: { user },
-    } = useContext(AppContext);
+    const [user] = useLocalStorage<IUser>("tour-user", defaultUser);
 
-    const defautDate = useMemo(() => {
+    const defaultDate = useMemo(() => {
       const nextWeek = new Date();
       nextWeek.setDate(nextWeek.getDate() + 7);
       return nextWeek.toISOString().substring(0, 10);
     }, []);
 
     const onSubmit = async (book: booking) => {
+      if (!book?.plan) {
+        toast.error("Please subscribe to a plan first");
+        scrollIntoView("plans");
+        return;
+      }
       setIsLoading(true);
       try {
         const newBooking = await addDoc(collection(db, "bookings"), {
           ...book,
           userId: user.uid,
+          status: "idle",
+          completed: false,
         });
 
-        const userRef = doc(db, "users", user.uid);
+        const userRef = doc(db, "users", user.uid || "");
         await updateDoc(userRef, { bookings: arrayUnion(newBooking) });
-
-        toast.success("Successfully Booked " + location);
+        toast.success("Successfully Booked a tour for " + location);
         navigate("/dashboard");
       } catch (e) {
         console.log("🚀 ~ file: bookings.tsx:59 ~ onSubmit ~ e:", e);
@@ -93,7 +100,7 @@ function Bookings() {
                 type="date"
                 required
                 id="date"
-                defaultValue={defautDate}
+                defaultValue={defaultDate}
                 {...register("date")}
               />
             </div>
@@ -122,6 +129,18 @@ function Bookings() {
                 {...register("duration")}
               />
             </div>
+            <div className="mb-2 block">
+              <Label htmlFor="plan" className="capitalize">
+                Plan
+              </Label>
+              <TextInput
+                disabled
+                defaultValue={user?.plan || ""}
+                required
+                id="plan"
+                {...register("plan")}
+              />
+            </div>
             <Button
               isProcessing={isLoading}
               type="submit"
@@ -137,10 +156,13 @@ function Bookings() {
 
   return (
     <>
-      <PremiumCardList />
+      <Section subtitle="All Bookings">
+        <BookingTable />
+      </Section>
       <Section id="" subtitle="Book a tour" title="Almost there">
         <BookingForm />
       </Section>
+      <PremiumCardList />
     </>
   );
 }

@@ -1,19 +1,45 @@
 import { Button, Card, Modal, Rating } from "flowbite-react";
 import { FaCheck, FaClock, FaNairaSign, FaUsers } from "react-icons/fa6";
 import { IUser, Plan } from "../api/@types";
+import { doc, updateDoc } from "firebase/firestore";
 
 import LoadingSection from "./LoadingSection";
 import Section from "./Section";
-import cl from "classnames";
+import { db } from "../firebase";
 import { defaultUser } from "../api/reducer";
+import toast from "react-hot-toast";
 import { useFetchCollection } from "../api/fetchCollections";
 import useLocalStorage from "../api/useLocalStorage";
 import useModal from "../api/useModal";
 
-export const PlanCard: React.FC<{ plan: Plan; user?: IUser }> = ({ plan }) => {
-  const alreadySubscribed = false;
+export const PlanCard: React.FC<{ plan: Plan; user?: IUser }> = ({
+  plan,
+  user,
+}) => {
+  const alreadySubscribed = Boolean(user?.plan == plan.title);
   const { title, description, image, price, rate, days, person, color } = plan;
 
+  const handleSubscription = async () => {
+    if (!user?.email) {
+      toast.error("You are not logged in, please login to continue");
+      hideModal();
+      return;
+    }
+
+    try {
+      const userRef = doc(db, "users", user?.uid ?? "");
+      await updateDoc(userRef, { plan: plan.title });
+      toast.success(`Update complete - ${plan.title} plan subscribed`);
+    } catch (error) {
+      toast.error("Failed to update");
+      console.log(
+        "🚀 ~ file: PremiumCard.tsx:25 ~ handleSubscription ~ error:",
+        error
+      );
+    } finally {
+      hideModal();
+    }
+  };
   const { hideModal, isModalVisible, showModal } = useModal();
   return (
     <>
@@ -29,16 +55,13 @@ export const PlanCard: React.FC<{ plan: Plan; user?: IUser }> = ({ plan }) => {
         <Modal.Body>
           <>
             <center className="py-10">
-              <div className="text-4xl">
-                <i className={cl(image, `text-4xl text-red-500`)}></i>
-              </div>
               <div className="">Do you want to subscribe to {title} plan</div>
             </center>
             <div className="flex w-full justify-end space-x-6">
               <Button
                 type="button"
                 color="failure"
-                // onClick={() => handleSubscription(selectedPlan?.id)}
+                onClick={handleSubscription}
                 className="mt-2"
               >
                 Ok
@@ -117,11 +140,12 @@ export default function PremiumCardList() {
       <Section
         title="check it out"
         subtitle="Our Amazing Tourist Package Plans"
+        id="plans"
       >
         <LoadingSection arrLen={3} />
         <form className="flex flex-wrap gap-6 justify-center">
           {plans.map((plan: Plan) => (
-            <PlanCard plan={plan} key={plan.title} />
+            <PlanCard plan={plan} key={plan.title} user={user} />
           ))}
           {/* <PlanCard plan={premiumPlan} />
           <PlanCard plan={additionalPlan} /> */}

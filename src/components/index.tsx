@@ -1,5 +1,4 @@
 import BookNowComponent from "./BookNowComponent";
-import { BookingTable } from "./TableComponent";
 import BreadcrumbComponents from "./BreadcrumbComponents";
 import CardComponent from "./Card";
 import { CardSkeleton } from "./Skeletons";
@@ -23,7 +22,6 @@ export {
   CarouselComponent,
   NavbarComponent,
   CardSkeleton,
-  BookingTable,
   LogoComponent,
   SearchBar,
   ServicesCard,

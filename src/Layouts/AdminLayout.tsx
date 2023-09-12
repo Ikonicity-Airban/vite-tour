@@ -1,26 +1,29 @@
 import { Avatar, Dropdown, Navbar } from "flowbite-react";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
+import { Types, defaultUser } from "../api/reducer";
 
 import { AppContext } from "../api/context";
 import BreadcrumbComponents from "../components/BreadcrumbComponents";
 import FooterComponent from "../components/Footer";
 import { Helmet } from "react-helmet";
+import { IUser } from "../api/@types";
 import LogoComponent from "../components/LogoComponent";
 import React from "react";
-import { Types } from "../api/reducer";
 import { auth } from "../firebase";
 import { onAuthStateChanged } from "firebase/auth";
 import useFetchSites from "../api/fetchCollections";
+import useLocalStorage from "../api/useLocalStorage";
 
 // import Drawer from "../components/Drawer";
 
 function AdminDashboardLayout() {
   const {
     dispatch,
-    state: { isLoggedIn, user },
+    state: { isLoggedIn },
   } = React.useContext(AppContext);
   const navigate = useNavigate();
   const path = useLocation().pathname;
+  const [user, setUser] = useLocalStorage<IUser>("tour-admin", defaultUser);
 
   // fetching places
   useFetchSites();
@@ -37,12 +40,7 @@ function AdminDashboardLayout() {
         userCredentials.email !== "sylva.iyke.si@gmail.com" &&
         userCredentials.email !== "ikonicityairban@gmail.com"
       ) {
-        dispatch({
-          type: Types.login,
-          payload: {
-            ...userCredentials,
-          },
-        });
+        setUser(userCredentials);
       } else {
         dispatch({
           type: Types.logout,

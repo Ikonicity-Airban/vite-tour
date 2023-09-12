@@ -62,7 +62,7 @@ const userColumns: MRT_ColumnDef<IUser>[] = [
       <Avatar
         img={photoURL || ""}
         rounded
-        placeholderInitials={photoURL || email.slice(0, 2).toUpperCase()}
+        placeholderInitials={photoURL || email?.slice(0, 2).toUpperCase()}
       />
     ),
   },

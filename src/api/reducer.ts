@@ -1,4 +1,10 @@
-import { IPlace, IPlaceResponse, IUser, IUserResponse } from "./@types";
+import {
+  Booking,
+  IPlace,
+  IPlaceResponse,
+  IUser,
+  IUserResponse,
+} from "./@types";
 
 type ActionMap<M extends { [index: string]: unknown }> = {
   [Key in keyof M]: M[Key] extends undefined
@@ -9,6 +15,14 @@ type ActionMap<M extends { [index: string]: unknown }> = {
         type: Key;
         payload: M[Key];
       };
+};
+
+export const defaultBooking: Booking = {
+  date: "",
+  duration: "",
+  place: "",
+  numGuests: "",
+  userId: "",
 };
 
 export const defaultUser: IUser = {
@@ -74,7 +88,7 @@ export const authReducer = <S>(
       };
 
     case Types.logout:
-      localStorage.clear();
+      localStorage.removeItem("tour-user");
       return {
         ...state,
         user: null,

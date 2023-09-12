@@ -9,7 +9,6 @@ import {
 import {
   GoogleAuthProvider,
   browserLocalPersistence,
-  browserSessionPersistence,
   signInWithEmailAndPassword,
   signInWithPopup,
 } from "firebase/auth";
@@ -41,12 +40,13 @@ function LoginPage() {
   const onSubmit: SubmitHandler<IFormInput> = async ({ email, password }) => {
     try {
       setLoading(true);
-      await auth.setPersistence(browserSessionPersistence);
+      await auth.setPersistence(browserLocalPersistence);
       const { user } = await signInWithEmailAndPassword(auth, email, password);
       const usersRef = doc(db, "users", user?.uid);
 
       const userData = {
         displayName: user.displayName,
+        uid: user?.uid,
         email: user.email ?? "",
         bookings: [],
         plan: "Basic",
@@ -82,6 +82,7 @@ function LoginPage() {
       const userData = {
         displayName: user.displayName,
         email: user.email ?? "",
+        uid: user?.uid,
         bookings: [],
         plan: null,
         role: "user",
@@ -177,10 +178,8 @@ function LoginPage() {
           </Button>
         </form>
         <Button
-          outline
-          color="blue"
+          color="royalblue"
           disabled={loading}
-          isProcessing={loading}
           className="w-full flex items-center space-x-3 justify-center rounded-lg text-sm my-4 border-[1px] border-slate-200"
           type="button"
           onClick={googleSignIn}

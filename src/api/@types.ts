@@ -10,6 +10,7 @@ export type IUser = {
   phone?: strNull;
   plan?: Plan["title"] | null;
   bookings?: Booking[];
+  emailVerified?: boolean;
 };
 
 export interface IService {
@@ -70,6 +71,8 @@ export interface Booking {
   date: string;
   numGuests: string;
   plan?: Plan["title"] | null;
+  status?: "declined" | "approved" | "idle";
+  completed?: boolean;
 }
 export interface PackagePlan {
   id: string;

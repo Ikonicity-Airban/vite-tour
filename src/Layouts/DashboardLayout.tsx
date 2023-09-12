@@ -9,7 +9,6 @@ import { IUser } from "../api/@types";
 import LogoComponent from "../components/LogoComponent";
 import React from "react";
 import { auth } from "../firebase";
-import { onAuthStateChanged } from "firebase/auth";
 import useFetchSites from "../api/fetchCollections";
 import useLocalStorage from "../api/useLocalStorage";
 
@@ -18,7 +17,7 @@ import useLocalStorage from "../api/useLocalStorage";
 
 function DashboardLayout() {
   const { dispatch } = React.useContext(AppContext);
-  const [user, setUser] = useLocalStorage<IUser>("tour-user", defaultUser);
+  const [user] = useLocalStorage<IUser>("tour-user", defaultUser);
 
   const navigate = useNavigate();
 
@@ -72,6 +71,7 @@ function DashboardLayout() {
           <Dropdown.Item
             onClick={() => {
               dispatch({ type: Types.logout, payload: null });
+              navigate("/login");
               auth.signOut();
             }}
           >
@@ -89,27 +89,16 @@ function DashboardLayout() {
       type: Types.setIsLoading,
       payload: true,
     });
-    onAuthStateChanged(auth, (userCredentials) => {
-      if (userCredentials) {
-        // User is signed in, see docs for a list of available properties
-        // https://firebase.google.com/docs/reference/js/firebase.User
 
-        setUser(userCredentials);
-      } else {
-        dispatch({
-          type: Types.logout,
-          payload: {},
-        });
-
-        navigate("/login");
-        console.log("user is logged out");
-      }
-      dispatch({
-        type: Types.setIsLoading,
-        payload: false,
-      });
+    if (!user.email) {
+      navigate("/login");
+      console.log("user is logged out");
+    }
+    dispatch({
+      type: Types.setIsLoading,
+      payload: false,
     });
-  }, [navigate, dispatch]);
+  }, []);
 
   if (user.email)
     return (

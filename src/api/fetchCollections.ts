@@ -7,23 +7,19 @@ import {
   query,
   where,
 } from "firebase/firestore";
+import { Types, defaultPlace } from "./reducer";
 import { useCallback, useContext, useEffect, useState } from "react";
 
 import { AppContext } from "./context";
 import { IPlaceResponse } from "./@types";
-import { Types, defaultPlace } from "./reducer";
 import { db } from "../firebase";
 import useLocalStorage from "./useLocalStorage";
 
 //
 function useFetchSites() {
   const [places, setPlaces] = useLocalStorage<IPlaceResponse[]>(
-    "tour-user",
+    "tour-places",
     defaultPlace
-  );
-  console.log(
-    "🚀 ~ file: fetchCollections.ts:24 ~ useFetchSites ~ places:",
-    places
   );
   const { dispatch } = useContext(AppContext);
 
