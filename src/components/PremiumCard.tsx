@@ -16,7 +16,6 @@ export const PlanCard: React.FC<{ plan: Plan; user?: IUser }> = ({
   plan,
   user,
 }) => {
-  console.log("🚀 ~ file: PremiumCard.tsx:19 ~ user:", user);
   const alreadySubscribed = Boolean(user?.plan == plan.title);
   const { title, description, image, price, rate, days, person, color } = plan;
 
