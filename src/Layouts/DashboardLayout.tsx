@@ -91,16 +91,19 @@ function DashboardLayout() {
       payload: true,
     });
 
+    if (!user.email) {
+      navigate("/login");
+      console.log("user is logged out");
+      return;
+    }
     const getSingleDocument = async () => {
       try {
         const userRef = doc(db, "users", user?.uid || "");
         const docSnap = await getDoc(userRef);
 
         if (docSnap.exists()) {
-          console.log("Document data:", docSnap.data());
           setUser(docSnap.data());
         } else {
-          console.log("Document does not exist");
           navigate("/login");
           console.log("user is logged out");
         }
@@ -117,7 +120,7 @@ function DashboardLayout() {
     getSingleDocument();
   }, []);
 
-  if (user.email)
+  if (user?.email)
     return (
       <main className="w-full relative tablet:px-4">
         <UserNavbar />

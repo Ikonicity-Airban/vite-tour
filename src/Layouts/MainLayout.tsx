@@ -11,6 +11,7 @@ function MainLayout() {
   const {
     state: { isLoading },
   } = useContext(AppContext);
+
   useFetchSites();
 
   return (

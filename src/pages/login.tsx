@@ -34,15 +34,17 @@ function LoginPage() {
   const [errMsg, setErrMsg] = useState("");
   const [showPass, setShowPass] = useState(true);
   const [user, setUser] = useLocalStorage<IUser>("tour-user", defaultUser);
-  console.log("🚀 ~ file: login.tsx:40 ~ LoginPage ~ user:", user);
-
   const navigate = useNavigate();
   const onSubmit: SubmitHandler<IFormInput> = async ({ email, password }) => {
     try {
       setLoading(true);
       await auth.setPersistence(browserLocalPersistence);
-      const { user } = await signInWithEmailAndPassword(auth, email, password);
-      setUser({ ...user, email });
+      const { user: newUser } = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      setUser({ ...user, ...newUser, email });
       navigate("/dashboard");
     } catch (error) {
       if (error instanceof Error) {
