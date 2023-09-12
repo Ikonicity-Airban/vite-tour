@@ -1,19 +1,14 @@
 import { Avatar, Checkbox, Label, TextInput } from "flowbite-react";
 import { IUser, Plan } from "../api/@types";
-import {
-  useFetchCollection,
-  useQueryCollection,
-} from "../api/fetchCollections";
 
 import { PlanCard } from "../components/PremiumCard";
 import Section from "../components/Section";
 import { defaultUser } from "../api/reducer";
+import { useFetchCollection } from "../api/fetchCollections";
 import useLocalStorage from "../api/useLocalStorage";
 
 function ProfilePage() {
   const [user] = useLocalStorage<IUser>("tour-user", defaultUser);
-  console.log("🚀 ~ file: profile.tsx:15 ~ ProfilePage ~ user:", user);
-
   const ProfileForm = () => (
     <div className="mx-auto max-w-xl w-full min-w-[280px] space-y-3">
       <Avatar
@@ -66,18 +61,20 @@ function ProfilePage() {
   );
 
   const plans = useFetchCollection<Plan>("plans");
-  const userPlan = plans.filter((plan: Plan) => plan.title === user?.plan);
+  const userPlan: Plan = plans.find((plan: Plan) => plan.title === user?.plan);
   return (
     <div className="">
       <Section subtitle="My Profile">
         <ProfileForm />
       </Section>
       <Section title="Current Plan">
-        {user?.plan ? (
-          <PlanCard plan={userPlan} />
-        ) : (
-          <center>You don't have a plan</center>
-        )}
+        <center>
+          {user?.plan ? (
+            <PlanCard plan={userPlan} user={user} />
+          ) : (
+            <center>You don't have a plan</center>
+          )}
+        </center>
       </Section>
     </div>
   );

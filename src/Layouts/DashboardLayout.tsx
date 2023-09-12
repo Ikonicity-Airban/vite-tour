@@ -3,7 +3,6 @@ import { Link, Outlet, useNavigate } from "react-router-dom";
 import { Types, defaultUser } from "../api/reducer";
 import { auth, db } from "../firebase";
 import { doc, getDoc } from "firebase/firestore";
-import useFetchSites, { useQueryCollection } from "../api/fetchCollections";
 
 import { AppContext } from "../api/context";
 import BreadcrumbComponents from "../components/BreadcrumbComponents";
@@ -11,6 +10,7 @@ import FooterComponent from "../components/Footer";
 import { IUser } from "../api/@types";
 import LogoComponent from "../components/LogoComponent";
 import React from "react";
+import useFetchSites from "../api/fetchCollections";
 import useLocalStorage from "../api/useLocalStorage";
 
 // import ThemeToggler from "../components/ToggleTheme";
@@ -85,37 +85,37 @@ function DashboardLayout() {
   );
 
   //useEffect
-  React.useLayoutEffect(() => {
-    dispatch({
-      type: Types.setIsLoading,
-      payload: true,
-    });
+  // React.useLayoutEffect(() => {
+  //   dispatch({
+  //     type: Types.setIsLoading,
+  //     payload: true,
+  //   });
 
-    const getSingleDocument = async () => {
-      try {
-        const userRef = doc(db, "users", user?.uid || "");
-        const docSnap = await getDoc(userRef);
+  //   const getSingleDocument = async () => {
+  //     try {
+  //       const userRef = doc(db, "users", user?.uid || "");
+  //       const docSnap = await getDoc(userRef);
 
-        if (docSnap.exists()) {
-          console.log("Document data:", docSnap.data());
-          setUser(docSnap.data());
-        } else {
-          console.log("Document does not exist");
-          navigate("/login");
-          console.log("user is logged out");
-        }
-      } catch (error) {
-        console.error("Error getting document:", error);
-      } finally {
-        dispatch({
-          type: Types.setIsLoading,
-          payload: false,
-        });
-      }
-    };
-    // Usage example
-    getSingleDocument();
-  }, []);
+  //       if (docSnap.exists()) {
+  //         console.log("Document data:", docSnap.data());
+  //         setUser(docSnap.data());
+  //       } else {
+  //         console.log("Document does not exist");
+  //         navigate("/login");
+  //         console.log("user is logged out");
+  //       }
+  //     } catch (error) {
+  //       console.error("Error getting document:", error);
+  //     } finally {
+  //       dispatch({
+  //         type: Types.setIsLoading,
+  //         payload: false,
+  //       });
+  //     }
+  //   };
+  //   // Usage example
+  //   getSingleDocument();
+  // }, []);
 
   if (user.email)
     return (

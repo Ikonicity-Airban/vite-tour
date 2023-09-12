@@ -21,6 +21,7 @@ function useFetchSites() {
     "tour-places",
     defaultPlace
   );
+
   const { dispatch } = useContext(AppContext);
 
   const fetchData = useCallback(async () => {
