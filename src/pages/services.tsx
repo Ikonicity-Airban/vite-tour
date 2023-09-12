@@ -42,7 +42,7 @@ function ServicesPage() {
             </Accordion>
           </div>
         ) : (
-          <div className="flex items-center justify-center rounded outline-dashed w-full max-w-2xl dark:outline-slate-400 outline-1 outline-[#c5c5c5] shadow-none h-[10rem] mt-10 ">
+          <div className="flex items-center justify-center rounded outline-dashed w-full mx-auto max-w-2xl dark:outline-slate-400 outline-1 outline-[#c5c5c5] shadow-none h-[10rem] mt-10 ">
             <h4 className="w-full text-sm md:text-lg text-center">
               No Services Available
             </h4>

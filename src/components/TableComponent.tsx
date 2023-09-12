@@ -8,7 +8,7 @@ interface Props {
   data: Booking[] | DocumentData;
 }
 
-const TourPlanTable = ({ data }: Props) => {
+export const BookingTable = ({ data }: Props) => {
   return (
     <div className="overflow-x-auto">
       <Table className="min-w-[60rem]">
@@ -23,7 +23,7 @@ const TourPlanTable = ({ data }: Props) => {
           {data.length ? (
             data.map((booking: Booking, i: number) => (
               <Table.Row key={i} className="min-w-fit">
-                <Table.Cell>{truncateString(booking.id, 15)}</Table.Cell>
+                <Table.Cell>{truncateString(booking.id ?? " ", 15)}</Table.Cell>
                 <Table.Cell>{booking.place}</Table.Cell>
                 <Table.Cell>{booking.date}</Table.Cell>
                 <Table.Cell>{booking.duration}</Table.Cell>
@@ -45,8 +45,6 @@ const TourPlanTable = ({ data }: Props) => {
     </div>
   );
 };
-
-export default TourPlanTable;
 
 import { type MRT_ColumnDef } from "material-react-table";
 import { truncateString } from "../api/helper";
@@ -78,7 +76,7 @@ const userColumns: MRT_ColumnDef<IUser>[] = [
   },
   {
     header: "Phone",
-    accessorKey: "plan.title",
+    accessorKey: "phone",
   },
 ];
 
@@ -90,3 +88,5 @@ export function UserTable({ users }: ITourTableProp) {
     ></MaterialReactTable>
   );
 }
+
+/*  */

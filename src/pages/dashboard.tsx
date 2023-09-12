@@ -1,12 +1,15 @@
+import { FaPen, FaTrashCan } from "react-icons/fa6";
+import MaterialReactTable, { MRT_ColumnDef } from "material-react-table";
+
 import { AppContext } from "../api/context";
 import { BookNowComponent } from "../components";
+import { Booking } from "../api/@types";
 import CardComponent from "../components/Card";
 import GoogleMap from "../components/GoogleMap";
 import { Helmet } from "react-helmet";
 import { Link } from "react-router-dom";
 import LoadingSection from "../components/LoadingSection";
 import Section from "../components/Section";
-import TableComponent from "../components/TableComponent";
 import { shuffleArray } from "../api/helper";
 import { useContext } from "react";
 import { useQueryCollection } from "../api/fetchCollections";
@@ -16,14 +19,54 @@ function Dashboard() {
     state: { places, user },
   } = useContext(AppContext);
   const bookings = useQueryCollection("bookings", "userId", user.uid);
-  console.log("🚀 ~ file: dashboard.tsx:19 ~ Dashboard ~ bookings:", bookings);
+
+  const bookingColumns: MRT_ColumnDef<Booking>[] = [
+    {
+      header: "Date",
+      accessorKey: "date",
+    },
+    {
+      header: "Duration",
+      accessorKey: "duration",
+    },
+    {
+      header: "Place",
+      accessorKey: "place",
+    },
+    {
+      header: "Guests",
+      accessorKey: "numGuests",
+    },
+    {
+      header: "Action",
+      accessorFn: () => (
+        <div className="flex space-x-4">
+          <div
+            className="ring-1 p-2 rounded-lg"
+            // onClick={() => handleEdit(tourPlan)}
+          >
+            <FaPen />
+          </div>
+          <div className="ring-1 p-2 rounded-lg" /* onClick={() => ha} */>
+            <FaTrashCan />
+          </div>
+        </div>
+      ),
+    },
+  ];
   return (
     <div className="block w-full mx-auto">
       <Helmet>
         <title>Dashboard | {user.email}</title>
       </Helmet>
       <Section title="Your Recent booking" id="">
-        <TableComponent data={bookings} />
+        {/* <BookingTable data={bookings} /> */}
+        <MaterialReactTable
+          columns={bookingColumns}
+          data={bookings as Booking[]}
+          enableRowSelection
+          enableEditing
+        />
       </Section>
       <Section id="places" subtitle="Tourism Centers">
         <LoadingSection />

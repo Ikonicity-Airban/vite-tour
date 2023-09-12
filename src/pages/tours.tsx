@@ -22,28 +22,14 @@ function ToursPages() {
   } = useContext(AppContext);
 
   const [searchResults, setSearchResults] = useState<IPlace[]>();
-  const [next, setNext] = useState<number>(0);
+  // const [next, setNext] = useState<number>(0);
   const handleSearch = (results: IPlace[]) => {
     setSearchResults(results);
   };
 
-  function handleClick(dir: "next" | "prev") {
-    if (next >= (searchResults ?? places).length - 1) {
-      setNext(0);
-      return;
-    } else if (next < 0) {
-      setNext((searchResults ?? places).length - 1);
-      return;
-    } else {
-      if (dir == "next") {
-        setNext((prev) => prev + 1);
-      } else if (dir == "prev") {
-        setNext((prev) => prev - 1);
-      }
-    }
+  // function handleClick() {
 
-    scrollIntoView("Section" + next);
-  }
+  // }
 
   return (
     <div className="md:mt-20 space-y-10 p-4">
@@ -62,7 +48,7 @@ function ToursPages() {
       <div className="mx-auto">
         <LoadingSection arrLen={9} />
       </div>
-      <div>
+      {/* <div>
         <Button
           pill
           gradientDuoTone="greenToBlue"
@@ -81,7 +67,7 @@ function ToursPages() {
           <FaArrowDown className="mr-4" />
           Next
         </Button>
-      </div>
+      </div> */}
       {places.length ? (
         (searchResults ?? shuffleArray(places)).map((source, i) => {
           return (
@@ -94,17 +80,18 @@ function ToursPages() {
                   className="rounded-xl"
                 >
                   <div className="h-72 md:h-[80vh] p-6 flex items-center justify-center card">
-                    <div className="card__overlay">
-                      <Button
-                        pill
-                        size="xs"
-                        gradientDuoTone="greenToBlue"
-                        className="fixed bottom-8 right-[42%] z-50 "
-                        onClick={() => handleClick("next")}
+                    <div className="card__overlay w-full flex flex-col p-2 items-center rounded-2xl justify-center">
+                      <Link
+                        to={source.name.split(" ").join("-")}
+                        state={source}
                       >
-                        Next
-                        <FaArrowDown className="ml-4" />
-                      </Button>
+                        <Button
+                          gradientDuoTone="greenToBlue"
+                          onClick={() => scrollIntoView("book")}
+                        >
+                          Book Now
+                        </Button>
+                      </Link>
                     </div>
                     <DivScrollToView>
                       <Heading
@@ -144,26 +131,6 @@ function ToursPages() {
           </h3>
         </div>
       )}
-      <Section subtitle="Suggestions" title="">
-        <div className="grid-card gap-4 place-items-center">
-          <LoadingSection />
-          {shuffleArray(places)
-            .splice(0, 6)
-            .map((source) => (
-              <div className="" key={source.name}>
-                <Link to={source.name.split(" ").join("-")} state={source}>
-                  <CardComponent
-                    source={{
-                      ...source,
-                      source:
-                        source.images[generateRandomNum(source.images.length)],
-                    }}
-                  />
-                </Link>
-              </div>
-            ))}
-        </div>
-      </Section>
     </div>
   );
 }

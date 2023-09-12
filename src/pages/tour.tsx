@@ -1,6 +1,15 @@
 import { Button, Card } from "flowbite-react";
-import { scrollIntoView, truncateString } from "../api/helper";
+import { CardComponent, LoadingSection } from "../components";
+import { Link, useLocation } from "react-router-dom";
+import {
+  generateRandomNum,
+  scrollIntoView,
+  shuffleArray,
+  truncateString,
+} from "../api/helper";
+import { useContext, useState } from "react";
 
+import { AppContext } from "../api/context";
 import BookNowComponent from "../components/BookNowComponent";
 import BreadcrumbComponents from "../components/BreadcrumbComponents";
 import DivScrollToView from "../components/Framer.div";
@@ -9,11 +18,12 @@ import GoogleMap from "../components/GoogleMap";
 import { Helmet } from "react-helmet";
 import PremiumCardList from "../components/PremiumCard";
 import Section from "../components/Section";
-import { useLocation } from "react-router-dom";
-import { useState } from "react";
 
 function TourPage() {
   const [mainPhoto, setMainPhoto] = useState(0);
+  const {
+    state: { places },
+  } = useContext(AppContext);
   const {
     state: { name = "Enugu", images = [""], about = "" },
   } = useLocation();
@@ -76,6 +86,17 @@ function TourPage() {
           </p>
         </Section>
       </DivScrollToView>
+      <DivScrollToView>
+        {places
+          ?.find((place) => place.name == name)
+          ?.other?.map((item) =>
+            Object.entries(item).map(([key, value]) => (
+              <>
+                <p>{key}</p> ====== <p>{value ?? ""}</p>
+              </>
+            ))
+          )}
+      </DivScrollToView>
       <div className="overflow-auto">
         <DivScrollToView>
           <GoogleMap withSearch={false} query={name} />
@@ -84,6 +105,26 @@ function TourPage() {
       <PremiumCardList />
       <Section id="book" subtitle="Let's Take You There" title="Book Now">
         <BookNowComponent destination={name} />
+      </Section>
+      <Section subtitle="Suggestions" title="">
+        <div className="grid-card gap-4 place-items-center">
+          <LoadingSection />
+          {shuffleArray(places)
+            .splice(0, 6)
+            .map((source) => (
+              <div className="" key={source.name}>
+                <Link to={source.name.split(" ").join("-")} state={source}>
+                  <CardComponent
+                    source={{
+                      ...source,
+                      source:
+                        source.images[generateRandomNum(source.images.length)],
+                    }}
+                  />
+                </Link>
+              </div>
+            ))}
+        </div>
       </Section>
     </div>
   );

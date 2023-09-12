@@ -1,4 +1,5 @@
 import defaultTheme from "tailwindcss/defaultTheme";
+
 /** @type {import('tailwindcss').Config} */
 export default {
   content: [
@@ -8,7 +9,7 @@ export default {
     "./components/**/*.{js,ts,jsx,tsx}",
     "node_modules/flowbite-react/**/*.{js,jsx,ts,tsx}",
   ],
-  darkMode: "class",
+  // darkMode: "class",
 
   theme: {
     screens: {

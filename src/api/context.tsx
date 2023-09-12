@@ -35,6 +35,7 @@ const initialState = {
       images: [""],
       tags: "",
       id: "",
+      other: [{ name: "" }],
     },
   ],
 };

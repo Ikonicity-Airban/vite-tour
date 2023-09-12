@@ -29,6 +29,7 @@ export type IPlaceResponse =
       tags: string;
       id: string;
       name: string;
+      others?: { string: string }[];
     }
   | DocumentData;
 
@@ -38,7 +39,7 @@ export type IPlace = {
   tags: string;
   id: string;
   name: string;
-  other?: undefined;
+  other?: { unknown: string }[] | [];
 };
 export interface IUserResponse {
   displayName?: string | null;
@@ -57,13 +58,13 @@ export interface Tour {
   title: string;
   description: string;
   bookings: Booking[];
-  Plan: PackagePlan;
+  Plan: Plan["title"];
 }
 
 export interface Booking {
-  place: string;
-  id: string;
-  tourId: string;
+  place?: string;
+  id?: string;
+  tourId?: string;
   duration: string;
   userId: string;
   date: string;
