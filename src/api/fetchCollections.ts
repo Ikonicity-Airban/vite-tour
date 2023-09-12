@@ -11,11 +11,20 @@ import { useCallback, useContext, useEffect, useState } from "react";
 
 import { AppContext } from "./context";
 import { IPlaceResponse } from "./@types";
-import { Types } from "./reducer";
+import { Types, defaultPlace } from "./reducer";
 import { db } from "../firebase";
+import useLocalStorage from "./useLocalStorage";
 
 //
 function useFetchSites() {
+  const [places, setPlaces] = useLocalStorage<IPlaceResponse[]>(
+    "tour-user",
+    defaultPlace
+  );
+  console.log(
+    "🚀 ~ file: fetchCollections.ts:24 ~ useFetchSites ~ places:",
+    places
+  );
   const { dispatch } = useContext(AppContext);
 
   const fetchData = useCallback(async () => {
@@ -28,10 +37,7 @@ function useFetchSites() {
         newArray.push(doc.data());
       });
 
-      dispatch({
-        type: Types.setPlaces,
-        payload: newArray,
-      });
+      setPlaces(newArray);
     } catch (e) {
       console.error("Error adding document: ", e);
     } finally {
@@ -112,7 +118,7 @@ export function useQueryCollection<T>(
   return col;
 }
 
-export async function saveToFirestore<T extends WithFieldValue<DocumentData>>(
+export async function SaveToFirestore<T extends WithFieldValue<DocumentData>>(
   colName: string,
   data: T
 ) {

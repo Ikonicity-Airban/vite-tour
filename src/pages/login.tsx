@@ -9,6 +9,7 @@ import {
 import {
   GoogleAuthProvider,
   browserLocalPersistence,
+  browserSessionPersistence,
   signInWithEmailAndPassword,
   signInWithPopup,
 } from "firebase/auth";
@@ -17,10 +18,10 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { auth, db } from "../firebase";
 import { doc, setDoc } from "firebase/firestore";
 
-import { AppContext } from "../api/context";
+import { IUser } from "../api/@types";
 import LogoComponent from "../components/LogoComponent";
-import { Types } from "../api/reducer";
-import { useContext } from "react";
+import { defaultUser } from "../api/reducer";
+import useLocalStorage from "../api/useLocalStorage";
 import { useState } from "react";
 
 interface IFormInput {
@@ -31,30 +32,32 @@ interface IFormInput {
 function LoginPage() {
   const { register, handleSubmit } = useForm<IFormInput>();
   const [loading, setLoading] = useState(false);
-  const { dispatch } = useContext(AppContext);
   const [errMsg, setErrMsg] = useState("");
   const [showPass, setShowPass] = useState(true);
+  const [user, setUser] = useLocalStorage<IUser>("tour-user", defaultUser);
+  console.log("🚀 ~ file: login.tsx:40 ~ LoginPage ~ user:", user);
 
   const navigate = useNavigate();
-  const onSubmit: SubmitHandler<IFormInput> = async ({
-    email: Email,
-    password,
-  }) => {
+  const onSubmit: SubmitHandler<IFormInput> = async ({ email, password }) => {
     try {
       setLoading(true);
-      await auth.setPersistence(browserLocalPersistence);
-      const userCredentials = await signInWithEmailAndPassword(
-        auth,
-        Email,
-        password
-      );
+      await auth.setPersistence(browserSessionPersistence);
+      const { user } = await signInWithEmailAndPassword(auth, email, password);
+      const usersRef = doc(db, "users", user?.uid);
 
-      dispatch({
-        type: Types.login,
-        payload: {
-          ...userCredentials.user,
-        },
-      });
+      const userData = {
+        displayName: user.displayName,
+        email: user.email ?? "",
+        bookings: [],
+        plan: "Basic",
+        role: "user",
+        photoURL: user.photoURL,
+      };
+
+      // Use setDoc() with merge option to avoid overwriting existing data
+      await setDoc(usersRef, userData, { merge: true });
+
+      setUser({ ...user, email });
       navigate("/dashboard");
     } catch (error) {
       if (error instanceof Error) {
@@ -78,7 +81,7 @@ function LoginPage() {
 
       const userData = {
         displayName: user.displayName,
-        email: user.email,
+        email: user.email ?? "",
         bookings: [],
         plan: null,
         role: "user",
@@ -88,18 +91,8 @@ function LoginPage() {
 
       // Use setDoc() with merge option to avoid overwriting existing data
       await setDoc(usersRef, userData, { merge: true });
-      dispatch({
-        type: Types.login,
-        payload: {
-          ...user,
-        },
-      });
-      dispatch({
-        type: Types.login,
-        payload: {
-          ...user,
-        },
-      });
+      setUser(userData);
+
       navigate("/dashboard");
     } catch (error) {
       if (error instanceof Error) {
@@ -185,7 +178,7 @@ function LoginPage() {
         </form>
         <Button
           outline
-          color="success"
+          color="blue"
           disabled={loading}
           isProcessing={loading}
           className="w-full flex items-center space-x-3 justify-center rounded-lg text-sm my-4 border-[1px] border-slate-200"

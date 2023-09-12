@@ -1,11 +1,11 @@
 import { AppContext } from "../api/context";
 import FooterComponent from "../components/Footer";
 import Header from "../components/Header";
+import { Helmet } from "react-helmet";
 import LogoComponent from "../components/LogoComponent";
 import { Outlet } from "react-router-dom";
 import { useContext } from "react";
 import useFetchSites from "../api/fetchCollections";
-import { Helmet } from "react-helmet";
 
 function MainLayout() {
   const {
@@ -16,9 +16,7 @@ function MainLayout() {
   return (
     <section className="tablet:px-6 mx-auto">
       <Helmet>
-        <title>
-          ESTC |
-        </title>
+        <title>ESTC |</title>
       </Helmet>
       {isLoading && (
         <div

@@ -1,4 +1,4 @@
-import { IPlaceResponse, IUserResponse } from "./@types";
+import { IPlace, IPlaceResponse, IUser, IUserResponse } from "./@types";
 
 type ActionMap<M extends { [index: string]: unknown }> = {
   [Key in keyof M]: M[Key] extends undefined
@@ -10,6 +10,23 @@ type ActionMap<M extends { [index: string]: unknown }> = {
         payload: M[Key];
       };
 };
+
+export const defaultUser: IUser = {
+  email: "",
+  displayName: "",
+  phone: "",
+  photoURL: "",
+};
+
+export const defaultPlace: IPlace[] = [
+  {
+    name: "",
+    about: "",
+    images: [""],
+    tags: "",
+    id: "",
+  },
+];
 
 export enum Types {
   login = "LOGIN",
@@ -57,6 +74,7 @@ export const authReducer = <S>(
       };
 
     case Types.logout:
+      localStorage.clear();
       return {
         ...state,
         user: null,

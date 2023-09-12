@@ -1,11 +1,9 @@
 import { Button, Card } from "flowbite-react";
-import { FaArrowDown, FaArrowUp } from "react-icons/fa";
-import { generateRandomNum, scrollIntoView, shuffleArray } from "../api/helper";
+import { scrollIntoView, shuffleArray } from "../api/helper";
 import { useContext, useState } from "react";
 
 import { AppContext } from "../api/context";
 import BreadcrumbComponents from "../components/BreadcrumbComponents";
-import CardComponent from "../components/Card";
 import DivScrollToView from "../components/Framer.div";
 import Heading from "../components/Heading";
 import { Helmet } from "react-helmet";

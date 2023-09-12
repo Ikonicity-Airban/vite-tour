@@ -3,12 +3,12 @@ import { DocumentData } from "firebase/firestore";
 type strNull = string | null;
 
 export type IUser = {
-  email: string;
+  email?: strNull;
   uid?: strNull;
   displayName?: strNull;
   photoURL?: strNull;
   phone?: strNull;
-  plan: Plan | null;
+  plan?: Plan["title"] | null;
   bookings?: Booking[];
 };
 

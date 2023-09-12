@@ -23,8 +23,8 @@ import { useContext, useState } from "react";
 import { AppContext } from "../api/context";
 import { IUser } from "../api/@types";
 import LogoComponent from "../components/LogoComponent";
+import { SaveToFirestore } from "../api/fetchCollections";
 import { Types } from "../api/reducer";
-import { saveToFirestore } from "../api/fetchCollections";
 import { toast } from "react-hot-toast";
 
 interface IFormInput {
@@ -64,7 +64,7 @@ function SignUpPage() {
 
       await updateProfile(user, { displayName: name });
 
-      await saveToFirestore<IUser & { role: string }>("users", {
+      await SaveToFirestore<IUser & { role: string }>("users", {
         displayName: user.displayName,
         email: user.email ?? "",
         bookings: [],

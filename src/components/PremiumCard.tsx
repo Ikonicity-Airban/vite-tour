@@ -5,13 +5,12 @@ import { IUser, Plan } from "../api/@types";
 import LoadingSection from "./LoadingSection";
 import Section from "./Section";
 import cl from "classnames";
+import { defaultUser } from "../api/reducer";
 import { useFetchCollection } from "../api/fetchCollections";
+import useLocalStorage from "../api/useLocalStorage";
 import useModal from "../api/useModal";
 
-export const PlanCard: React.FC<{ plan: Plan; user?: IUser }> = ({
-  plan,
-  // user,
-}) => {
+export const PlanCard: React.FC<{ plan: Plan; user?: IUser }> = ({ plan }) => {
   const alreadySubscribed = false;
   const { title, description, image, price, rate, days, person, color } = plan;
 
@@ -108,6 +107,11 @@ export const PlanCard: React.FC<{ plan: Plan; user?: IUser }> = ({
 
 export default function PremiumCardList() {
   const plans = useFetchCollection<Plan>("plans");
+  const [user] = useLocalStorage<IUser>("tour-user", defaultUser);
+  console.log(
+    "🚀 ~ file: PremiumCard.tsx:113 ~ PremiumCardList ~ users:",
+    user
+  );
   return (
     <div className="w-full">
       <Section

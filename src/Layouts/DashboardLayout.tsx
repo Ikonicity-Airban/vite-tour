@@ -1,24 +1,25 @@
 import { Avatar, Dropdown, Navbar } from "flowbite-react";
 import { Link, Outlet, useNavigate } from "react-router-dom";
+import { Types, defaultUser } from "../api/reducer";
 
 import { AppContext } from "../api/context";
 import BreadcrumbComponents from "../components/BreadcrumbComponents";
 import FooterComponent from "../components/Footer";
+import { IUser } from "../api/@types";
 import LogoComponent from "../components/LogoComponent";
 import React from "react";
-import { Types } from "../api/reducer";
 import { auth } from "../firebase";
 import { onAuthStateChanged } from "firebase/auth";
 import useFetchSites from "../api/fetchCollections";
+import useLocalStorage from "../api/useLocalStorage";
 
 // import ThemeToggler from "../components/ToggleTheme";
 // import Drawer from "../components/Drawer";
 
 function DashboardLayout() {
-  const {
-    dispatch,
-    state: { isLoggedIn, user },
-  } = React.useContext(AppContext);
+  const { dispatch } = React.useContext(AppContext);
+  const [user, setUser] = useLocalStorage<IUser>("tour-user", defaultUser);
+
   const navigate = useNavigate();
 
   // fetching places
@@ -33,7 +34,7 @@ function DashboardLayout() {
       <Navbar.Brand>
         <LogoComponent />
       </Navbar.Brand>
-      <div className="flex md:order-2 space-x-10">
+      <div className="flex md:order-2 space-x-10 md:mr-10">
         {/* <ThemeToggler /> */}
         <Dropdown
           arrowIcon={false}
@@ -49,7 +50,7 @@ function DashboardLayout() {
             />
           }
         >
-          <Dropdown.Header className="mr-10">
+          <Dropdown.Header>
             <span className="block font-semibold text-primary">
               {user?.displayName}
             </span>
@@ -63,7 +64,7 @@ function DashboardLayout() {
             </Link>
           </Dropdown.Item>
           <Dropdown.Item>
-            <Link className="text-sm" to="profile">
+            <Link className="text-sm" to="/profile">
               Profile
             </Link>
           </Dropdown.Item>
@@ -93,12 +94,7 @@ function DashboardLayout() {
         // User is signed in, see docs for a list of available properties
         // https://firebase.google.com/docs/reference/js/firebase.User
 
-        dispatch({
-          type: Types.login,
-          payload: {
-            ...userCredentials,
-          },
-        });
+        setUser(userCredentials);
       } else {
         dispatch({
           type: Types.logout,
@@ -115,7 +111,7 @@ function DashboardLayout() {
     });
   }, [navigate, dispatch]);
 
-  if (isLoggedIn)
+  if (user.email)
     return (
       <main className="w-full relative tablet:px-4">
         <UserNavbar />

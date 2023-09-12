@@ -1,24 +1,57 @@
-import { FaPen, FaTrashCan } from "react-icons/fa6";
+import { Booking, IPlace, IUser } from "../api/@types";
 import MaterialReactTable, { MRT_ColumnDef } from "material-react-table";
+import {
+  collection,
+  deleteDoc,
+  doc,
+  getDocs,
+  updateDoc,
+} from "firebase/firestore";
+import {
+  useFetchCollection,
+  useQueryCollection,
+} from "../api/fetchCollections";
 
-import { AppContext } from "../api/context";
 import { BookNowComponent } from "../components";
-import { Booking } from "../api/@types";
 import CardComponent from "../components/Card";
+import { FaTrashCan } from "react-icons/fa6";
 import GoogleMap from "../components/GoogleMap";
 import { Helmet } from "react-helmet";
 import { Link } from "react-router-dom";
 import LoadingSection from "../components/LoadingSection";
 import Section from "../components/Section";
+import { db } from "../firebase";
+import { defaultUser } from "../api/reducer";
 import { shuffleArray } from "../api/helper";
-import { useContext } from "react";
-import { useQueryCollection } from "../api/fetchCollections";
+import useLocalStorage from "../api/useLocalStorage";
 
 function Dashboard() {
-  const {
-    state: { places, user },
-  } = useContext(AppContext);
-  const bookings = useQueryCollection("bookings", "userId", user.uid);
+  const [user] = useLocalStorage<IUser>("tour-user", defaultUser);
+  const places = useFetchCollection<IPlace>("places");
+  const bookings = useQueryCollection("bookings", "userId", user.uid ?? "");
+
+  const handleDelete = async (docId: string) => {
+    if (!docId) return;
+    try {
+      const collectionRef = collection(db, "booking");
+      const documentRef = doc(collectionRef, docId);
+      await deleteDoc(documentRef);
+      console.log("Document deleted successfully");
+    } catch (error) {
+      console.error("Error deleting document:", error);
+    }
+
+    const tourPlansRef = collection(db, "plans");
+    const snapshot = await getDocs(tourPlansRef);
+    const data = snapshot.docs.map(
+      (doc) => ({ id: doc.id, ...doc.data() } as Booking)
+    );
+  };
+
+  const handleEdit = async (booking: Booking) => {
+    const tourPlanRef = doc(db, "bookings", booking?.id || "");
+    await updateDoc(tourPlanRef, { ...booking });
+  };
 
   const bookingColumns: MRT_ColumnDef<Booking>[] = [
     {
@@ -38,16 +71,13 @@ function Dashboard() {
       accessorKey: "numGuests",
     },
     {
-      header: "Action",
-      accessorFn: () => (
+      header: " ",
+      accessorFn: ({ id }) => (
         <div className="flex space-x-4">
           <div
             className="ring-1 p-2 rounded-lg"
-            // onClick={() => handleEdit(tourPlan)}
+            onClick={() => handleDelete(id || "")}
           >
-            <FaPen />
-          </div>
-          <div className="ring-1 p-2 rounded-lg" /* onClick={() => ha} */>
             <FaTrashCan />
           </div>
         </div>
@@ -66,6 +96,7 @@ function Dashboard() {
           data={bookings as Booking[]}
           enableRowSelection
           enableEditing
+          onEditingRowSave={(item) => handleEdit(item.row.original)}
         />
       </Section>
       <Section id="places" subtitle="Tourism Centers">
