@@ -16,6 +16,7 @@ export const PlanCard: React.FC<{ plan: Plan; user?: IUser }> = ({
   plan,
   user,
 }) => {
+  console.log("🚀 ~ file: PremiumCard.tsx:19 ~ user:", user);
   const alreadySubscribed = Boolean(user?.plan == plan.title);
   const { title, description, image, price, rate, days, person, color } = plan;
 
@@ -30,12 +31,9 @@ export const PlanCard: React.FC<{ plan: Plan; user?: IUser }> = ({
       const userRef = doc(db, "users", user?.uid ?? "");
       await updateDoc(userRef, { plan: plan.title });
       toast.success(`Update complete - ${plan.title} plan subscribed`);
+      location.reload();
     } catch (error) {
       toast.error("Failed to update");
-      console.log(
-        "🚀 ~ file: PremiumCard.tsx:25 ~ handleSubscription ~ error:",
-        error
-      );
     } finally {
       hideModal();
     }
@@ -76,7 +74,7 @@ export const PlanCard: React.FC<{ plan: Plan; user?: IUser }> = ({
       </Modal>
       <Card
         className={
-          "rounded-lg shadow-lg h-auto overflow-hidden text-center max-w-sm"
+          "rounded-lg shadow-lg h-auto overflow-hidden text-center max-w-sm w-full"
         }
       >
         <i
@@ -112,7 +110,12 @@ export const PlanCard: React.FC<{ plan: Plan; user?: IUser }> = ({
               </h3>
             </li>
           </ul>
-          <Button outline pill disabled={alreadySubscribed} onClick={showModal}>
+          <Button
+            outline={alreadySubscribed}
+            pill
+            disabled={alreadySubscribed}
+            onClick={showModal}
+          >
             {alreadySubscribed ? (
               <>
                 <FaCheck color="green" size={20} className="mr-4" />
@@ -131,10 +134,6 @@ export const PlanCard: React.FC<{ plan: Plan; user?: IUser }> = ({
 export default function PremiumCardList() {
   const plans = useFetchCollection<Plan>("plans");
   const [user] = useLocalStorage<IUser>("tour-user", defaultUser);
-  console.log(
-    "🚀 ~ file: PremiumCard.tsx:113 ~ PremiumCardList ~ users:",
-    user
-  );
   return (
     <div className="w-full">
       <Section

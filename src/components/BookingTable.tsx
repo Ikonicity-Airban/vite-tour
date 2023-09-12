@@ -146,9 +146,14 @@ function BookingTable() {
       accessorKey: "place",
     },
     {
+      header: "Status",
+      accessorKey: "status",
+    },
+    {
       header: "Guests",
       accessorKey: "numGuests",
     },
+
     {
       header: " ",
       accessorFn: (item) => (

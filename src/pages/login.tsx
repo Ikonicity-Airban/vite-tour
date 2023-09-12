@@ -42,21 +42,6 @@ function LoginPage() {
       setLoading(true);
       await auth.setPersistence(browserLocalPersistence);
       const { user } = await signInWithEmailAndPassword(auth, email, password);
-      const usersRef = doc(db, "users", user?.uid);
-
-      const userData = {
-        displayName: user.displayName,
-        uid: user?.uid,
-        email: user.email ?? "",
-        bookings: [],
-        plan: "Basic",
-        role: "user",
-        photoURL: user.photoURL,
-      };
-
-      // Use setDoc() with merge option to avoid overwriting existing data
-      await setDoc(usersRef, userData, { merge: true });
-
       setUser({ ...user, email });
       navigate("/dashboard");
     } catch (error) {
@@ -76,7 +61,6 @@ function LoginPage() {
       setLoading(true);
       const provider = new GoogleAuthProvider();
       const { user } = await signInWithPopup(auth, provider);
-
       const usersRef = doc(db, "users", user.uid);
 
       const userData = {
@@ -84,7 +68,6 @@ function LoginPage() {
         email: user.email ?? "",
         uid: user?.uid,
         bookings: [],
-        plan: null,
         role: "user",
         photoURL: user.photoURL,
         phone: user.phoneNumber,
@@ -93,7 +76,6 @@ function LoginPage() {
       // Use setDoc() with merge option to avoid overwriting existing data
       await setDoc(usersRef, userData, { merge: true });
       setUser(userData);
-
       navigate("/dashboard");
     } catch (error) {
       if (error instanceof Error) {

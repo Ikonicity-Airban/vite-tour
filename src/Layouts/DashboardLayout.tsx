@@ -1,6 +1,9 @@
 import { Avatar, Dropdown, Navbar } from "flowbite-react";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import { Types, defaultUser } from "../api/reducer";
+import { auth, db } from "../firebase";
+import { doc, getDoc } from "firebase/firestore";
+import useFetchSites, { useQueryCollection } from "../api/fetchCollections";
 
 import { AppContext } from "../api/context";
 import BreadcrumbComponents from "../components/BreadcrumbComponents";
@@ -8,8 +11,6 @@ import FooterComponent from "../components/Footer";
 import { IUser } from "../api/@types";
 import LogoComponent from "../components/LogoComponent";
 import React from "react";
-import { auth } from "../firebase";
-import useFetchSites from "../api/fetchCollections";
 import useLocalStorage from "../api/useLocalStorage";
 
 // import ThemeToggler from "../components/ToggleTheme";
@@ -17,11 +18,12 @@ import useLocalStorage from "../api/useLocalStorage";
 
 function DashboardLayout() {
   const { dispatch } = React.useContext(AppContext);
-  const [user] = useLocalStorage<IUser>("tour-user", defaultUser);
+  const [user, setUser] = useLocalStorage<IUser>("tour-user", defaultUser);
 
   const navigate = useNavigate();
 
   // fetching places
+  useFetchSites();
 
   const UserNavbar = () => (
     <Navbar
@@ -82,7 +84,6 @@ function DashboardLayout() {
     </Navbar>
   );
 
-  useFetchSites();
   //useEffect
   React.useLayoutEffect(() => {
     dispatch({
@@ -90,14 +91,30 @@ function DashboardLayout() {
       payload: true,
     });
 
-    if (!user.email) {
-      navigate("/login");
-      console.log("user is logged out");
-    }
-    dispatch({
-      type: Types.setIsLoading,
-      payload: false,
-    });
+    const getSingleDocument = async () => {
+      try {
+        const userRef = doc(db, "users", user?.uid || "");
+        const docSnap = await getDoc(userRef);
+
+        if (docSnap.exists()) {
+          console.log("Document data:", docSnap.data());
+          setUser(docSnap.data());
+        } else {
+          console.log("Document does not exist");
+          navigate("/login");
+          console.log("user is logged out");
+        }
+      } catch (error) {
+        console.error("Error getting document:", error);
+      } finally {
+        dispatch({
+          type: Types.setIsLoading,
+          payload: false,
+        });
+      }
+    };
+    // Usage example
+    getSingleDocument();
   }, []);
 
   if (user.email)

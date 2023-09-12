@@ -1,8 +1,6 @@
 import { Button, Card } from "flowbite-react";
 import { scrollIntoView, shuffleArray } from "../api/helper";
-import { useContext, useState } from "react";
 
-import { AppContext } from "../api/context";
 import BreadcrumbComponents from "../components/BreadcrumbComponents";
 import DivScrollToView from "../components/Framer.div";
 import Heading from "../components/Heading";
@@ -13,11 +11,12 @@ import LoadingSection from "../components/LoadingSection";
 import { Parallax } from "react-parallax";
 import SearchBar from "../components/SearchBar";
 import Section from "../components/Section";
+import { defaultPlace } from "../api/reducer";
+import useLocalStorage from "../api/useLocalStorage";
+import { useState } from "react";
 
 function ToursPages() {
-  const {
-    state: { places },
-  } = useContext(AppContext);
+  const [places] = useLocalStorage<IPlace[]>("tour-places", defaultPlace);
 
   const [searchResults, setSearchResults] = useState<IPlace[]>();
   // const [next, setNext] = useState<number>(0);
