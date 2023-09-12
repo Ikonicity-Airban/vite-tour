@@ -10,6 +10,9 @@ import useLocalStorage from "../api/useLocalStorage";
 
 function ProfilePage() {
   const [user] = useLocalStorage<IUser>("tour-user", defaultUser);
+  const [userPlan, setuserPlan] = useState<Plan>();
+  const plans = useFetchCollection<Plan>("plans");
+
   const ProfileForm = () => (
     <div className="mx-auto max-w-xl w-full min-w-[280px] space-y-3">
       <Avatar
@@ -60,14 +63,10 @@ function ProfilePage() {
       )}
     </div>
   );
-  const [userPlan, setuserPlan] = useState<Plan>();
-
-  const plans = useFetchCollection<Plan>("plans");
   useEffect(() => {
     setuserPlan(plans.find((plan: Plan) => plan?.title === user?.plan));
-  }, []);
+  }, [user, plans]);
 
-  console.log("🚀 ~ file: profile.tsx:65 ~ ProfilePage ~ userPlan:", userPlan);
   return (
     <div className="">
       <Section subtitle="My Profile">
