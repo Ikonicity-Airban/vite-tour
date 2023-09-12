@@ -43,8 +43,8 @@ function useFetchSites() {
   }, [dispatch]);
 
   useEffect(() => {
-    fetchData();
-  }, [fetchData]);
+    !places && fetchData();
+  }, [fetchData, places]);
 }
 
 export function useFetchCollection<T>(colName: string) {

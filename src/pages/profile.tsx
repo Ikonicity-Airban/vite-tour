@@ -1,5 +1,6 @@
 import { Avatar, Checkbox, Label, TextInput } from "flowbite-react";
 import { IUser, Plan } from "../api/@types";
+import { useEffect, useState } from "react";
 
 import { PlanCard } from "../components/PremiumCard";
 import Section from "../components/Section";
@@ -59,9 +60,14 @@ function ProfilePage() {
       )}
     </div>
   );
+  const [userPlan, setuserPlan] = useState<Plan>();
 
   const plans = useFetchCollection<Plan>("plans");
-  const userPlan: Plan = plans.find((plan: Plan) => plan.title === user?.plan);
+  useEffect(() => {
+    setuserPlan(plans.find((plan: Plan) => plan?.title === user?.plan));
+  }, []);
+
+  console.log("🚀 ~ file: profile.tsx:65 ~ ProfilePage ~ userPlan:", userPlan);
   return (
     <div className="">
       <Section subtitle="My Profile">
@@ -69,7 +75,7 @@ function ProfilePage() {
       </Section>
       <Section title="Current Plan">
         <center>
-          {user?.plan ? (
+          {userPlan ? (
             <PlanCard plan={userPlan} user={user} />
           ) : (
             <center>You don't have a plan</center>

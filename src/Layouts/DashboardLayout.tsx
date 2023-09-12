@@ -85,37 +85,37 @@ function DashboardLayout() {
   );
 
   //useEffect
-  // React.useLayoutEffect(() => {
-  //   dispatch({
-  //     type: Types.setIsLoading,
-  //     payload: true,
-  //   });
+  React.useLayoutEffect(() => {
+    dispatch({
+      type: Types.setIsLoading,
+      payload: true,
+    });
 
-  //   const getSingleDocument = async () => {
-  //     try {
-  //       const userRef = doc(db, "users", user?.uid || "");
-  //       const docSnap = await getDoc(userRef);
+    const getSingleDocument = async () => {
+      try {
+        const userRef = doc(db, "users", user?.uid || "");
+        const docSnap = await getDoc(userRef);
 
-  //       if (docSnap.exists()) {
-  //         console.log("Document data:", docSnap.data());
-  //         setUser(docSnap.data());
-  //       } else {
-  //         console.log("Document does not exist");
-  //         navigate("/login");
-  //         console.log("user is logged out");
-  //       }
-  //     } catch (error) {
-  //       console.error("Error getting document:", error);
-  //     } finally {
-  //       dispatch({
-  //         type: Types.setIsLoading,
-  //         payload: false,
-  //       });
-  //     }
-  //   };
-  //   // Usage example
-  //   getSingleDocument();
-  // }, []);
+        if (docSnap.exists()) {
+          console.log("Document data:", docSnap.data());
+          setUser(docSnap.data());
+        } else {
+          console.log("Document does not exist");
+          navigate("/login");
+          console.log("user is logged out");
+        }
+      } catch (error) {
+        console.error("Error getting document:", error);
+      } finally {
+        dispatch({
+          type: Types.setIsLoading,
+          payload: false,
+        });
+      }
+    };
+    // Usage example
+    getSingleDocument();
+  }, []);
 
   if (user.email)
     return (
