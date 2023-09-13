@@ -1,6 +1,7 @@
 import { Booking, IPlace, IUser } from "../api/@types";
 import { Button, Label, Modal, TextInput } from "flowbite-react";
-import { FaPen, FaTrashCan } from "react-icons/fa6";
+import { FaCheck, FaPen, FaTrashCan } from "react-icons/fa6";
+import { FaMinusCircle, FaTimes } from "react-icons/fa";
 import MaterialReactTable, { MRT_ColumnDef } from "material-react-table";
 import { defaultBooking, defaultUser } from "../api/reducer";
 import { deleteDoc, doc, updateDoc } from "firebase/firestore";
@@ -152,11 +153,29 @@ function BookingTable() {
     },
     {
       header: "Status",
-      accessorKey: "status",
+      accessorFn: ({ status }) => (
+        <center>
+          {status === "approved" ? (
+            <FaCheck color="green"></FaCheck>
+          ) : status === "declined" ? (
+            <FaTimes color="red" />
+          ) : (
+            <FaMinusCircle color="gray" />
+          )}
+        </center>
+      ),
     },
     {
-      header: "Complete",
-      accessorKey: "completed",
+      header: "Completed",
+      accessorFn: ({ completed }) => (
+        <center>
+          {completed ? (
+            <FaCheck color="green"></FaCheck>
+          ) : (
+            <FaMinusCircle color="gray" />
+          )}
+        </center>
+      ),
     },
 
     {

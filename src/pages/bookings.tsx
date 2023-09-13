@@ -57,6 +57,7 @@ function Bookings() {
         const newBooking = await addDoc(collection(db, "bookings"), {
           ...book,
           userId: user.uid,
+          email: user.email,
           plan: user?.plan,
           status: "idle",
           completed: false,
