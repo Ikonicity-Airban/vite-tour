@@ -2,7 +2,6 @@ import { Button, Label, Modal, TextInput, Textarea } from "flowbite-react";
 import { FaPen, FaPlus, FaTrashCan } from "react-icons/fa6";
 import MaterialReactTable, { MRT_ColumnDef } from "material-react-table";
 import {
-  addDoc,
   collection,
   deleteDoc,
   doc,
@@ -92,11 +91,11 @@ const TourSiteList = () => {
     setTourPlans(data);
   };
 
-  const ImageRenderer = (/* { siteImages }: { images: string[] } */) => {
+  const ImageRenderer = () => {
     return (
       <div className="relative">
         {siteImages?.map((image) => (
-          <div>
+          <div key={image}>
             <img src={image} alt="image" />
           </div>
         ))}
@@ -104,9 +103,9 @@ const TourSiteList = () => {
           Images
         </Label>
         <TextInput id="images" />
-        <button className="absolute">
+        <Button className="absolute right-0 bottom-0">
           <FaPlus />
-        </button>
+        </Button>
       </div>
     );
   };
@@ -188,8 +187,8 @@ const TourSiteList = () => {
         header: "Images",
         accessorFn: ({ images }) => (
           <div className="flex w-10 gap-3 object-contain">
-            {images.map((image) => (
-              <img src={image} alt="image" />
+            {images.map((image, i) => (
+              <img src={image} alt="image" key={i} />
             ))}
           </div>
         ),
