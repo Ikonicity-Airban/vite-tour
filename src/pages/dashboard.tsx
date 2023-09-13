@@ -26,7 +26,7 @@ function Dashboard() {
       <Section title="My Recent bookings" id="">
         {/* <BookingTable data={bookings} /> */}
         <BookingTable />
-        <Link to="bookings">
+        <Link to="/bookings" state={{ location: "The Oaklands" }}>
           <Button className="w-full" gradientDuoTone="greenToBlue">
             See more bookings
           </Button>

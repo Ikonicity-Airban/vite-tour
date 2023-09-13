@@ -1,20 +1,23 @@
 import { IUser } from "../../api/@types";
 import Section from "../../components/Section";
-import { TourPlanList } from "./PlanList";
+import TourPlanList from "./PlanList";
 import { UserTable } from "../../components/TableComponent";
 import { useFetchCollection } from "../../api/fetchCollections";
+import TourSiteList from "./SitesList";
 
 export default function AdminDashboard() {
   const users = useFetchCollection<IUser[]>("users");
-  console.log("🚀 ~ file: dashboard.tsx:9 ~ AdminDashboard ~ users:", users);
 
   return (
     <>
-      <Section title="Tours Plans" subtitle="">
+      <Section title="Users" subtitle="All Tour Users">
+        <UserTable users={users} />
+      </Section>
+      <Section title="Plans" subtitle="All Tour Plans">
         <TourPlanList />
       </Section>
-      <Section title="Tour Sites" subtitle="">
-        <UserTable users={users} />
+      <Section title="Sites" subtitle="All Tour Sites">
+        <TourSiteList />
       </Section>
     </>
   );

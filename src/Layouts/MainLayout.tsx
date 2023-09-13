@@ -17,7 +17,7 @@ function MainLayout() {
   return (
     <section className="tablet:px-6 mx-auto">
       <Helmet>
-        <title>ESTC |</title>
+        <title>ESTC | A Home for all Tourists</title>
       </Helmet>
       {isLoading && (
         <div

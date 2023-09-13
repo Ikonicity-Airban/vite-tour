@@ -1,11 +1,4 @@
-import {
-  Button,
-  Card,
-  Checkbox,
-  Label,
-  TextInput,
-  Toast,
-} from "flowbite-react";
+import { Button, Card, Checkbox, Label, TextInput } from "flowbite-react";
 import {
   GoogleAuthProvider,
   browserLocalPersistence,
@@ -20,6 +13,7 @@ import { doc, setDoc } from "firebase/firestore";
 import { IUser } from "../api/@types";
 import LogoComponent from "../components/LogoComponent";
 import { defaultUser } from "../api/reducer";
+import toast from "react-hot-toast";
 import useLocalStorage from "../api/useLocalStorage";
 import { useState } from "react";
 
@@ -31,7 +25,6 @@ interface IFormInput {
 function LoginPage() {
   const { register, handleSubmit } = useForm<IFormInput>();
   const [loading, setLoading] = useState(false);
-  const [errMsg, setErrMsg] = useState("");
   const [showPass, setShowPass] = useState(true);
   const [user, setUser] = useLocalStorage<IUser>("tour-user", defaultUser);
   const navigate = useNavigate();
@@ -48,13 +41,11 @@ function LoginPage() {
       navigate("/dashboard");
     } catch (error) {
       if (error instanceof Error) {
-        const errorMessage = error.message;
-        console.log(errorMessage);
-        setErrMsg(errorMessage);
+        const errMsg = error.message;
+        toast.error(errMsg);
       }
     } finally {
       setLoading(false);
-      setTimeout(() => setErrMsg(""), 5000);
     }
   };
 
@@ -82,11 +73,9 @@ function LoginPage() {
     } catch (error) {
       if (error instanceof Error) {
         const errorMessage = error.message;
-        console.log(errorMessage);
-        setErrMsg(errorMessage);
+        toast.error(errorMessage);
       }
     } finally {
-      setTimeout(() => setErrMsg(""), 5000);
       setLoading(false);
     }
   };
@@ -94,12 +83,6 @@ function LoginPage() {
   //return
   return (
     <section className="grid place-items-center min-h-screen mt-10 mb-20">
-      {errMsg && (
-        <Toast className="fixed top-0 md:top-10 z-50 min-w-max">
-          <p>{errMsg}</p>
-          <Toast.Toggle></Toast.Toggle>
-        </Toast>
-      )}
       <Card className="smallScreens:min-w-[320px] w-5/6 max-w-md mt-10">
         <div className="mx-auto mb-10">
           <LogoComponent />

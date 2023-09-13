@@ -43,7 +43,11 @@ function Bookings() {
     }, []);
 
     const onSubmit = async (book: booking) => {
-      if (!book?.plan) {
+      if (!user?.plan) {
+        console.log(
+          "🚀 ~ file: bookings.tsx:47 ~ onSubmit ~ !user?.plan:",
+          user?.plan
+        );
         toast.error("Please subscribe to a plan first");
         scrollIntoView("plans");
         return;
@@ -53,6 +57,7 @@ function Bookings() {
         const newBooking = await addDoc(collection(db, "bookings"), {
           ...book,
           userId: user.uid,
+          plan: user?.plan,
           status: "idle",
           completed: false,
         });

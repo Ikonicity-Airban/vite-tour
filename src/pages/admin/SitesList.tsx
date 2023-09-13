@@ -1,119 +1,166 @@
-import { Button, Label, Modal, Table, TextInput } from "flowbite-react";
+import { Button, Label, Modal, TextInput, Textarea } from "flowbite-react";
 import { FaPen, FaPlus, FaTrashCan } from "react-icons/fa6";
 import {
+  addDoc,
   collection,
   deleteDoc,
   doc,
   getDocs,
   updateDoc,
 } from "firebase/firestore";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { IPlace } from "../../api/@types";
+import MaterialReactTable, { MRT_ColumnDef } from "material-react-table";
 import React from "react";
 import { db } from "../../firebase";
-import { useFetchCollection } from "../../api/fetchCollections";
+import { v4 as randomUUID } from "uuid";
 import { useForm } from "react-hook-form";
+import useLocalStorage from "../../api/useLocalStorage";
 import useModal from "../../api/useModal";
+import { truncateString } from "../../api/helper";
+import { Chip } from "@mui/material";
 
-const defaultTourPlan: IPlace = {
+const defaultTourSite: IPlace = {
   id: "",
   name: "",
   about: "",
   tags: "",
-  other: [],
+  others: [],
   images: [""],
 };
 
 interface Props {
   tourSite?: IPlace;
-  onSave: (tourSite: IPlace) => void;
 }
 
 interface FormData extends IPlace {
   time: Date;
 }
 
-export const TourPlanList = () => {
+const TourSiteList = () => {
   const [mode, setMode] = useState<"Create" | "Edit" | "Delete">("Create");
-  const plans = useFetchCollection<IPlace>("plans");
-  const [tourPlans, setTour] = useState(plans);
+  const [tourPlans, setTourPlans] = useLocalStorage<IPlace[]>("tour-places", [
+    defaultTourSite,
+  ]);
   const { hideModal, isModalVisible, showModal } = useModal();
-  const [selectedPlan, setSelectedPlan] = useState<IPlace>(defaultTourPlan);
+  const [selectedSite, setSelectedSite] = useState<IPlace>(defaultTourSite);
+  const [siteImages, setSiteImages] = useState(selectedSite.images);
 
-  useEffect(() => {
-    const fetchTourPlans = async () => {
-      const tourPlansRef = collection(db, "plans");
-      const snapshot = await getDocs(tourPlansRef);
-      const data = snapshot.docs.map(
-        (doc) => ({ id: doc.id, ...doc.data() } as IPlace)
-      );
-      setTour(data);
-    };
-
-    fetchTourPlans();
-  }, []);
-
-  const handleCreateTour = () => {
-    setSelectedPlan(defaultTourPlan);
-    setMode("Create");
-    showModal();
-  };
-  const handleEditTourPlan = async (tourSite: IPlace) => {
-    setSelectedPlan(tourSite);
-    setMode("Edit");
-    showModal();
-  };
-
-  const handleDeleteTourPlan = async (id: string) => {
-    const tourPlanRef = doc(db, "tourPlans", id);
-    await deleteDoc(tourPlanRef);
-    const tourPlansRef = collection(db, "tourPlans");
+  const fetchTourPlans = async () => {
+    const tourPlansRef = collection(db, "places");
     const snapshot = await getDocs(tourPlansRef);
     const data = snapshot.docs.map(
       (doc) => ({ id: doc.id, ...doc.data() } as IPlace)
     );
-    setTour(data);
-    hideModal();
+    setTourPlans(data);
   };
-  const TourPlanForm = ({ tourSite = selectedPlan }: Props) => {
+  useEffect(() => {
+    fetchTourPlans();
+  }, []);
+
+  const handleCreateTour = () => {
+    setSelectedSite(defaultTourSite);
+    setMode("Create");
+    showModal();
+  };
+  const handleEditTourPlan = async (tourSite: IPlace) => {
+    setSelectedSite(tourSite);
+    setMode("Edit");
+    showModal();
+  };
+
+  const handleDeleteTourPlan = async (docId: string) => {
+    console.log(
+      "🚀 ~ file: SitesList.tsx:72 ~ handleDeleteTourPlan ~ docId:",
+      docId
+    );
+    try {
+      const documentRef = doc(db, "places", docId);
+      await deleteDoc(documentRef);
+      console.log("Document deleted successfully");
+    } catch (error) {
+      console.error("Error deleting document:", error);
+    }
+
+    const tourPlansRef = collection(db, "places");
+    const snapshot = await getDocs(tourPlansRef);
+    const data = snapshot.docs.map(
+      (doc) => ({ id: doc.id, ...doc.data() } as IPlace)
+    );
+    hideModal();
+    setTourPlans(data);
+  };
+
+  const ImageRenderer = (/* { siteImages }: { images: string[] } */) => {
+    return (
+      <div className="relative">
+        {siteImages?.map((image) => (
+          <div>
+            <img src={image} alt="image" />
+          </div>
+        ))}
+        <Label htmlFor="images" className="capitalize">
+          Images
+        </Label>
+        <TextInput id="images" />
+        <button className="absolute">
+          <FaPlus />
+        </button>
+      </div>
+    );
+  };
+
+  const TourPlanForm = ({ tourSite = selectedSite }: Props) => {
     const { register, handleSubmit, setValue, reset } = useForm<FormData>();
 
     React.useEffect(() => {
-      reset(selectedPlan);
+      reset(selectedSite);
     }, [tourSite, setValue, reset]);
 
     const onSubmit = async (formData: FormData) => {
-      const tourPlanRef = doc(db, "tourPlans", formData.id);
-      await updateDoc(tourPlanRef, { ...tourSite });
-      const tourPlansRef = collection(db, "tourPlans");
-      const snapshot = await getDocs(tourPlansRef);
-      const data = snapshot.docs.map(
-        (doc) => ({ id: doc.id, ...doc.data() } as IPlace)
-      );
-      setTour(data);
-      reset();
+      if (mode == "Create") {
+        const tourPlansRef = collection(db, "places");
+
+        await addDoc(tourPlansRef, { ...formData, id: randomUUID() });
+        fetchTourPlans();
+        reset(defaultTourSite);
+        hideModal();
+      } else {
+        const tourPlanRef = doc(db, "places", formData.id);
+        await updateDoc(tourPlanRef, { ...tourSite });
+        fetchTourPlans();
+        reset(defaultTourSite);
+      }
     };
 
     return (
       <>
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 py-4">
+          {Object.keys(defaultTourSite)
+            .filter((key) => !["id", "images", "about"].includes(key))
+            .map((key) => (
+              <div key={key}>
+                <Label htmlFor={key} className="capitalize">
+                  {key}
+                </Label>
+                <TextInput
+                  type={[""].includes(key) ? "number" : "text"}
+                  min={0}
+                  id={key}
+                  {...register(key as keyof IPlace, { required: true })}
+                />
+              </div>
+            ))}
           <div>
-            <Label htmlFor="title">Name</Label>
-            <TextInput
-              type="text"
-              id="title"
-              {...register("name", { required: true })}
-            />
-          </div>
-          <div>
-            <Label htmlFor="description">Description</Label>
-            <TextInput
-              type="text"
-              id="description"
+            <Label htmlFor="about">About</Label>
+            <Textarea
+              id="about"
+              className="h-20"
               {...register("about", { required: true })}
             />
           </div>
+          <ImageRenderer />
           <Button type="submit" className="w-full">
             Save
           </Button>
@@ -122,13 +169,65 @@ export const TourPlanList = () => {
     );
   };
 
+  const siteColumns: MRT_ColumnDef<IPlace>[] = useMemo(
+    () => [
+      {
+        header: "Name",
+        accessorKey: "name",
+      },
+      {
+        header: "Tags",
+        accessorKey: "tags",
+      },
+      {
+        header: "About",
+        accessorFn: ({ about }) => truncateString(about, 30),
+      },
+
+      {
+        header: "Images",
+        accessorFn: ({ images }) => (
+          <div className="flex w-10 gap-3 object-contain">
+            {images.map((image) => (
+              <img src={image} alt="image" />
+            ))}
+          </div>
+        ),
+      },
+      {
+        header: "Action",
+        accessorFn: (item) => (
+          <div className="flex space-x-3">
+            <div
+              className="ring-1 p-2 rounded-lg"
+              onClick={() => handleEditTourPlan(item)}
+            >
+              <FaPen />
+            </div>
+            <div
+              className="ring-1 p-2 rounded-lg"
+              onClick={() => {
+                setSelectedSite(item);
+                setMode("Delete");
+                showModal();
+              }}
+            >
+              <FaTrashCan />
+            </div>
+          </div>
+        ),
+      },
+    ],
+    []
+  );
+
   return (
     <div>
       <Modal show={isModalVisible} size="lg" popup onClose={hideModal}>
         <Modal.Header>
           <center>
             <h3 className="m-4 text-center w-full font-medium text-primary">
-              {mode} IPlace
+              {mode} Tour
             </h3>
           </center>
         </Modal.Header>
@@ -143,7 +242,7 @@ export const TourPlanList = () => {
                 <Button
                   type="button"
                   color="failure"
-                  onClick={() => handleDeleteTourPlan(selectedPlan?.id)}
+                  onClick={() => handleDeleteTourPlan(selectedSite?.id)}
                   className="mt-2"
                 >
                   Ok
@@ -156,7 +255,7 @@ export const TourPlanList = () => {
             </>
           ) : (
             <>
-              <TourPlanForm onSave={setTour} tourSite={selectedPlan} />
+              <TourPlanForm tourSite={selectedSite} />
               <Button type="button" onClick={hideModal} className="w-full mt-2">
                 Cancel
               </Button>
@@ -170,58 +269,12 @@ export const TourPlanList = () => {
           onClick={handleCreateTour}
           className="w-full mt-2"
         >
-          <FaPlus /> Add a New IPlace
+          <FaPlus className="mr-4" /> Add a New IPlace
         </Button>
-        <Table className="">
-          <Table.Head>
-            {Object.keys(defaultTourPlan)
-              .filter((key) => !(key == "id"))
-              .map((key) => (
-                <Table.HeadCell
-                  colSpan={key == "description" || key == "action" ? 2 : 1}
-                >
-                  {key}
-                </Table.HeadCell>
-              ))}
-            <Table.HeadCell colSpan={2}>Action</Table.HeadCell>
-          </Table.Head>
-          <Table.Body>
-            {tourPlans?.map((tourSite: IPlace) => (
-              <Table.Row key={tourSite.id}>
-                <Table.Cell>{tourSite.name}</Table.Cell>
-                <Table.Cell colSpan={2}>{tourSite.about}</Table.Cell>
-                <Table.Cell className="flex space-x-3">
-                  {tourSite.images.map((src) => (
-                    <img src={src} alt={src} />
-                  ))}
-                </Table.Cell>
-                <Table.Cell>{tourSite.tags}</Table.Cell>
-
-                <Table.Cell>
-                  <div
-                    className="ring-1 p-2 rounded-lg"
-                    onClick={() => handleEditTourPlan(tourSite)}
-                  >
-                    <FaPen />
-                  </div>
-                </Table.Cell>
-                <Table.Cell>
-                  <div
-                    className="ring-1 p-2 rounded-lg"
-                    onClick={() => {
-                      setSelectedPlan(tourSite);
-                      setMode("Delete");
-                      showModal();
-                    }}
-                  >
-                    <FaTrashCan />
-                  </div>
-                </Table.Cell>
-              </Table.Row>
-            ))}
-          </Table.Body>
-        </Table>
+        <MaterialReactTable columns={siteColumns} data={tourPlans || []} />
       </div>
     </div>
   );
 };
+
+export default TourSiteList;

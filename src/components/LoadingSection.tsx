@@ -8,7 +8,7 @@ const LoadingSection = ({ arrLen = 9 }: { arrLen?: number }) => {
   } = useContext(AppContext);
   if (isLoading) {
     return (
-      <div className="grid-card justify-center gap-6 w-full">
+      <div className="grid sm:grid-cols-2 laptop:grid-cols-3 justify-center gap-6 w-full">
         {Array(arrLen)
           .fill(null)
           .map((_, i) => (

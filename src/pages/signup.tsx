@@ -21,9 +21,7 @@ import { doc, setDoc } from "firebase/firestore";
 import { useContext, useState } from "react";
 
 import { AppContext } from "../api/context";
-import { IUser } from "../api/@types";
 import LogoComponent from "../components/LogoComponent";
-import { SaveToFirestore } from "../api/fetchCollections";
 import { Types } from "../api/reducer";
 import { toast } from "react-hot-toast";
 
@@ -62,26 +60,24 @@ function SignUpPage() {
         password
       );
 
+      console.log("🚀 ~ file: signup.tsx:60 ~ SignUpPage ~ user:", user);
       await updateProfile(user, { displayName: name });
 
-      await SaveToFirestore<IUser & { role: string }>("users", {
+      const usersRef = doc(db, "users", user.uid);
+
+      const userData = {
         displayName: user.displayName,
-        email: user.email ?? "",
+        email: user.email,
         bookings: [],
         uid: user?.uid,
         role: "user",
         plan: null,
         photoURL: user.photoURL,
         phone: user.phoneNumber,
-      });
+      };
 
-      dispatch({
-        type: Types.login,
-        payload: {
-          ...user,
-        },
-      });
-
+      // Use setDoc() with merge option to avoid overwriting existing data
+      await setDoc(usersRef, userData, { merge: true });
       //navigate to login
       navigate("/login", { replace: true });
     } catch (error) {

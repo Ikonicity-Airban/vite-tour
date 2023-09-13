@@ -1,12 +1,6 @@
-import {
-  Button,
-  Label,
-  Modal,
-  Table,
-  TextInput,
-  Textarea,
-} from "flowbite-react";
+import { Button, Label, Modal, TextInput, Textarea } from "flowbite-react";
 import { FaPen, FaPlus, FaTrashCan } from "react-icons/fa6";
+import MaterialReactTable, { MRT_ColumnDef } from "material-react-table";
 import {
   addDoc,
   collection,
@@ -15,14 +9,14 @@ import {
   getDocs,
   updateDoc,
 } from "firebase/firestore";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { Plan } from "../../api/@types";
 import React from "react";
 import { db } from "../../firebase";
 import { v4 as randomUUID } from "uuid";
-import { useFetchCollection } from "../../api/fetchCollections";
 import { useForm } from "react-hook-form";
+import useLocalStorage from "../../api/useLocalStorage";
 import useModal from "../../api/useModal";
 
 const defaultTourPlan: Plan = {
@@ -39,17 +33,17 @@ const defaultTourPlan: Plan = {
 
 interface Props {
   tourPlan?: Plan;
-  onSave: (tourPlan: Plan) => void;
 }
 
 interface FormData extends Plan {
   time: Date;
 }
 
-export const TourPlanList = () => {
+const TourPlanList = () => {
   const [mode, setMode] = useState<"Create" | "Edit" | "Delete">("Create");
-  const plans = useFetchCollection<Plan>("plans");
-  const [tourPlans, setTourPlans] = useState(plans);
+  const [tourPlans, setTourPlans] = useLocalStorage<Plan[]>("tour-plans", [
+    defaultTourPlan,
+  ]);
   const { hideModal, isModalVisible, showModal } = useModal();
   const [selectedPlan, setSelectedPlan] = useState<Plan>(defaultTourPlan);
 
@@ -78,9 +72,8 @@ export const TourPlanList = () => {
 
   const handleDeleteTourPlan = async (docId: string) => {
     try {
-      const collectionRef = collection(db, "plans");
-      const documentRef = doc(collectionRef, docId);
-      await deleteDoc(documentRef);
+      const planRef = doc(db, "plans", docId);
+      await deleteDoc(planRef);
       console.log("Document deleted successfully");
     } catch (error) {
       console.error("Error deleting document:", error);
@@ -94,6 +87,7 @@ export const TourPlanList = () => {
     hideModal();
     setTourPlans(data);
   };
+
   const TourPlanForm = ({ tourPlan = selectedPlan }: Props) => {
     const { register, handleSubmit, setValue, reset } = useForm<FormData>();
 
@@ -122,14 +116,16 @@ export const TourPlanList = () => {
 
     return (
       <>
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 py-4">
           {Object.keys(defaultTourPlan)
             .filter(
               (key) => !["id", "color", "image", "description"].includes(key)
             )
             .map((key) => (
               <div key={key}>
-                <Label htmlFor={key}>{key}</Label>
+                <Label htmlFor={key} className="capitalize">
+                  {key}
+                </Label>
                 <TextInput
                   type={
                     ["person", "price", "rate", "day"].includes(key)
@@ -151,13 +147,65 @@ export const TourPlanList = () => {
             />
           </div>
           <Button type="submit" className="w-full">
-            Save
+            {mode == "Create" ? "Save" : "Update"}
           </Button>
         </form>
       </>
     );
   };
 
+  const PlanColumns: MRT_ColumnDef<Plan>[] = useMemo(
+    () => [
+      {
+        header: "Title",
+        accessorKey: "title",
+      },
+      {
+        header: "Description",
+        accessorKey: "description",
+      },
+      {
+        header: "Price",
+        accessorKey: "price",
+      },
+      {
+        header: "Rate",
+        accessorKey: "rate",
+      },
+      {
+        header: "Person",
+        accessorKey: "person",
+      },
+      {
+        header: "Days",
+        accessorKey: "days",
+      },
+      {
+        header: "Action",
+        accessorFn: (item) => (
+          <div className="flex space-x-3">
+            <div
+              className="ring-1 p-2 rounded-lg"
+              onClick={() => handleEditTourPlan(item)}
+            >
+              <FaPen />
+            </div>
+            <div
+              className="ring-1 p-2 rounded-lg"
+              onClick={() => {
+                setSelectedPlan(item);
+                setMode("Delete");
+                showModal();
+              }}
+            >
+              <FaTrashCan />
+            </div>
+          </div>
+        ),
+      },
+    ],
+    []
+  );
   return (
     <div>
       <Modal show={isModalVisible} size="lg" popup onClose={hideModal}>
@@ -192,7 +240,7 @@ export const TourPlanList = () => {
             </>
           ) : (
             <>
-              <TourPlanForm onSave={setTourPlans} tourPlan={selectedPlan} />
+              <TourPlanForm tourPlan={selectedPlan} />
               <Button type="button" onClick={hideModal} className="w-full mt-2">
                 Cancel
               </Button>
@@ -208,60 +256,10 @@ export const TourPlanList = () => {
         >
           <FaPlus className="mr-4" /> Add a New Plan
         </Button>
-        <Table className="">
-          <Table.Head>
-            {Object.keys(defaultTourPlan)
-              .filter((key) => !(key == "id"))
-              .map((key) => (
-                <Table.HeadCell
-                  colSpan={key == "description" || key == "action" ? 2 : 1}
-                >
-                  {key}
-                </Table.HeadCell>
-              ))}
-            <Table.HeadCell colSpan={2}>Action</Table.HeadCell>
-          </Table.Head>
-          <Table.Body>
-            {tourPlans?.map((tourPlan: Plan) => (
-              <Table.Row key={tourPlan.id}>
-                <Table.Cell>{tourPlan.title}</Table.Cell>
-                <Table.Cell colSpan={2}>{tourPlan.description}</Table.Cell>
-                <Table.Cell
-                  className="text-center"
-                  style={{ color: tourPlan.color }}
-                >
-                  <i className={tourPlan.image}></i>
-                </Table.Cell>
-                <Table.Cell>{tourPlan.price}</Table.Cell>
-                <Table.Cell>{tourPlan.color}</Table.Cell>
-                <Table.Cell>{tourPlan.rate}</Table.Cell>
-                <Table.Cell>{tourPlan.person}</Table.Cell>
-                <Table.Cell>{tourPlan.days}</Table.Cell>
-                <Table.Cell>
-                  <div
-                    className="ring-1 p-2 rounded-lg"
-                    onClick={() => handleEditTourPlan(tourPlan)}
-                  >
-                    <FaPen />
-                  </div>
-                </Table.Cell>
-                <Table.Cell>
-                  <div
-                    className="ring-1 p-2 rounded-lg"
-                    onClick={() => {
-                      setSelectedPlan(tourPlan);
-                      setMode("Delete");
-                      showModal();
-                    }}
-                  >
-                    <FaTrashCan />
-                  </div>
-                </Table.Cell>
-              </Table.Row>
-            ))}
-          </Table.Body>
-        </Table>
+        <MaterialReactTable columns={PlanColumns} data={tourPlans || []} />
       </div>
     </div>
   );
 };
+
+export default TourPlanList;

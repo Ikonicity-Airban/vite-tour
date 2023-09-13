@@ -100,11 +100,20 @@ function DashboardLayout() {
       try {
         const userRef = doc(db, "users", user?.uid || "");
         const docSnap = await getDoc(userRef);
+        console.log(
+          "🚀 ~ file: DashboardLayout.tsx:103 ~ getSingleDocument ~ docSnap:",
+          docSnap.data()
+        );
 
         if (docSnap.exists()) {
           setUser(docSnap.data());
+          console.log(
+            "🚀 ~ file: DashboardLayout.tsx:106 ~ getSingleDocument ~ docSnap.data():",
+            docSnap.data()
+          );
         } else {
           navigate("/login");
+
           console.log("user is logged out");
         }
       } catch (error) {

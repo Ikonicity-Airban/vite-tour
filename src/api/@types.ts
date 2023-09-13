@@ -40,7 +40,7 @@ export type IPlace = {
   tags: string;
   id: string;
   name: string;
-  other?: { unknown: string }[] | [];
+  others?: { unknown: string }[] | [];
 };
 export interface IUserResponse {
   displayName?: string | null;
