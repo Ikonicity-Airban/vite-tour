@@ -2,11 +2,11 @@ import { Button, Label, Modal, TextInput, Textarea } from "flowbite-react";
 import { FaPen, FaPlus, FaTrashCan } from "react-icons/fa6";
 import MaterialReactTable, { MRT_ColumnDef } from "material-react-table";
 import {
-  addDoc,
   collection,
   deleteDoc,
   doc,
   getDocs,
+  setDoc,
   updateDoc,
 } from "firebase/firestore";
 import { useEffect, useMemo, useState } from "react";
@@ -84,6 +84,7 @@ const TourPlanList = () => {
     const data = snapshot.docs.map(
       (doc) => ({ id: doc.id, ...doc.data() } as Plan)
     );
+    fetchTourPlans();
     hideModal();
     setTourPlans(data);
   };
@@ -100,16 +101,22 @@ const TourPlanList = () => {
     }, [tourPlan, setValue, reset]);
 
     const onSubmit = async (formData: FormData) => {
+      console.log(
+        "🚀 ~ file: PlanList.tsx:104 ~ onSubmit ~ formData:",
+        formData
+      );
       if (mode == "Create") {
-        const tourPlansRef = collection(db, "plans");
-        await addDoc(tourPlansRef, { ...formData, id: randomUUID() });
+        const id = randomUUID();
+        const tourPlansRef = doc(db, "plans", id);
+        await setDoc(tourPlansRef, { ...formData, id });
         fetchTourPlans();
         reset(defaultTourPlan);
         hideModal();
       } else {
-        const tourPlanRef = doc(db, "plans", selectedPlan.id);
-        await updateDoc(tourPlanRef, { ...tourPlan });
+        const tourPlanRef = doc(db, "plans", formData.id);
+        await updateDoc(tourPlanRef, { ...formData });
         fetchTourPlans();
+        hideModal();
         reset(defaultTourPlan);
       }
     };

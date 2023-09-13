@@ -30,7 +30,7 @@ export type IPlaceResponse =
       tags: string;
       id: string;
       name: string;
-      others?: { string: string }[];
+      other?: { string: string }[];
     }
   | DocumentData;
 
@@ -40,7 +40,7 @@ export type IPlace = {
   tags: string;
   id: string;
   name: string;
-  others?: { unknown: string }[] | [];
+  other?: { unknown: string }[] | [];
 };
 export interface IUserResponse {
   displayName?: string | null;

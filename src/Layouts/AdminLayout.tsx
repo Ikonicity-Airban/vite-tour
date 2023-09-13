@@ -105,6 +105,7 @@ function AdminDashboardLayout() {
                 onClick={() => {
                   dispatch({ type: Types.logout, payload: null });
                   auth.signOut();
+                  navigate("login");
                 }}
               >
                 Sign out

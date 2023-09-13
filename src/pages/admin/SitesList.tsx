@@ -7,6 +7,7 @@ import {
   deleteDoc,
   doc,
   getDocs,
+  setDoc,
   updateDoc,
 } from "firebase/firestore";
 import { useEffect, useMemo, useState } from "react";
@@ -25,7 +26,7 @@ const defaultTourSite: IPlace = {
   name: "",
   about: "",
   tags: "",
-  others: [],
+  other: [],
   images: [""],
 };
 
@@ -119,15 +120,15 @@ const TourSiteList = () => {
 
     const onSubmit = async (formData: FormData) => {
       if (mode == "Create") {
-        const tourPlansRef = collection(db, "places");
-
-        await addDoc(tourPlansRef, { ...formData, id: randomUUID() });
+        const id = randomUUID();
+        const tourSiteRef = doc(db, "plans", id);
+        await setDoc(tourSiteRef, { ...formData, id });
         fetchTourPlans();
         reset(defaultTourSite);
         hideModal();
       } else {
         const tourPlanRef = doc(db, "places", formData.id);
-        await updateDoc(tourPlanRef, { ...tourSite });
+        await updateDoc(tourPlanRef, { ...formData });
         fetchTourPlans();
         reset(defaultTourSite);
       }
