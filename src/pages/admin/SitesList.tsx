@@ -1,5 +1,6 @@
 import { Button, Label, Modal, TextInput, Textarea } from "flowbite-react";
 import { FaPen, FaPlus, FaTrashCan } from "react-icons/fa6";
+import MaterialReactTable, { MRT_ColumnDef } from "material-react-table";
 import {
   addDoc,
   collection,
@@ -11,15 +12,13 @@ import {
 import { useEffect, useMemo, useState } from "react";
 
 import { IPlace } from "../../api/@types";
-import MaterialReactTable, { MRT_ColumnDef } from "material-react-table";
 import React from "react";
 import { db } from "../../firebase";
 import { v4 as randomUUID } from "uuid";
+import { truncateString } from "../../api/helper";
 import { useForm } from "react-hook-form";
 import useLocalStorage from "../../api/useLocalStorage";
 import useModal from "../../api/useModal";
-import { truncateString } from "../../api/helper";
-import { Chip } from "@mui/material";
 
 const defaultTourSite: IPlace = {
   id: "",
@@ -45,7 +44,7 @@ const TourSiteList = () => {
   ]);
   const { hideModal, isModalVisible, showModal } = useModal();
   const [selectedSite, setSelectedSite] = useState<IPlace>(defaultTourSite);
-  const [siteImages, setSiteImages] = useState(selectedSite.images);
+  const [siteImages] = useState(selectedSite.images);
 
   const fetchTourPlans = async () => {
     const tourPlansRef = collection(db, "places");
