@@ -107,7 +107,7 @@ const TourPlanList = () => {
         reset(defaultTourPlan);
         hideModal();
       } else {
-        const tourPlanRef = doc(db, "plans", formData.id);
+        const tourPlanRef = doc(db, "plans", selectedPlan.id);
         await updateDoc(tourPlanRef, { ...tourPlan });
         fetchTourPlans();
         reset(defaultTourPlan);

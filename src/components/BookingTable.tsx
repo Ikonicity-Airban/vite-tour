@@ -1,16 +1,16 @@
 import { Booking, IPlace, IUser } from "../api/@types";
 import { Button, Label, Modal, TextInput } from "flowbite-react";
 import { FaCheck, FaPen, FaTrashCan } from "react-icons/fa6";
-import { FaMinusCircle, FaTimes } from "react-icons/fa";
 import MaterialReactTable, { MRT_ColumnDef } from "material-react-table";
 import { defaultBooking, defaultUser } from "../api/reducer";
 import { deleteDoc, doc, updateDoc } from "firebase/firestore";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   useFetchCollection,
   useQueryCollection,
 } from "../api/fetchCollections";
 
+import { FaMinusCircle } from "react-icons/fa";
 import { db } from "../firebase";
 import toast from "react-hot-toast";
 import { useForm } from "react-hook-form";
@@ -133,71 +133,64 @@ function BookingTable() {
     );
   };
 
-  const bookingColumns: MRT_ColumnDef<Booking>[] = [
-    {
-      header: "Date",
-      accessorKey: "date",
-    },
-    {
-      header: "Duration",
-      accessorKey: "duration",
-    },
-    {
-      header: "Place",
-      accessorKey: "place",
-    },
+  const bookingColumns: MRT_ColumnDef<Booking>[] = useMemo(
+    () => [
+      {
+        header: "Date",
+        accessorKey: "date",
+      },
+      {
+        header: "Duration",
+        accessorKey: "duration",
+      },
+      {
+        header: "Place",
+        accessorKey: "place",
+      },
 
-    {
-      header: "Guests",
-      accessorKey: "numGuests",
-    },
-    {
-      header: "Status",
-      accessorFn: ({ status }) => (
-        <center>
-          {status === "approved" ? (
-            <FaCheck color="green"></FaCheck>
-          ) : status === "declined" ? (
-            <FaTimes color="red" />
-          ) : (
-            <FaMinusCircle color="gray" />
-          )}
-        </center>
-      ),
-    },
-    {
-      header: "Completed",
-      accessorFn: ({ completed }) => (
-        <center>
-          {completed ? (
-            <FaCheck color="green"></FaCheck>
-          ) : (
-            <FaMinusCircle color="gray" />
-          )}
-        </center>
-      ),
-    },
+      {
+        header: "Guests",
+        accessorKey: "numGuests",
+      },
+      {
+        header: "Status",
+        accessorFn: ({ status }) => <center>{status}</center>,
+      },
+      {
+        header: "Completed",
+        accessorFn: ({ completed }) => (
+          <div className="text-align">
+            {completed ? (
+              <FaCheck color="green"></FaCheck>
+            ) : (
+              <FaMinusCircle color="gray" />
+            )}
+          </div>
+        ),
+      },
 
-    {
-      header: " ",
-      accessorFn: (item) => (
-        <div className="flex space-x-4">
-          <div
-            className="ring-1 p-2 rounded-lg"
-            onClick={() => handleEdit(item)}
-          >
-            <FaPen />
+      {
+        header: " ",
+        accessorFn: (item) => (
+          <div className="flex space-x-4">
+            <div
+              className="ring-1 p-2 rounded-lg"
+              onClick={() => handleEdit(item)}
+            >
+              <FaPen />
+            </div>
+            <div
+              className="ring-1 p-2 rounded-lg"
+              onClick={() => handleDelete(item)}
+            >
+              <FaTrashCan />
+            </div>
           </div>
-          <div
-            className="ring-1 p-2 rounded-lg"
-            onClick={() => handleDelete(item)}
-          >
-            <FaTrashCan />
-          </div>
-        </div>
-      ),
-    },
-  ];
+        ),
+      },
+    ],
+    []
+  );
 
   return (
     <>
