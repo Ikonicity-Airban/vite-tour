@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 import { shuffleArray } from "../api/helper";
 
 interface GridInViewAnimationProps {
-  list: IPlace[];
+  list: Omit<IPlace, "other">[];
 }
 
 function GridInViewAnimation({ list }: GridInViewAnimationProps) {

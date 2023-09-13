@@ -118,7 +118,7 @@ function DashboardLayout() {
     };
     // Usage example
     getSingleDocument();
-  }, []);
+  }, [dispatch]);
 
   if (user?.email)
     return (

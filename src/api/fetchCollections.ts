@@ -23,27 +23,27 @@ function useFetchSites() {
   );
   const { dispatch } = useContext(AppContext);
 
-  const fetchData = useCallback(async () => {
-    dispatch({ type: Types.setIsLoading, payload: true });
-    try {
-      const querySnapshot = await getDocs(collection(db, "places"));
-      const newArray: IPlaceResponse[] = [];
-      querySnapshot.forEach((doc) => {
-        // console.log(doc.data());
-        newArray.push(doc.data());
-      });
-
-      setPlaces(newArray);
-    } catch (e) {
-      console.error("Error adding document: ", e);
-    } finally {
-      dispatch({ type: Types.setIsLoading, payload: false });
-    }
-  }, [dispatch]);
-
   useEffect(() => {
+    const fetchData = async () => {
+      dispatch({ type: Types.setIsLoading, payload: true });
+      try {
+        const querySnapshot = await getDocs(collection(db, "places"));
+        const newArray: IPlaceResponse[] = [];
+        querySnapshot.forEach((doc) => {
+          // console.log(doc.data());
+          newArray.push(doc.data());
+        });
+        dispatch({ type: Types.setPlaces, payload: newArray });
+        setPlaces(newArray);
+      } catch (e) {
+        console.error("Error adding document: ", e);
+      } finally {
+        dispatch({ type: Types.setIsLoading, payload: false });
+      }
+    };
     fetchData();
-  }, [fetchData]);
+  }, []);
+
   return places;
 }
 

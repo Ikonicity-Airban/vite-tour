@@ -16,19 +16,15 @@ import { useContext, useState } from "react";
 import { AppContext } from "../api/context";
 import { Button } from "flowbite-react";
 import { Link } from "react-router-dom";
-import { defaultPlace } from "../api/reducer";
 import { shuffleArray } from "../api/helper";
 import { useFetchCollection } from "../api/fetchCollections";
-import useLocalStorage from "../api/useLocalStorage";
 
 function HomePage() {
   const {
-    state: { carousel },
+    state: { places, carousel },
   } = useContext(AppContext);
 
   // const services: IService[] = [];
-  const [places] = useLocalStorage<IPlace[]>("tour-places", defaultPlace);
-
   const services = useFetchCollection<IService>("services");
   const [filtered, setFiltered] = useState<IPlace[]>();
 
