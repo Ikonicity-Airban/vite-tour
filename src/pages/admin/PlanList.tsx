@@ -39,7 +39,6 @@ const defaultTourPlan: Plan = {
   person: 0,
   days: 0,
 };
-
 const tourPlanKeys = {
   title: "Name of Plan",
   description: "A Short description of the tour",
@@ -76,6 +75,10 @@ const TourPlanList = () => {
   const [tourPlans, setTourPlans] = useLocalStorage<Plan[]>("tour-plans", [
     defaultTourPlan,
   ]);
+  console.log(
+    "🚀 ~ file: PlanList.tsx:78 ~ TourPlanList ~ tourPlans:",
+    tourPlans
+  );
   const { hideModal, isModalVisible, showModal } = useModal();
   const [selectedPlan, setSelectedPlan] = useState<Plan>(defaultTourPlan);
 
@@ -258,7 +261,6 @@ const TourPlanList = () => {
     ],
     []
   );
-
   return (
     <div>
       <Modal show={isModalVisible} size="lg" popup onClose={hideModal}>

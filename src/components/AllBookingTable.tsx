@@ -1,8 +1,8 @@
 import { Button, Checkbox, Label, Modal, Spinner } from "flowbite-react";
-import { DocumentData, doc, updateDoc } from "firebase/firestore";
 import { FaCheck, FaPen } from "react-icons/fa6";
 import { FaMinusCircle, FaTimes } from "react-icons/fa";
 import MaterialReactTable, { MRT_ColumnDef } from "material-react-table";
+import { doc, updateDoc } from "firebase/firestore";
 import { useEffect, useMemo, useState } from "react";
 
 import { Booking } from "../api/@types";
