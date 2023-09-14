@@ -76,10 +76,6 @@ const TourPlanList = () => {
   const [tourPlans, setTourPlans] = useLocalStorage<Plan[]>("tour-plans", [
     defaultTourPlan,
   ]);
-  console.log(
-    "🚀 ~ file: PlanList.tsx:78 ~ TourPlanList ~ tourPlans:",
-    tourPlans
-  );
   const { hideModal, isModalVisible, showModal } = useModal();
   const [selectedPlan, setSelectedPlan] = useState<Plan>(defaultTourPlan);
 

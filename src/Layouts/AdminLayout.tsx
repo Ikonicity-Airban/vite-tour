@@ -14,8 +14,6 @@ import { onAuthStateChanged } from "firebase/auth";
 import useFetchSites from "../api/fetchCollections";
 import useLocalStorage from "../api/useLocalStorage";
 
-// import Drawer from "../components/Drawer";
-
 function AdminDashboardLayout() {
   const {
     dispatch,
@@ -48,7 +46,7 @@ function AdminDashboardLayout() {
           payload: {},
         });
 
-        // navigate("/admin/login");
+        navigate("/admin/login");
         console.log("user is logged out");
       }
       dispatch({

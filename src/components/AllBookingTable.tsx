@@ -15,17 +15,15 @@ import useModal from "../api/useModal";
 
 function AllBookingTable() {
   const { data: bookings, refetch } = useFetchCollection<Booking>("bookings");
-  const [bookingList, setBookingList] = useState<Booking[] | DocumentData>(
+  console.log(
+    "🚀 ~ file: AllBookingTable.tsx:18 ~ AllBookingTable ~ bookings:",
     bookings
   );
+
   const [selectedBooking, setSelectedBooking] =
     useState<Booking>(defaultBooking);
   const [mode, setMode] = useState<"Edit" | "Delete">("Edit");
   const { hideModal, isModalVisible, showModal } = useModal();
-
-  useEffect(() => {
-    setBookingList(bookings);
-  }, []);
 
   const handleEdit = async (booking: Booking) => {
     setSelectedBooking(booking);
@@ -48,7 +46,7 @@ function AllBookingTable() {
         toast.success("Update complete");
       } catch (error) {
         console.log(
-          "🚀 ~ file: AllBookingTable.tsx:42 ~ onSubmit ~ error:",
+          "🚀 ~ file: AllBookingTable.tsx:50 ~ onSubmit ~ error:",
           error
         );
       }
@@ -197,7 +195,7 @@ function AllBookingTable() {
             <Spinner size="lg" />
           </center>
         )}
-        data={(bookingList as Booking[]) || []}
+        data={(bookings as Booking[]) || []}
         enableRowSelection
         rowCount={5}
       />
