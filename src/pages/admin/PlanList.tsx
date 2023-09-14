@@ -42,7 +42,7 @@ const tourPlanKeys = {
   days: "Days of tour",
 };
 
-const colors = [
+/* const colors = [
   "red",
   "yellow",
   "skyblue",
@@ -52,9 +52,7 @@ const colors = [
   "gray",
   "silver",
   "gold",
-];
-
-interface Props {
+] */ interface Props {
   tourPlan?: Plan;
 }
 
