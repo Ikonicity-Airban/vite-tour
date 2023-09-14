@@ -17,7 +17,7 @@ function NavbarComponent({ links: navLinks }: Props) {
   } = React.useContext(AppContext);
 
   return (
-    <div className="md:container sticky w-full mx-auto p-4 dark:bg-slate-700 bg-white md:p-6 top-0 rounded-lg shadow-lg overflow-hidden z-10 md:-my-10">
+    <div className="md:container sticky w-full mx-auto p-4 dark:bg-slate-700 bg-white md:p-6 top-0 rounded-lg shadow-lg overflow-hidden z-[999] md:-my-10">
       <Navbar
         fluid
         style={{

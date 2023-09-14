@@ -6,9 +6,9 @@ export default function getTokenUser(user: IUser) {
     email: user.email ?? "",
     uid: user?.uid,
     role: "user",
-    photoURL: user.photoURL,
-    phone: user.phone,
-    lastLoggedIn: new Date(Date.now()).getDate().toString(),
+    photoURL: user?.photoURL,
+    phoneNumber: user?.phoneNumber,
+    lastLoggedIn: new Date(Date.now()).toUTCString(),
   };
   return userData;
 }

@@ -1,4 +1,12 @@
-import { Button, Label, Modal, TextInput, Textarea } from "flowbite-react";
+import {
+  Button,
+  Label,
+  Modal,
+  Select,
+  Spinner,
+  TextInput,
+  Textarea,
+} from "flowbite-react";
 import { FaPen, FaPlus, FaTrashCan } from "react-icons/fa6";
 import MaterialReactTable, { MRT_ColumnDef } from "material-react-table";
 import {
@@ -31,6 +39,7 @@ const defaultTourPlan: Plan = {
   person: 0,
   days: 0,
 };
+
 const tourPlanKeys = {
   title: "Name of Plan",
   description: "A Short description of the tour",
@@ -42,7 +51,7 @@ const tourPlanKeys = {
   days: "Days of tour",
 };
 
-/* const colors = [
+const colors = [
   "red",
   "yellow",
   "skyblue",
@@ -52,7 +61,9 @@ const tourPlanKeys = {
   "gray",
   "silver",
   "gold",
-] */ interface Props {
+];
+
+interface Props {
   tourPlan?: Plan;
 }
 
@@ -65,6 +76,10 @@ const TourPlanList = () => {
   const [tourPlans, setTourPlans] = useLocalStorage<Plan[]>("tour-plans", [
     defaultTourPlan,
   ]);
+  console.log(
+    "🚀 ~ file: PlanList.tsx:78 ~ TourPlanList ~ tourPlans:",
+    tourPlans
+  );
   const { hideModal, isModalVisible, showModal } = useModal();
   const [selectedPlan, setSelectedPlan] = useState<Plan>(defaultTourPlan);
 
@@ -165,6 +180,16 @@ const TourPlanList = () => {
               </div>
             ))}
 
+          <div className="">
+            <Label htmlFor="Color">Color</Label>
+            <Select {...register("color")} id="color" defaultValue="gray">
+              {colors.map((color) => (
+                <option value={color} className="capitalize" style={{ color }}>
+                  {color}
+                </option>
+              ))}
+            </Select>
+          </div>
           <div>
             <Label htmlFor="description">Description</Label>
             <Textarea
@@ -204,6 +229,10 @@ const TourPlanList = () => {
         accessorKey: "person",
       },
       {
+        header: "Color",
+        accessorKey: "color",
+      },
+      {
         header: "Days",
         accessorKey: "days",
       },
@@ -233,6 +262,7 @@ const TourPlanList = () => {
     ],
     []
   );
+
   return (
     <div>
       <Modal show={isModalVisible} size="lg" popup onClose={hideModal}>
@@ -279,7 +309,15 @@ const TourPlanList = () => {
         <Button type="button" onClick={handleCreateTour} className="w-full">
           <FaPlus className="mr-4" /> Add a New Plan
         </Button>
-        <MaterialReactTable columns={PlanColumns} data={tourPlans || []} />
+        <MaterialReactTable
+          columns={PlanColumns}
+          data={tourPlans || []}
+          renderEmptyRowsFallback={() => (
+            <center className="p-4">
+              <Spinner size="lg" />
+            </center>
+          )}
+        />
       </div>
     </div>
   );

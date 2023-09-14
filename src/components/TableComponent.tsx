@@ -2,7 +2,7 @@ import { IUser } from "../api/@types";
 
 import { DocumentData } from "firebase/firestore";
 import { MaterialReactTable } from "material-react-table";
-import { Avatar } from "flowbite-react";
+import { Avatar, Spinner } from "flowbite-react";
 
 import { type MRT_ColumnDef } from "material-react-table";
 
@@ -33,8 +33,8 @@ const userColumns: MRT_ColumnDef<IUser>[] = [
     accessorKey: "email",
   },
   {
-    header: "Phone",
-    accessorKey: "phone",
+    header: "Last Login Date",
+    accessorKey: "lastLoggedIn",
   },
 ];
 
@@ -43,6 +43,11 @@ export function UserTable({ users }: ITourTableProp) {
     <MaterialReactTable
       columns={userColumns}
       data={users as IUser[]}
+      renderEmptyRowsFallback={() => (
+        <center className="p-4">
+          <Spinner size="lg" />
+        </center>
+      )}
     ></MaterialReactTable>
   );
 }

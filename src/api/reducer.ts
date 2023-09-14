@@ -28,7 +28,7 @@ export const defaultBooking: Booking = {
 export const defaultUser: IUser = {
   email: "",
   displayName: "",
-  phone: "",
+  phoneNumber: "",
   photoURL: "",
 };
 

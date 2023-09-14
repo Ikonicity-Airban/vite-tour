@@ -64,7 +64,7 @@ export function useFetchCollection<T>(colName: string) {
 
       setCol(newArray);
     } catch (e) {
-      console.error("Error adding document: ", e);
+      console.error("Error fe document: ", e);
     } finally {
       dispatch({ type: Types.setIsLoading, payload: false });
     }
@@ -74,7 +74,10 @@ export function useFetchCollection<T>(colName: string) {
     fetchData();
   }, [fetchData]);
 
-  return col;
+  const refetch = () => {
+    dispatch({ type: Types.setIsLoading, payload: true });
+  };
+  return { data: col, refetch };
 }
 export function useQueryCollection<T>(
   colName: string,

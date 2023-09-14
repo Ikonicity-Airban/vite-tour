@@ -1,5 +1,6 @@
+import { FaHeart, FaHotel, FaReceipt } from "react-icons/fa6";
+
 import AllBookingTable from "../../components/AllBookingTable";
-import { FaFoursquare } from "react-icons/fa6";
 import { FaUserCircle } from "react-icons/fa";
 import { IUser } from "../../api/@types";
 import Section from "../../components/Section";
@@ -17,20 +18,20 @@ export default function AdminDashboard() {
       <Tabs.Group aria-label="Full width tabs" style="underline">
         <Tabs.Item active icon={FaUserCircle} title="Users">
           <Section title="Users" subtitle="All Tour Users">
-            <UserTable users={users} />
+            <UserTable users={users.data} />
           </Section>
         </Tabs.Item>
-        <Tabs.Item icon={FaFoursquare} title="Plans">
+        <Tabs.Item icon={FaHeart} title="Plans">
           <Section title="Plans" subtitle="All Tour Plans">
             <TourPlanList />
           </Section>
         </Tabs.Item>
-        <Tabs.Item icon={FaFoursquare} title="Tour Sites">
+        <Tabs.Item icon={FaHotel} title="Tour Sites">
           <Section title="Sites" subtitle="All Tour Sites">
             <TourSiteList />
           </Section>
         </Tabs.Item>
-        <Tabs.Item icon={FaFoursquare} title="Bookings">
+        <Tabs.Item icon={FaReceipt} title="Bookings">
           <Section title="bookings" subtitle="All Bookings">
             <AllBookingTable />
           </Section>

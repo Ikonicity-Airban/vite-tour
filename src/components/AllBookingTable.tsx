@@ -1,8 +1,8 @@
-import { Button, Label, Modal } from "flowbite-react";
+import { Button, Checkbox, Label, Modal, Spinner } from "flowbite-react";
+import { DocumentData, doc, updateDoc } from "firebase/firestore";
 import { FaCheck, FaPen } from "react-icons/fa6";
 import { FaMinusCircle, FaTimes } from "react-icons/fa";
 import MaterialReactTable, { MRT_ColumnDef } from "material-react-table";
-import { doc, updateDoc } from "firebase/firestore";
 import { useEffect, useMemo, useState } from "react";
 
 import { Booking } from "../api/@types";
@@ -14,15 +14,23 @@ import { useForm } from "react-hook-form";
 import useModal from "../api/useModal";
 
 function AllBookingTable() {
-  const bookings = useFetchCollection<Booking>("bookings");
-  const [selectedBooking, setBooking] = useState<Booking>(defaultBooking);
+  const { data: bookings, refetch } = useFetchCollection<Booking>("bookings");
+  const [bookingList, setBookingList] = useState<Booking[] | DocumentData>(
+    bookings
+  );
+  const [selectedBooking, setSelectedBooking] =
+    useState<Booking>(defaultBooking);
   const [mode, setMode] = useState<"Edit" | "Delete">("Edit");
   const { hideModal, isModalVisible, showModal } = useModal();
 
+  useEffect(() => {
+    setBookingList(bookings);
+  }, []);
+
   const handleEdit = async (booking: Booking) => {
+    setSelectedBooking(booking);
     setMode("Edit");
     showModal();
-    setBooking(booking);
   };
 
   const BookingForm = () => {
@@ -36,8 +44,8 @@ function AllBookingTable() {
       try {
         const tourPlanRef = doc(db, "bookings", selectedBooking?.id || "");
         await updateDoc(tourPlanRef, { ...formData });
+        refetch();
         toast.success("Update complete");
-        location.reload();
       } catch (error) {
         console.log(
           "🚀 ~ file: AllBookingTable.tsx:42 ~ onSubmit ~ error:",
@@ -67,6 +75,14 @@ function AllBookingTable() {
                 </option>
               ))}
             </select>
+          </div>
+          <div className="flex items-center space-x-2">
+            <Checkbox
+              size={30}
+              defaultChecked={selectedBooking.completed}
+              {...register("completed")}
+            />
+            <Label htmlFor="place">Complete</Label>
           </div>
           <Button type="submit" className="w-full">
             Save
@@ -176,7 +192,12 @@ function AllBookingTable() {
       </Modal>
       <MaterialReactTable
         columns={bookingColumns}
-        data={bookings as Booking[]}
+        renderEmptyRowsFallback={() => (
+          <center className="p-4">
+            <Spinner size="lg" />
+          </center>
+        )}
+        data={(bookingList as Booking[]) || []}
         enableRowSelection
         rowCount={5}
       />

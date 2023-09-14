@@ -1,4 +1,5 @@
 import { Button, Card, Checkbox, Label, TextInput } from "flowbite-react";
+import { FaEnvelope, FaKey } from "react-icons/fa6";
 import {
   GoogleAuthProvider,
   browserLocalPersistence,
@@ -39,10 +40,10 @@ function LoginPage() {
         password
       );
       setUser({ ...user, ...newUser, email });
-      const usersRef = doc(db, "users", user.uid || "");
+      const usersRef = doc(db, "users", user?.uid || "");
       await setDoc(
         usersRef,
-        { lastLoggedIn: new Date(Date.now()).getDate().toString() },
+        { lastLoggedIn: new Date(Date.now()).toUTCString() },
         { merge: true }
       );
 
@@ -50,7 +51,15 @@ function LoginPage() {
     } catch (error) {
       if (error instanceof Error) {
         const errMsg = error.message;
-        toast.error(errMsg);
+        toast.error(
+          errMsg === "Firebase: Error (auth/user-not-found)."
+            ? "Account doesn't exist, please sign up now"
+            : "Something went wrong"
+        );
+        console.log(
+          "🚀 ~ file: login.tsx:55 ~ constonSubmit:SubmitHandler<IFormInput>= ~ errMsg:",
+          errMsg
+        );
       }
     } finally {
       setLoading(false);
@@ -96,6 +105,7 @@ function LoginPage() {
             </div>
             <TextInput
               autoFocus
+              icon={FaEnvelope}
               id="email1"
               placeholder="name@flowbite.com"
               required
@@ -110,6 +120,7 @@ function LoginPage() {
 
             <TextInput
               id="password1"
+              icon={FaKey}
               required
               type={showPass ? "password" : "text"}
               {...register("password")}

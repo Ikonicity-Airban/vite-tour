@@ -25,7 +25,7 @@ function HomePage() {
   } = useContext(AppContext);
 
   // const services: IService[] = [];
-  const services = useFetchCollection<IService>("services");
+  const { data: services } = useFetchCollection<IService>("services");
   const [filtered, setFiltered] = useState<IPlace[]>();
 
   return (

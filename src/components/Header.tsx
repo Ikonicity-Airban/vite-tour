@@ -59,7 +59,7 @@ const navLinks = [
 
 function Header() {
   return (
-    <header className="flex flex-col top-0 w-full text-base z-50 dark:text-white">
+    <header className="flex flex-col top-0 w-full text-base z-[500] dark:text-white">
       <div className="hidden md:flex w-full p-4 z-20">
         <div className="flex w-full md:container max-w-screen-desktop mx-auto justify-between p-4 pb-10">
           <div className="text-center text-lg-left mb-2 mb-lg-0">

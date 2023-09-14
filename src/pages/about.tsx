@@ -1,5 +1,6 @@
-import { Link } from "react-router-dom";
 import BreadcrumbComponents from "../components/BreadcrumbComponents";
+import { GoogleMap } from "../components";
+import { Link } from "react-router-dom";
 
 function AboutPage() {
   return (
@@ -56,6 +57,9 @@ function AboutPage() {
             </button>
           </div>
         </form>
+      </div>
+      <div className="-mt-32">
+        <GoogleMap withSearch={false} />
       </div>
     </section>
   );

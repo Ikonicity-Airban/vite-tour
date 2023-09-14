@@ -131,7 +131,7 @@ export const PlanCard: React.FC<{ plan: Plan; user?: IUser }> = ({
 };
 
 export default function PremiumCardList() {
-  const plans = useFetchCollection<Plan>("plans");
+  const { data: plans } = useFetchCollection<Plan>("plans");
   const [user] = useLocalStorage<IUser>("tour-user", defaultUser);
   return (
     <div className="w-full">

@@ -86,31 +86,21 @@ function DashboardLayout() {
 
   //useEffect
   React.useLayoutEffect(() => {
-    dispatch({
-      type: Types.setIsLoading,
-      payload: true,
-    });
-
     if (!user.email) {
       navigate("/login");
       console.log("user is logged out");
       return;
     }
-    const getSingleDocument = async () => {
+    const checkUser = async () => {
+      dispatch({
+        type: Types.setIsLoading,
+        payload: true,
+      });
       try {
         const userRef = doc(db, "users", user?.uid || "");
         const docSnap = await getDoc(userRef);
-        console.log(
-          "🚀 ~ file: DashboardLayout.tsx:103 ~ getSingleDocument ~ docSnap:",
-          docSnap.data()
-        );
-
         if (docSnap.exists()) {
           setUser(docSnap.data());
-          console.log(
-            "🚀 ~ file: DashboardLayout.tsx:106 ~ getSingleDocument ~ docSnap.data():",
-            docSnap.data()
-          );
         } else {
           navigate("/login");
 
@@ -125,8 +115,7 @@ function DashboardLayout() {
         });
       }
     };
-    // Usage example
-    getSingleDocument();
+    checkUser();
   }, [dispatch]);
 
   if (user?.email)

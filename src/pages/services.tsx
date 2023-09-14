@@ -7,7 +7,7 @@ import Section from "../components/Section";
 import { useFetchCollection } from "../api/fetchCollections";
 
 function ServicesPage() {
-  const services = useFetchCollection<IService>("services");
+  const { data: services } = useFetchCollection<IService>("services");
 
   return (
     <div className="md:mt-20 p-1">
@@ -27,7 +27,7 @@ function ServicesPage() {
                   <Accordion.Content className="text-justify p-6">
                     <div className="p-6">
                       <h1 className="text-center my-4 text-zinc-400">{name}</h1>
-                      <div className="h-52 w-52 animate-bounce animate-title mx-auto  ">
+                      <div className="h-52 w-52 animate-title mx-auto  ">
                         <img
                           src={icon}
                           alt={name}

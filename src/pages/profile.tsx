@@ -11,7 +11,7 @@ import useLocalStorage from "../api/useLocalStorage";
 function ProfilePage() {
   const [user] = useLocalStorage<IUser>("tour-user", defaultUser);
   const [userPlan, setuserPlan] = useState<Plan>();
-  const plans = useFetchCollection<Plan>("plans");
+  const { data: plans } = useFetchCollection<Plan>("plans");
 
   const ProfileForm = () => (
     <div className="mx-auto max-w-xl w-full min-w-[280px] space-y-3">
@@ -48,7 +48,7 @@ function ProfilePage() {
               readOnly
               type="phone"
               id="phone"
-              defaultValue={user?.phone || ""}
+              defaultValue={user?.phoneNumber || ""}
             />
           </div>
           <div className="flex items-center space-x-2">

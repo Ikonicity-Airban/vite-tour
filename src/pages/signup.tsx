@@ -1,12 +1,5 @@
-import {
-  Alert,
-  Button,
-  Card,
-  Checkbox,
-  Label,
-  TextInput,
-} from "flowbite-react";
 import { BreadcrumbComponents, Section } from "../components";
+import { Button, Card, Checkbox, Label, TextInput } from "flowbite-react";
 import {
   GoogleAuthProvider,
   createUserWithEmailAndPassword,
@@ -23,6 +16,7 @@ import { useContext, useState } from "react";
 import { AppContext } from "../api/context";
 import LogoComponent from "../components/LogoComponent";
 import { Types } from "../api/reducer";
+import getTokenUser from "../api/getTokenUser";
 import { toast } from "react-hot-toast";
 
 interface IFormInput {
@@ -36,7 +30,6 @@ function SignUpPage() {
   const [loading, setLoading] = useState(false);
   const { register, handleSubmit } = useForm<IFormInput>();
   const navigate = useNavigate();
-  const [errMsg, setErrMsg] = useState("");
   const { dispatch } = useContext(AppContext);
   auth.setPersistence(inMemoryPersistence);
   const [showPass, setShowPass] = useState(true);
@@ -49,7 +42,7 @@ function SignUpPage() {
     password,
   }) => {
     if (password !== confirmPassword) {
-      setErrMsg("Password doesn't Match");
+      toast.error("Passwords doesn't Match");
       return;
     }
     try {
@@ -59,32 +52,19 @@ function SignUpPage() {
         Email,
         password
       );
-
-      console.log("🚀 ~ file: signup.tsx:60 ~ SignUpPage ~ user:", user);
+      console.log("🚀 ~ file: signup.tsx:51 ~ SignUpPage ~ user:", user);
       await updateProfile(user, { displayName: name });
 
-      const usersRef = doc(db, "users", user.uid);
-
-      const userData = {
-        displayName: user.displayName,
-        email: user.email,
-        bookings: [],
-        uid: user?.uid,
-        role: "user",
-        plan: null,
-        photoURL: user.photoURL,
-        phone: user.phoneNumber,
-      };
+      const usersRef = doc(db, "users", user?.uid || "");
 
       // Use setDoc() with merge option to avoid overwriting existing data
-      await setDoc(usersRef, userData, { merge: true });
+      await setDoc(usersRef, getTokenUser(user), { merge: true });
       //navigate to login
       navigate("/login", { replace: true });
     } catch (error) {
       if (error instanceof Error) {
-        const errorMessage = error.message;
-        console.log(errorMessage);
-        setErrMsg(errorMessage);
+        const errMsg = error.message;
+        console.log(errMsg);
         toast.error(errMsg);
       }
     } finally {
@@ -100,39 +80,23 @@ function SignUpPage() {
 
       //save the user to firestore
 
-      const usersRef = doc(db, "users", user.uid);
-
-      const userData = {
-        displayName: user.displayName,
-        email: user.email,
-        bookings: [],
-        uid: user?.uid,
-        role: "user",
-        plan: null,
-        photoURL: user.photoURL,
-        phone: user.phoneNumber,
-      };
-
+      const usersRef = doc(db, "users", user?.uid);
       // Use setDoc() with merge option to avoid overwriting existing data
-      await setDoc(usersRef, userData, { merge: true });
+      await setDoc(usersRef, getTokenUser(user), { merge: true });
       dispatch({
         type: Types.login,
         payload: {
           ...user,
         },
       });
-      navigate("/login");
+      navigate("/dashboard");
     } catch (error) {
       if (error instanceof Error) {
         const errorMessage = error.message;
         console.log(errorMessage);
-        setErrMsg(errorMessage);
         toast.error(errorMessage);
       }
     } finally {
-      setTimeout(() => {
-        setErrMsg("");
-      }, 5000);
       setLoading(false);
     }
   };
@@ -142,17 +106,6 @@ function SignUpPage() {
       <BreadcrumbComponents />
       <section className="grid place-items-center min-h-screen">
         <Section subtitle="Create an account" title="sign up form">
-          {errMsg && (
-            <Alert color="failure">
-              <span>
-                <p>
-                  <span className="font-medium">Info alert!</span>
-                  {errMsg}
-                </p>
-              </span>
-            </Alert>
-          )}
-
           <Card
             className="mobile:min-w-[320px] w-11/12 max-w-md mt-20 mx-auto p-0"
             id=""
@@ -223,7 +176,7 @@ function SignUpPage() {
                   to="/login"
                   className="text-xs underline dark:bg-slate-700 bg-slate-100 p-1"
                 >
-                  login
+                  Login
                 </NavLink>
               </div>
               <Button
@@ -237,12 +190,11 @@ function SignUpPage() {
               </Button>
             </form>
             <Button
-              outline
-              isProcessing={loading}
               disabled={loading}
               className="w-full flex items-center space-x-3 justify-center rounded-lg text-sm my-4 border-[1px] border-slate-200"
               type="button"
               onClick={googleSignIn}
+              color="skyblue"
             >
               <span className="w-6 object-contain mr-2">
                 <img src="google.svg" alt="logo" className="object-contain" />

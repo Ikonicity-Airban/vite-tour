@@ -1,5 +1,5 @@
 import { Booking, IPlace, IUser } from "../api/@types";
-import { Button, Label, Modal, TextInput } from "flowbite-react";
+import { Button, Label, Modal, Spinner, TextInput } from "flowbite-react";
 import { FaCheck, FaPen, FaTrashCan } from "react-icons/fa6";
 import MaterialReactTable, { MRT_ColumnDef } from "material-react-table";
 import { defaultBooking, defaultUser } from "../api/reducer";
@@ -29,7 +29,7 @@ const bookingKeys = {
 
 function BookingTable() {
   const [user] = useLocalStorage<IUser>("tour-user", defaultUser);
-  const places = useFetchCollection<IPlace>("places");
+  const { data: places } = useFetchCollection<IPlace>("places");
   const bookings = useQueryCollection("bookings", "userId", user.uid ?? "");
   const [selectedBooking, setBooking] = useState<Booking>(defaultBooking);
   const [mode, setMode] = useState<"Edit" | "Delete">("Edit");
@@ -133,7 +133,7 @@ function BookingTable() {
     );
   };
 
-  const bookingColumns: MRT_ColumnDef<Booking>[] = useMemo(
+  const bookingColumns = useMemo<MRT_ColumnDef<Booking>[]>(
     () => [
       {
         header: "Date",
@@ -142,6 +142,7 @@ function BookingTable() {
       {
         header: "Duration",
         accessorKey: "duration",
+        size: 0.1,
       },
       {
         header: "Place",
@@ -239,6 +240,11 @@ function BookingTable() {
         data={bookings as Booking[]}
         enableRowSelection
         rowCount={5}
+        renderEmptyRowsFallback={() => (
+          <center className="p-4">
+            <Spinner size="lg" />
+          </center>
+        )}
       />
     </>
   );

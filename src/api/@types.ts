@@ -8,7 +8,7 @@ export type IUser = {
   role?: "user" | "admin";
   displayName?: strNull;
   photoURL?: strNull;
-  phone?: strNull;
+  phoneNumber?: strNull;
   plan?: Plan["title"] | null;
   bookings?: Booking[];
   emailVerified?: boolean;
