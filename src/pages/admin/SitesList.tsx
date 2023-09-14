@@ -44,7 +44,6 @@ const TourSiteList = () => {
   ]);
   const { hideModal, isModalVisible, showModal } = useModal();
   const [selectedSite, setSelectedSite] = useState<IPlace>(defaultTourSite);
-  const [siteImages] = useState(selectedSite.images);
 
   const fetchTourPlans = async () => {
     const tourPlansRef = collection(db, "places");
@@ -70,10 +69,6 @@ const TourSiteList = () => {
   };
 
   const handleDeleteTourPlan = async (docId: string) => {
-    console.log(
-      "🚀 ~ file: SitesList.tsx:72 ~ handleDeleteTourPlan ~ docId:",
-      docId
-    );
     try {
       const documentRef = doc(db, "places", docId);
       await deleteDoc(documentRef);
@@ -94,9 +89,9 @@ const TourSiteList = () => {
   const ImageRenderer = () => {
     return (
       <div className="relative">
-        {siteImages?.map((image) => (
+        {selectedSite.images?.map((image) => (
           <div key={image}>
-            <img src={image} alt="image" />
+            <img src={image} alt="image" />1
           </div>
         ))}
         <Label htmlFor="images" className="capitalize">
@@ -121,7 +116,7 @@ const TourSiteList = () => {
       if (mode == "Create") {
         const id = randomUUID();
         const tourSiteRef = doc(db, "plans", id);
-        await setDoc(tourSiteRef, { ...formData, id });
+        await setDoc(tourSiteRef, { ...formData, id, images: [] });
         fetchTourPlans();
         reset(defaultTourSite);
         hideModal();

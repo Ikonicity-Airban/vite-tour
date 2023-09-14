@@ -13,6 +13,7 @@ import { doc, setDoc } from "firebase/firestore";
 import { IUser } from "../api/@types";
 import LogoComponent from "../components/LogoComponent";
 import { defaultUser } from "../api/reducer";
+import getTokenUser from "../api/getTokenUser";
 import toast from "react-hot-toast";
 import useLocalStorage from "../api/useLocalStorage";
 import { useState } from "react";
@@ -38,6 +39,13 @@ function LoginPage() {
         password
       );
       setUser({ ...user, ...newUser, email });
+      const usersRef = doc(db, "users", user.uid || "");
+      await setDoc(
+        usersRef,
+        { lastLoggedIn: new Date(Date.now()).getDate().toString() },
+        { merge: true }
+      );
+
       navigate("/dashboard");
     } catch (error) {
       if (error instanceof Error) {
@@ -56,19 +64,9 @@ function LoginPage() {
       const { user } = await signInWithPopup(auth, provider);
       const usersRef = doc(db, "users", user.uid);
 
-      const userData = {
-        displayName: user.displayName,
-        email: user.email ?? "",
-        uid: user?.uid,
-        bookings: [],
-        role: "user",
-        photoURL: user.photoURL,
-        phone: user.phoneNumber,
-      };
-
       // Use setDoc() with merge option to avoid overwriting existing data
-      await setDoc(usersRef, userData, { merge: true });
-      setUser(userData);
+      await setDoc(usersRef, getTokenUser(user), { merge: true });
+      setUser(getTokenUser(user));
       navigate("/dashboard");
     } catch (error) {
       if (error instanceof Error) {

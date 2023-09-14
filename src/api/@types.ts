@@ -5,12 +5,14 @@ type strNull = string | null;
 export type IUser = {
   email?: strNull;
   uid?: strNull;
+  role?: "user" | "admin";
   displayName?: strNull;
   photoURL?: strNull;
   phone?: strNull;
   plan?: Plan["title"] | null;
   bookings?: Booking[];
   emailVerified?: boolean;
+  lastLoggedIn?: string;
 };
 
 export interface IService {
@@ -70,6 +72,7 @@ export interface Booking {
   userId: string;
   date: string;
   numGuests: string;
+  email?: string;
   plan?: Plan["title"] | null;
   status?: "declined" | "approved" | "idle";
   completed?: boolean;

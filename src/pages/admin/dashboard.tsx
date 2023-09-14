@@ -1,24 +1,41 @@
+import AllBookingTable from "../../components/AllBookingTable";
+import { FaFoursquare } from "react-icons/fa6";
+import { FaUserCircle } from "react-icons/fa";
 import { IUser } from "../../api/@types";
 import Section from "../../components/Section";
+import { Tabs } from "flowbite-react";
 import TourPlanList from "./PlanList";
+import TourSiteList from "./SitesList";
 import { UserTable } from "../../components/TableComponent";
 import { useFetchCollection } from "../../api/fetchCollections";
-import TourSiteList from "./SitesList";
 
 export default function AdminDashboard() {
   const users = useFetchCollection<IUser[]>("users");
 
   return (
-    <>
-      <Section title="Users" subtitle="All Tour Users">
-        <UserTable users={users} />
-      </Section>
-      <Section title="Plans" subtitle="All Tour Plans">
-        <TourPlanList />
-      </Section>
-      <Section title="Sites" subtitle="All Tour Sites">
-        <TourSiteList />
-      </Section>
-    </>
+    <div className="my-10 max-w-screen-desktop w-full mx-auto">
+      <Tabs.Group aria-label="Full width tabs" style="underline">
+        <Tabs.Item active icon={FaUserCircle} title="Users">
+          <Section title="Users" subtitle="All Tour Users">
+            <UserTable users={users} />
+          </Section>
+        </Tabs.Item>
+        <Tabs.Item icon={FaFoursquare} title="Plans">
+          <Section title="Plans" subtitle="All Tour Plans">
+            <TourPlanList />
+          </Section>
+        </Tabs.Item>
+        <Tabs.Item icon={FaFoursquare} title="Tour Sites">
+          <Section title="Sites" subtitle="All Tour Sites">
+            <TourSiteList />
+          </Section>
+        </Tabs.Item>
+        <Tabs.Item icon={FaFoursquare} title="Bookings">
+          <Section title="bookings" subtitle="All Bookings">
+            <AllBookingTable />
+          </Section>
+        </Tabs.Item>
+      </Tabs.Group>
+    </div>
   );
 }

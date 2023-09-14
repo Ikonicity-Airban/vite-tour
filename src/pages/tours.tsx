@@ -19,14 +19,9 @@ function ToursPages() {
   const [places] = useLocalStorage<IPlace[]>("tour-places", defaultPlace);
 
   const [searchResults, setSearchResults] = useState<IPlace[]>();
-  // const [next, setNext] = useState<number>(0);
   const handleSearch = (results: IPlace[]) => {
     setSearchResults(results);
   };
-
-  // function handleClick() {
-
-  // }
 
   return (
     <div className="md:mt-20 space-y-10 p-4">

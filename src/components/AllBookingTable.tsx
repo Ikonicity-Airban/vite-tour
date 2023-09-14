@@ -1,11 +1,11 @@
-import { Booking, IPlace } from "../api/@types";
-import { Button, Label, Modal, TextInput } from "flowbite-react";
-import { FaCheck, FaPen, FaTrashCan } from "react-icons/fa6";
+import { Button, Label, Modal } from "flowbite-react";
+import { FaCheck, FaPen } from "react-icons/fa6";
+import { FaMinusCircle, FaTimes } from "react-icons/fa";
 import MaterialReactTable, { MRT_ColumnDef } from "material-react-table";
-import { deleteDoc, doc, updateDoc } from "firebase/firestore";
+import { doc, updateDoc } from "firebase/firestore";
 import { useEffect, useMemo, useState } from "react";
 
-import { FaMinusCircle } from "react-icons/fa";
+import { Booking } from "../api/@types";
 import { db } from "../firebase";
 import { defaultBooking } from "../api/reducer";
 import toast from "react-hot-toast";
@@ -13,44 +13,16 @@ import { useFetchCollection } from "../api/fetchCollections";
 import { useForm } from "react-hook-form";
 import useModal from "../api/useModal";
 
-const bookingKeys = {
-  date: "Date",
-  duration: "Duration",
-  place: "Place",
-  numGuests: "Number of Guests",
-  userId: "",
-  status: "Status",
-  approved: "",
-};
-
-function BookingTable() {
-  const places = useFetchCollection<IPlace>("places");
-  const bookings = useFetchCollection<Booking>("booking");
+function AllBookingTable() {
+  const bookings = useFetchCollection<Booking>("bookings");
   const [selectedBooking, setBooking] = useState<Booking>(defaultBooking);
   const [mode, setMode] = useState<"Edit" | "Delete">("Edit");
   const { hideModal, isModalVisible, showModal } = useModal();
 
-  const handleDelete = async (booking: Booking) => {
-    setMode("Delete");
-    showModal();
-    setBooking(booking);
-  };
   const handleEdit = async (booking: Booking) => {
     setMode("Edit");
     showModal();
     setBooking(booking);
-  };
-
-  const onDelete = async () => {
-    const bookingRef = doc(db, "bookings", selectedBooking?.id || "");
-
-    try {
-      await deleteDoc(bookingRef);
-      console.log("Booking deleted successfully");
-      location.reload();
-    } catch (error) {
-      console.error("Error deleting booking:", error);
-    }
   };
 
   const BookingForm = () => {
@@ -67,55 +39,31 @@ function BookingTable() {
         toast.success("Update complete");
         location.reload();
       } catch (error) {
-        console.log("🚀 ~ file: dashboard.tsx:81 ~ onSubmit ~ error:", error);
+        console.log(
+          "🚀 ~ file: AllBookingTable.tsx:42 ~ onSubmit ~ error:",
+          error
+        );
       }
     };
 
     return (
       <>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          {Object.keys(defaultBooking)
-            .filter((key) => !["userId", "place"].includes(key))
-            .map((key) => (
-              <div key={key}>
-                <Label htmlFor={key}>{bookingKeys[key]}</Label>
-                <TextInput
-                  type={
-                    ["duration", "guest"].includes(key)
-                      ? "number"
-                      : key === "date"
-                      ? "date"
-                      : "text"
-                  }
-                  min={0}
-                  id={key}
-                  {...register(key as keyof Booking, { required: true })}
-                />
-              </div>
-            ))}
           <div>
-            <Label htmlFor="place">Description</Label>
+            <Label htmlFor="place">Status</Label>
             <select
               required
-              defaultValue={selectedBooking.place}
+              defaultValue={selectedBooking.status}
               className="w-full space-y-2 block outline-none p-3 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-white focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              {...register("place")}
+              {...register("status")}
             >
-              <option
-                value={selectedBooking.place}
-                className="text-gray-500"
-                disabled
-              >
-                {selectedBooking.place || "Choose your Destination"}
-              </option>
-              {places?.map(({ name }: IPlace, i: number) => (
+              {["Declined", "Approved", "Idle"].map((item) => (
                 <option
-                  key={i}
-                  value={name}
-                  className="h-fit grid rounded cursor-pointer"
-                  // onClick={() => handleClick(name)}
+                  value={item.toLowerCase()}
+                  key={item}
+                  className="text-gray-500"
                 >
-                  {name}
+                  {item}
                 </option>
               ))}
             </select>
@@ -130,6 +78,10 @@ function BookingTable() {
 
   const bookingColumns: MRT_ColumnDef<Booking>[] = useMemo(
     () => [
+      {
+        header: "User Email",
+        accessorKey: "email",
+      },
       {
         header: "Date",
         accessorKey: "date",
@@ -149,7 +101,28 @@ function BookingTable() {
       },
       {
         header: "Status",
-        accessorFn: ({ status }) => <center>{status}</center>,
+        accessorFn: ({ status }) => (
+          <div
+            className="capitalize flex items-center gap-2"
+            style={{
+              color:
+                status === "approved"
+                  ? "green"
+                  : status === "declined"
+                  ? "red"
+                  : "gray",
+            }}
+          >
+            {status}{" "}
+            {status === "approved" ? (
+              <FaCheck />
+            ) : status === "declined" ? (
+              <FaTimes />
+            ) : (
+              <FaMinusCircle />
+            )}
+          </div>
+        ),
       },
       {
         header: "Completed",
@@ -174,12 +147,6 @@ function BookingTable() {
             >
               <FaPen />
             </div>
-            <div
-              className="ring-1 p-2 rounded-lg"
-              onClick={() => handleDelete(item)}
-            >
-              <FaTrashCan />
-            </div>
           </div>
         ),
       },
@@ -193,40 +160,18 @@ function BookingTable() {
         <Modal.Header>
           <center>
             <h3 className="m-4 text-center w-full font-medium text-primary">
-              {mode} Booking
+              {mode} Bookings
             </h3>
           </center>
         </Modal.Header>
         <hr />
         <Modal.Body>
-          {mode == "Delete" ? (
-            <>
-              <center className="py-4">
-                <div className="">Do you want to delete this Booking?</div>
-              </center>
-              <div className="flex w-full justify-end space-x-6">
-                <Button
-                  type="button"
-                  color="failure"
-                  onClick={() => onDelete()}
-                  className="mt-2"
-                >
-                  Ok
-                </Button>
-
-                <Button type="button" onClick={hideModal} className="mt-2">
-                  Cancel
-                </Button>
-              </div>
-            </>
-          ) : (
-            <>
-              <BookingForm />
-              <Button type="button" onClick={hideModal} className="w-full mt-2">
-                Cancel
-              </Button>
-            </>
-          )}
+          <>
+            <BookingForm />
+            <Button type="button" onClick={hideModal} className="w-full mt-2">
+              Cancel
+            </Button>
+          </>
         </Modal.Body>
       </Modal>
       <MaterialReactTable
@@ -238,4 +183,4 @@ function BookingTable() {
     </>
   );
 }
-export default BookingTable;
+export default AllBookingTable;

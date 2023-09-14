@@ -1,22 +1,24 @@
-import { IPlace, IUser } from "../api/@types";
-import { defaultPlace, defaultUser } from "../api/reducer";
-
+import { AppContext } from "../api/context";
 import { BookNowComponent } from "../components";
 import BookingTable from "../components/BookingTable";
 import { Button } from "flowbite-react";
 import CardComponent from "../components/Card";
 import GoogleMap from "../components/GoogleMap";
 import { Helmet } from "react-helmet";
+import { IUser } from "../api/@types";
 import { Link } from "react-router-dom";
 import LoadingSection from "../components/LoadingSection";
 import Section from "../components/Section";
+import { defaultUser } from "../api/reducer";
 import { shuffleArray } from "../api/helper";
+import { useContext } from "react";
 import useLocalStorage from "../api/useLocalStorage";
 
 function Dashboard() {
   const [user] = useLocalStorage<IUser>("tour-user", defaultUser);
-  const [places] = useLocalStorage<IPlace[]>("tour-places", defaultPlace);
-
+  const {
+    state: { places },
+  } = useContext(AppContext);
   return (
     <div className="block w-full max-w-screen-desktop mx-auto">
       <Helmet>

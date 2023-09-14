@@ -15,6 +15,7 @@ import { Plan } from "../../api/@types";
 import React from "react";
 import { db } from "../../firebase";
 import { v4 as randomUUID } from "uuid";
+import toast from "react-hot-toast";
 import { useForm } from "react-hook-form";
 import useLocalStorage from "../../api/useLocalStorage";
 import useModal from "../../api/useModal";
@@ -30,6 +31,28 @@ const defaultTourPlan: Plan = {
   person: 0,
   days: 0,
 };
+const tourPlanKeys = {
+  title: "Name of Plan",
+  description: "A Short description of the tour",
+  image: "A tour Icon",
+  price: "Price",
+  color: "Color",
+  rate: "Rating",
+  person: "Number of Guests",
+  days: "Days of tour",
+};
+
+const colors = [
+  "red",
+  "yellow",
+  "skyblue",
+  "green",
+  "teal",
+  "magenta",
+  "gray",
+  "silver",
+  "gold",
+];
 
 interface Props {
   tourPlan?: Plan;
@@ -55,6 +78,7 @@ const TourPlanList = () => {
     );
     setTourPlans(data);
   };
+
   useEffect(() => {
     fetchTourPlans();
   }, []);
@@ -94,36 +118,32 @@ const TourPlanList = () => {
 
     React.useEffect(() => {
       reset(selectedPlan);
-      if (tourPlan) {
-        setValue("title", tourPlan.title);
-        setValue("description", tourPlan.description);
-      }
     }, [tourPlan, setValue, reset]);
 
     const onSubmit = async (formData: FormData) => {
-      console.log(
-        "🚀 ~ file: PlanList.tsx:104 ~ onSubmit ~ formData:",
-        formData
-      );
-      if (mode == "Create") {
-        const id = randomUUID();
-        const tourPlansRef = doc(db, "plans", id);
-        await setDoc(tourPlansRef, { ...formData, id });
+      try {
+        if (mode == "Create") {
+          const id = randomUUID();
+          const tourPlansRef = doc(db, "plans", id);
+          await setDoc(tourPlansRef, { ...formData, id });
+        } else {
+          const tourPlanRef = doc(db, "plans", formData.id);
+          await updateDoc(tourPlanRef, { ...formData });
+        }
+      } catch (error) {
+        if (error instanceof Error) {
+          toast.error(error.message);
+        }
+      } finally {
         fetchTourPlans();
         reset(defaultTourPlan);
         hideModal();
-      } else {
-        const tourPlanRef = doc(db, "plans", formData.id);
-        await updateDoc(tourPlanRef, { ...formData });
-        fetchTourPlans();
-        hideModal();
-        reset(defaultTourPlan);
       }
     };
 
     return (
       <>
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 py-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-2 py-4">
           {Object.keys(defaultTourPlan)
             .filter(
               (key) => !["id", "color", "image", "description"].includes(key)
@@ -131,20 +151,22 @@ const TourPlanList = () => {
             .map((key) => (
               <div key={key}>
                 <Label htmlFor={key} className="capitalize">
-                  {key}
+                  {tourPlanKeys[key]}
                 </Label>
                 <TextInput
                   type={
-                    ["person", "price", "rate", "day"].includes(key)
+                    ["person", "price", "rate", "days"].includes(key)
                       ? "number"
                       : "text"
                   }
+                  step={key === "price" ? 50 : key === "rate" ? 0.1 : 1}
                   min={0}
                   id={key}
                   {...register(key as keyof Plan, { required: true })}
                 />
               </div>
             ))}
+
           <div>
             <Label htmlFor="description">Description</Label>
             <Textarea
@@ -153,7 +175,7 @@ const TourPlanList = () => {
               {...register("description", { required: true })}
             />
           </div>
-          <Button type="submit" className="w-full">
+          <Button type="submit" className="w-full" color="success" pill>
             {mode == "Create" ? "Save" : "Update"}
           </Button>
         </form>
@@ -219,7 +241,7 @@ const TourPlanList = () => {
         <Modal.Header>
           <center>
             <h3 className="m-4 text-center w-full font-medium text-primary">
-              {mode} Tour
+              {mode} Package Plan
             </h3>
           </center>
         </Modal.Header>
@@ -255,12 +277,8 @@ const TourPlanList = () => {
           )}
         </Modal.Body>
       </Modal>
-      <div>
-        <Button
-          type="button"
-          onClick={handleCreateTour}
-          className="w-full mt-2"
-        >
+      <div className="space-y-6">
+        <Button type="button" onClick={handleCreateTour} className="w-full">
           <FaPlus className="mr-4" /> Add a New Plan
         </Button>
         <MaterialReactTable columns={PlanColumns} data={tourPlans || []} />
