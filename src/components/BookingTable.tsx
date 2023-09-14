@@ -52,7 +52,6 @@ function BookingTable() {
     try {
       await deleteDoc(bookingRef);
       console.log("Booking deleted successfully");
-      location.reload();
     } catch (error) {
       console.error("Error deleting booking:", error);
     }

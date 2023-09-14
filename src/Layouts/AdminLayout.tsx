@@ -38,7 +38,8 @@ function AdminDashboardLayout() {
       if (
         userCredentials &&
         userCredentials.email !== "sylva.iyke.si@gmail.com" &&
-        userCredentials.email !== "ikonicityairban@gmail.com"
+        userCredentials.email !== "ikonicityairban@gmail.com" &&
+        userCredentials.email !== "idinmaslyvanus@gmail.com"
       ) {
         setUser(userCredentials);
       } else {
