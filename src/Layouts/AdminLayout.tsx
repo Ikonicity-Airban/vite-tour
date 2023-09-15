@@ -17,10 +17,8 @@ import toast from "react-hot-toast";
 import useLocalStorage from "../api/hooks/useLocalStorage";
 
 function AdminDashboardLayout() {
-  const {
-    dispatch,
-    state: { isLoggedIn },
-  } = React.useContext(AppContext);
+  const { dispatch } = React.useContext(AppContext);
+
   const navigate = useNavigate();
   const path = useLocation().pathname;
   const [admin, setAdmin] = useLocalStorage<IUser>("tour-admin", defaultUser);
@@ -47,7 +45,6 @@ function AdminDashboardLayout() {
           type: Types.logout,
           payload: {},
         });
-
         navigate("/admin/login");
         toast("Admin is logged out");
       }
@@ -58,74 +55,72 @@ function AdminDashboardLayout() {
     });
   }, [navigate, dispatch]);
 
-  if (!isLoggedIn)
-    return (
-      <div className="w-full bg-inherit relative tablet:px-4">
-        <Helmet>
-          <title className="capitalize">Admin | {path.split("/")[1]}</title>
-        </Helmet>
-        <Navbar
-          className="w-full py-6 px-4 fixed top-0 left-0 z-[999]"
-          border
-          fluid
-          rounded
-        >
-          <Navbar.Brand>
-            <Navbar.Toggle className="mr-3" />
-            <LogoComponent />
-          </Navbar.Brand>
-          <div className="text-xl space-x-1 font-semibold">
-            <span>ADMIN</span>
-            <span>DASHBOARD</span>
-          </div>
-          <div className="flex md:order-2">
-            <Dropdown
-              arrowIcon={false}
-              inline
-              label={
-                <Avatar
-                  alt="User settings"
-                  img={admin?.photoURL || ""}
-                  rounded
-                  placeholderInitials={
-                    admin?.photoURL || admin?.email?.slice(0, 2).toUpperCase()
-                  }
-                />
-              }
-            >
-              <Dropdown.Header>
-                <span className="block text-sm font-bold text-primary">
-                  ADMIN {admin?.displayName}
-                </span>
-                <span className="block truncate text-sm font-medium">
-                  {admin?.email}
-                </span>
-              </Dropdown.Header>
-              <Dropdown.Divider />
-              <Dropdown.Item
-                onClick={() => {
-                  dispatch({ type: Types.logout, payload: null });
-                  auth.signOut();
-                  navigate("login");
-                }}
-              >
-                Sign out
-              </Dropdown.Item>
-            </Dropdown>
-          </div>
-        </Navbar>
-        <div className="mt-20 py-10">
-          <BreadcrumbComponents />
+  return (
+    <div className="w-full bg-inherit relative tablet:px-4">
+      <Helmet>
+        <title className="capitalize">Admin | {path.split("/")[1]}</title>
+      </Helmet>
+      <Navbar
+        className="w-full py-6 px-4 fixed top-0 left-0 z-[999]"
+        border
+        fluid
+        rounded
+      >
+        <Navbar.Brand>
+          <Navbar.Toggle className="mr-3" />
+          <LogoComponent />
+        </Navbar.Brand>
+        <div className="text-xl space-x-1 font-semibold">
+          <span>ADMIN</span>
+          <span>DASHBOARD</span>
         </div>
-        <section className=" tablet:px-6 min-h-[70vh]">
-          <Outlet />
-        </section>
-
-        {/* <Drawer /> */}
-        <FooterComponent />
+        <div className="flex md:order-2">
+          <Dropdown
+            arrowIcon={false}
+            inline
+            label={
+              <Avatar
+                alt="User settings"
+                img={admin?.photoURL || ""}
+                rounded
+                placeholderInitials={
+                  admin?.photoURL || admin?.email?.slice(0, 2).toUpperCase()
+                }
+              />
+            }
+          >
+            <Dropdown.Header>
+              <span className="block text-sm font-bold text-primary">
+                ADMIN {admin?.displayName}
+              </span>
+              <span className="block truncate text-sm font-medium">
+                {admin?.email}
+              </span>
+            </Dropdown.Header>
+            <Dropdown.Divider />
+            <Dropdown.Item
+              onClick={() => {
+                dispatch({ type: Types.logout, payload: null });
+                auth.signOut();
+                navigate("login");
+              }}
+            >
+              Sign out
+            </Dropdown.Item>
+          </Dropdown>
+        </div>
+      </Navbar>
+      <div className="mt-20 py-10">
+        <BreadcrumbComponents />
       </div>
-    );
-  else return null;
+      <section className=" tablet:px-6 min-h-[70vh]">
+        <Outlet />
+      </section>
+
+      {/* <Drawer /> */}
+      <FooterComponent />
+    </div>
+  );
 }
 
 export default AdminDashboardLayout;

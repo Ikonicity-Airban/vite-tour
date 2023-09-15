@@ -1,4 +1,4 @@
-import { Avatar, Navbar } from "flowbite-react";
+import { Avatar, Button, Navbar } from "flowbite-react";
 import { Link, NavLink } from "react-router-dom";
 
 import { AppContext } from "../api/contexts/context";
@@ -45,17 +45,10 @@ function NavbarComponent({ links: navLinks }: Props) {
           ))}
         </Navbar.Collapse>
         <Link
-          to="/dashboard"
+          to="/login"
           className="cursor-pointer -my-1 px-4 md:order-3 order-0"
         >
-          <Avatar
-            alt="User settings"
-            img={user?.photoURL || ""}
-            rounded
-            placeholderInitials={
-              user?.photoURL || user?.email?.slice(0, 2).toUpperCase()
-            }
-          />
+          <Button gradientDuoTone="greenToBlue">Login</Button>
         </Link>
       </Navbar>
     </div>
