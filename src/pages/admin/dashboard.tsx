@@ -1,5 +1,5 @@
 import { AllBookingTable, Section, UserTable } from "../../components";
-import { FaCrown, FaMapLocation, FaPerson, FaReceipt } from "react-icons/fa6";
+import { FaCrown, FaMapLocation, FaReceipt } from "react-icons/fa6";
 
 import { FaUserCircle } from "react-icons/fa";
 import { Tabs } from "flowbite-react";
@@ -29,11 +29,7 @@ export default function AdminDashboard() {
             <TourSiteList />
           </Section>
         </Tabs.Item>
-        <Tabs.Item icon={FaPerson} title="Tour Guides">
-          <Section title="Sites" subtitle="All Tour Guides">
-            <TourSiteList />
-          </Section>
-        </Tabs.Item>
+
         <Tabs.Item icon={FaUserCircle} title="Users">
           <Section title="Users" subtitle="All Tour Users">
             <UserTable />
