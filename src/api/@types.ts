@@ -9,18 +9,25 @@ export type IUser = {
   displayName?: strNull;
   photoURL?: strNull;
   phoneNumber?: strNull;
-  plan?: Plan["title"] | null;
-  bookings?: Booking[];
+  plan?: IPlan["title"] | null;
+  bookings?: IBooking[];
   emailVerified?: boolean;
   lastLoggedIn?: string;
 };
 
+export interface ITourGuide {
+  name: string;
+  sex: "male" | "female";
+  photoURL: string;
+  location: string;
+  about: string;
+}
 export interface IService {
   name: string;
   icon: string;
   desc: string;
 }
-export interface GenericResponse {
+export interface IGenericResponse {
   status: string;
   message: string;
 }
@@ -56,15 +63,15 @@ export interface IUserResponse {
   photoURL?: string | null;
   uid: string;
 }
-export interface Tour {
+export interface ITour {
   id: string;
   title: string;
   description: string;
-  bookings: Booking[];
-  Plan: Plan["title"];
+  bookings: IBooking[];
+  Plan: IPlan["title"];
 }
 
-export interface Booking {
+export interface IBooking {
   place?: string;
   id?: string;
   tourId?: string;
@@ -73,19 +80,12 @@ export interface Booking {
   date: string;
   numGuests: string;
   email?: string;
-  plan?: Plan["title"] | null;
+  plan?: IPlan["title"] | null;
   status?: "declined" | "approved" | "idle";
   completed?: boolean;
 }
-export interface PackagePlan {
-  id: string;
-  name: string;
-  description: string;
-  price: number;
-  features: string[];
-}
 
-export interface Plan {
+export interface IPlan {
   id: string;
   title: string;
   description: string;

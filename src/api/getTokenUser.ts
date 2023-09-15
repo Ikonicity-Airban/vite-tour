@@ -10,5 +10,6 @@ export default function getTokenUser(user: IUser) {
     phoneNumber: user?.phoneNumber,
     lastLoggedIn: new Date(Date.now()).toUTCString(),
   };
+
   return userData;
 }

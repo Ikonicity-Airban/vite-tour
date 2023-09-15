@@ -14,6 +14,7 @@ import { IUser } from "../api/@types";
 import React from "react";
 import useFetchSites from "../api/hooks/fetchCollections";
 import useLocalStorage from "../api/hooks/useLocalStorage";
+import { FaArrowRightFromBracket, FaPlane, FaUser } from "react-icons/fa6";
 
 function DashboardLayout() {
   const { dispatch } = React.useContext(AppContext);
@@ -26,7 +27,7 @@ function DashboardLayout() {
 
   const UserNavbar = () => (
     <Navbar
-      className="w-full py-6 px-4 fixed top-0 left-0 z-[999]"
+      className="w-full py-6 px-4 fixed top-0 left-0 z-[99]"
       border
       fluid
       rounded
@@ -50,7 +51,7 @@ function DashboardLayout() {
             />
           }
         >
-          <Dropdown.Header>
+          <Dropdown.Header className="">
             <span className="block font-semibold text-primary">
               {user?.displayName}
             </span>
@@ -58,25 +59,26 @@ function DashboardLayout() {
               {user?.email}
             </span>
           </Dropdown.Header>
-          <Dropdown.Item>
-            <Link className="text-sm" to="/dashboard">
+          <Dropdown.Item icon={FaPlane}>
+            <Link className="text-sm w-full text-left ml-2" to="/dashboard">
               Dashboard
             </Link>
           </Dropdown.Item>
-          <Dropdown.Item>
-            <Link className="text-sm" to="/profile">
+          <Dropdown.Item icon={FaUser}>
+            <Link className="text-sm w-full text-left ml-2" to="/profile">
               Profile
             </Link>
           </Dropdown.Item>
           <Dropdown.Divider />
           <Dropdown.Item
+            icon={FaArrowRightFromBracket}
             onClick={() => {
               dispatch({ type: Types.logout, payload: null });
               navigate("/login");
               auth.signOut();
             }}
           >
-            Sign out
+            <div className="text-sm w-full text-left ml-2">Sign out</div>
           </Dropdown.Item>
         </Dropdown>
       </div>
@@ -84,7 +86,7 @@ function DashboardLayout() {
   );
 
   //useEffect
-  React.useLayoutEffect(() => {
+  React.useEffect(() => {
     if (!user.email) {
       navigate("/login");
       console.log("user is logged out");
@@ -115,7 +117,7 @@ function DashboardLayout() {
       }
     };
     checkUser();
-  }, [dispatch]);
+  }, []);
 
   if (user?.email)
     return (

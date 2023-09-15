@@ -12,7 +12,7 @@ import MaterialReactTable, { MRT_ColumnDef } from "material-react-table";
 import { doc, updateDoc } from "firebase/firestore";
 import { useEffect, useMemo, useState } from "react";
 
-import { Booking } from "../api/@types";
+import { IBooking } from "../api/@types";
 import { db } from "../firebase";
 import { defaultBooking } from "../api/contexts/reducer";
 import toast from "react-hot-toast";
@@ -25,26 +25,26 @@ function AllBookingTable() {
     data: bookings,
     refetch,
     fetching,
-  } = useFetchCollection<Booking>("bookings");
+  } = useFetchCollection<IBooking>("bookings");
   const [selectedBooking, setSelectedBooking] =
-    useState<Booking>(defaultBooking);
+    useState<IBooking>(defaultBooking);
   const [mode, setMode] = useState<"Edit" | "Delete">("Edit");
   const { hideModal, isModalVisible, showModal } = useModal();
 
-  const handleEdit = async (booking: Booking) => {
+  const handleEdit = async (booking: IBooking) => {
     setSelectedBooking(booking);
     setMode("Edit");
     showModal();
   };
 
   const BookingForm = () => {
-    const { register, handleSubmit, setValue, reset } = useForm<Booking>();
+    const { register, handleSubmit, setValue, reset } = useForm<IBooking>();
 
     useEffect(() => {
       reset(selectedBooking);
     }, [setValue, reset]);
 
-    const onSubmit = async (formData: Booking) => {
+    const onSubmit = async (formData: IBooking) => {
       try {
         const tourPlanRef = doc(db, "bookings", selectedBooking?.id || "");
         await updateDoc(tourPlanRef, { ...formData });
@@ -94,7 +94,7 @@ function AllBookingTable() {
     );
   };
 
-  const bookingColumns: MRT_ColumnDef<Booking>[] = useMemo(
+  const bookingColumns: MRT_ColumnDef<IBooking>[] = useMemo(
     () => [
       {
         header: "User Email",
@@ -210,7 +210,7 @@ function AllBookingTable() {
             <center className="p-10">No Bookings Available</center>
           )
         }
-        data={(bookings as Booking[]) || []}
+        data={(bookings as IBooking[]) || []}
         enableRowSelection
         rowCount={5}
       />

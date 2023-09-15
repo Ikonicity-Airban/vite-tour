@@ -1,5 +1,4 @@
 import { FooterComponent, LogoComponent } from "../components";
-
 import { AppContext } from "../api/contexts/context";
 import Header from "../components/Header";
 import { Helmet } from "react-helmet";

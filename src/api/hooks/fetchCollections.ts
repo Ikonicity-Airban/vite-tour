@@ -3,6 +3,8 @@ import {
   WithFieldValue,
   addDoc,
   collection,
+  doc,
+  getDoc,
   getDocs,
   query,
   where,
@@ -23,24 +25,24 @@ function useFetchSites() {
   );
   const { dispatch } = useContext(AppContext);
 
+  const fetchData = async () => {
+    dispatch({ type: Types.setIsLoading, payload: true });
+    try {
+      const querySnapshot = await getDocs(collection(db, "places"));
+      const newArray: IPlaceResponse[] = [];
+      querySnapshot.forEach((doc) => {
+        // console.log(doc.data());
+        newArray.push(doc.data());
+      });
+      dispatch({ type: Types.setPlaces, payload: newArray });
+      setPlaces(newArray);
+    } catch (e) {
+      console.error("Error adding document: ", e);
+    } finally {
+      dispatch({ type: Types.setIsLoading, payload: false });
+    }
+  };
   useEffect(() => {
-    const fetchData = async () => {
-      dispatch({ type: Types.setIsLoading, payload: true });
-      try {
-        const querySnapshot = await getDocs(collection(db, "places"));
-        const newArray: IPlaceResponse[] = [];
-        querySnapshot.forEach((doc) => {
-          // console.log(doc.data());
-          newArray.push(doc.data());
-        });
-        dispatch({ type: Types.setPlaces, payload: newArray });
-        setPlaces(newArray);
-      } catch (e) {
-        console.error("Error adding document: ", e);
-      } finally {
-        dispatch({ type: Types.setIsLoading, payload: false });
-      }
-    };
     fetchData();
   }, []);
 
@@ -50,7 +52,6 @@ function useFetchSites() {
 export function useFetchCollection<T>(colName: string) {
   const [col, setCol] = useState<T[] | DocumentData>([]);
   const [fetching, setFetching] = useState(false);
-  const { dispatch } = useContext(AppContext);
 
   const fetchData = useCallback(async () => {
     setFetching(true);
@@ -68,7 +69,7 @@ export function useFetchCollection<T>(colName: string) {
     } finally {
       setFetching(false);
     }
-  }, [dispatch, colName]);
+  }, [colName]);
 
   useEffect(() => {
     fetchData();
@@ -80,6 +81,35 @@ export function useFetchCollection<T>(colName: string) {
   };
 
   return { data: col, refetch, fetching };
+}
+
+export function useFetchSingleDoc<T>(colName: string, docId: string) {
+  const [document, setDocument] = useState<T | DocumentData>({});
+  const [fetching, setFetching] = useState(false);
+
+  const fetchData = useCallback(async () => {
+    setFetching(true);
+    try {
+      const newDoc = await getDoc(doc(db, colName, docId));
+
+      setDocument({ ...newDoc.data() });
+    } catch (e) {
+      console.error("Error fetching document: ", e);
+    } finally {
+      setFetching(false);
+    }
+  }, [docId, colName]);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
+
+  const refetch = () => {
+    setFetching(true);
+    fetchData();
+  };
+
+  return { data: document, refetch, fetching };
 }
 export function useQueryCollection<T>(
   colName: string,

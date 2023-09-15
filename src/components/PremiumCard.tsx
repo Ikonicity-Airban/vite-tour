@@ -1,6 +1,6 @@
 import { Button, Card, Modal, Rating } from "flowbite-react";
 import { FaCheck, FaClock, FaNairaSign, FaUsers } from "react-icons/fa6";
-import { IUser, Plan } from "../api/@types";
+import { IUser, IPlan } from "../api/@types";
 import { doc, updateDoc } from "firebase/firestore";
 
 import LoadingSection from "./LoadingSection";
@@ -12,7 +12,7 @@ import { useFetchCollection } from "../api/hooks/fetchCollections";
 import useLocalStorage from "../api/hooks/useLocalStorage";
 import useModal from "../api/hooks/useModal";
 
-export const PlanCard = ({ plan, user }: { plan: Plan; user?: IUser }) => {
+export const PlanCard = ({ plan, user }: { plan: IPlan; user?: IUser }) => {
   const alreadySubscribed = Boolean(user?.plan == plan.title);
   const { title, description, image, price, rate, days, person, color } = plan;
 
@@ -128,7 +128,7 @@ export const PlanCard = ({ plan, user }: { plan: Plan; user?: IUser }) => {
 };
 
 export default function PremiumCardList() {
-  const { data: plans } = useFetchCollection<Plan>("plans");
+  const { data: plans } = useFetchCollection<IPlan>("plans");
   const [user] = useLocalStorage<IUser>("tour-user", defaultUser);
   return (
     <div className="w-full">
@@ -139,7 +139,7 @@ export default function PremiumCardList() {
       >
         <LoadingSection arrLen={3} />
         <form className="flex flex-wrap gap-6 justify-center">
-          {plans.map((plan: Plan) => (
+          {plans.map((plan: IPlan) => (
             <PlanCard plan={plan} key={plan.title} user={user} />
           ))}
           {/* <PlanCard plan={premiumPlan} />

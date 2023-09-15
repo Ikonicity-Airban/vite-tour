@@ -1,5 +1,5 @@
 import {
-  Booking,
+  IBooking,
   IPlace,
   IPlaceResponse,
   IUser,
@@ -17,7 +17,7 @@ type ActionMap<M extends { [index: string]: unknown }> = {
       };
 };
 
-export const defaultBooking: Booking = {
+export const defaultBooking: IBooking = {
   date: "",
   duration: "",
   place: "",

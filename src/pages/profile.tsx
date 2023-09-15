@@ -1,69 +1,180 @@
-import { Avatar, Checkbox, Label, TextInput } from "flowbite-react";
-import { IUser, Plan } from "../api/@types";
-import { PlanCard, Section } from "../components";
+import {
+  Avatar,
+  Button,
+  Checkbox,
+  Label,
+  Modal,
+  Spinner,
+  TextInput,
+  Tooltip,
+} from "flowbite-react";
+import { IUser, IPlan } from "../api/@types";
+import { ImageUploader, PlanCard, Section } from "../components";
 import { useEffect, useState } from "react";
 
 import { defaultUser } from "../api/contexts/reducer";
-import { useFetchCollection } from "../api/hooks/fetchCollections";
+import {
+  useFetchCollection,
+  useFetchSingleDoc,
+} from "../api/hooks/fetchCollections";
 import useLocalStorage from "../api/hooks/useLocalStorage";
+import { SubmitHandler, useForm } from "react-hook-form";
+import useModal from "../api/hooks/useModal";
+import { doc, updateDoc } from "firebase/firestore";
+import { db } from "../firebase";
+import toast from "react-hot-toast";
 
 function ProfilePage() {
-  const [user] = useLocalStorage<IUser>("tour-user", defaultUser);
-  const [userPlan, setuserPlan] = useState<Plan>();
-  const { data: plans } = useFetchCollection<Plan>("plans");
+  const [storageUser] = useLocalStorage<IUser>("tour-user", defaultUser);
+  const [imageData, setImageData] = useState<string | null>(null);
+
+  const { data: user } = useFetchSingleDoc<IUser>(
+    "users",
+    storageUser?.uid || ""
+  );
+
+  const [userPlan, setUserPlan] = useState<IPlan>();
+  const { data: plans, refetch, fetching } = useFetchCollection<IPlan>("plans");
+  const [loading, setLoading] = useState(false);
+
+  const { showModal, hideModal, isModalVisible } = useModal();
+  const { handleSubmit, register } = useForm<IUser>();
+
+  const onSubmit: SubmitHandler<IUser> = async (formData) => {
+    setLoading(true);
+    const updatedUser = {
+      ...user,
+      ...formData,
+    };
+    console.log(
+      "🚀 ~ file: profile.tsx:46 ~ constonSubmit:SubmitHandler<IUser>= ~ updatedUser:",
+      updatedUser
+    );
+
+    // try {
+    //   await updateDoc(doc(db, "users", storageUser.uid || ""), {
+    //     ...formData,
+    //   });
+    //   toast.success("Updated photo successfully");
+    //   refetch();
+    // } catch (error) {
+    //   console.log(
+    //     "🚀 ~ file: profile.tsx:52 ~ constonSubmit:SubmitHandler<IUser>= ~ error:",
+    //     error
+    //   );
+    // } finally {
+    //   setLoading((prev) => !prev);
+    // }
+  };
+
+  const handleUploadPhoto = async () => {
+    try {
+      await updateDoc(doc(db, "users", storageUser.uid || ""), {
+        photoURL: imageData,
+      });
+      toast.success("Updated profile successfully");
+      refetch();
+    } catch (error) {
+      console.log(
+        "🚀 ~ file: profile.tsx:67 ~ handleUploadPhoto ~ error:",
+        error
+      );
+    }
+    hideModal();
+  };
 
   const ProfileForm = () => (
     <div className="mx-auto max-w-xl w-full min-w-[280px] space-y-3">
-      <Avatar
-        size="xl"
-        rounded
-        className="relative"
-        img={user?.photoURL || ""}
-        placeholderInitials={user?.photoURL || user?.email?.slice(0, 2)}
-      >
-        <i className="fa fa-camera absolute left-[55%] bottom-0"></i>
-      </Avatar>
-      {user && (
-        <>
+      <Modal show={isModalVisible} size="lg" popup onClose={hideModal}>
+        <Modal.Header className="p-2 text-center">
+          Upload a profile photo
+        </Modal.Header>
+        <hr />
+        <Modal.Body className="mt-6">
+          <ImageUploader imageData={imageData} setImageData={setImageData} />
+        </Modal.Body>
+        <Modal.Footer>
+          <Button
+            pill
+            gradientDuoTone="greenToBlue"
+            isProcessing={fetching}
+            className="w-full"
+            onClick={handleUploadPhoto}
+          >
+            Upload Photo
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      <>
+        <Avatar
+          size="xl"
+          rounded
+          className="relative mx-auto"
+          img={user?.photoURL}
+          onClick={showModal}
+          placeholderInitials={user?.photoURL || user?.email?.slice(0, 2)}
+        >
+          <Tooltip
+            content="click to edit photo"
+            trigger="hover"
+            className="cursor-pointer mx-auto"
+          >
+            <div className="hover:scale-150 absolute left-[55%] bottom-0">
+              <i className="fa fa-camera"></i>
+            </div>
+          </Tooltip>
+        </Avatar>
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div className="block">
-            <Label htmlFor={user.displayName || ""}>Name</Label>
+            <Label htmlFor="displayName">Full Name</Label>
             <TextInput
-              readOnly
-              id={user?.displayName || ""}
-              value={user?.displayName || ""}
+              id="displayName"
+              placeholder={user.displayName}
+              defaultValue={user.displayName}
+              {...register("displayName")}
             />
           </div>
           <div className="block">
-            <Label htmlFor={user?.email || ""}>Email</Label>
-            <TextInput
-              readOnly
-              id={user?.email || ""}
-              value={user?.email || ""}
-            />
+            <Label htmlFor="email">Email</Label>
+            <TextInput readOnly disabled id="email" value={user.email} />
           </div>
           <div className="block">
-            <Label htmlFor="phone">Phone</Label>
+            <Label htmlFor="phone">Phone Number</Label>
             <TextInput
-              readOnly
               type="phone"
               id="phone"
-              defaultValue={user?.phoneNumber || ""}
+              placeholder={user.phoneNumber}
+              defaultValue={user.phoneNumber}
+              {...register("phoneNumber")}
             />
           </div>
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-2 my-10">
             <Checkbox
               disabled
-              defaultChecked={user?.emailVerified || false}
+              defaultChecked={user.emailVerified}
               id="emailVerified"
             />
             <Label htmlFor="emailVerified">Verified Email</Label>
           </div>
-        </>
-      )}
+          <div className="my-4">
+            <Button
+              type="submit"
+              pill
+              gradientDuoTone="greenToBlue"
+              className="w-full"
+              isProcessing={loading}
+            >
+              Update Profile
+            </Button>
+          </div>
+        </form>
+      </>
     </div>
   );
+
   useEffect(() => {
-    setuserPlan(plans.find((plan: Plan) => plan?.title === user?.plan));
+    setUserPlan(plans.find((plan: IPlan) => plan?.title === user?.plan));
   }, [user, plans]);
 
   return (
@@ -75,6 +186,10 @@ function ProfilePage() {
         <center>
           {userPlan ? (
             <PlanCard plan={userPlan} user={user} />
+          ) : fetching ? (
+            <center>
+              <Spinner />
+            </center>
           ) : (
             <center>You don't have a plan</center>
           )}

@@ -19,8 +19,12 @@ function AdminLoginPage() {
       const { user } = await signInWithPopup(auth, provider);
 
       if (
-        user.email == "ikonicityairban@gmail.com" ||
-        user.email == "sylva.iyke.si@gmail.com"
+        user &&
+        [
+          "sylva.iyke.si@gmail.com",
+          "ikonicityairban@gmail.com",
+          "idinmasylvanus@gmail.com",
+        ].includes(user?.email || "")
       )
         navigate("/admin");
       else {

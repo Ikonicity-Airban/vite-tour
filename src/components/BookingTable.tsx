@@ -1,4 +1,4 @@
-import { Booking, IPlace, IUser } from "../api/@types";
+import { IBooking, IPlace, IUser } from "../api/@types";
 import { Button, Label, Modal, Spinner, TextInput } from "flowbite-react";
 import { FaCheck, FaPen, FaTrashCan } from "react-icons/fa6";
 import MaterialReactTable, { MRT_ColumnDef } from "material-react-table";
@@ -35,16 +35,16 @@ function BookingTable() {
     fetching,
   } = useFetchCollection<IPlace>("places");
   const bookings = useQueryCollection("bookings", "userId", user.uid ?? "");
-  const [selectedBooking, setBooking] = useState<Booking>(defaultBooking);
+  const [selectedBooking, setBooking] = useState<IBooking>(defaultBooking);
   const [mode, setMode] = useState<"Edit" | "Delete">("Edit");
   const { hideModal, isModalVisible, showModal } = useModal();
 
-  const handleDelete = async (booking: Booking) => {
+  const handleDelete = async (booking: IBooking) => {
     setMode("Delete");
     showModal();
     setBooking(booking);
   };
-  const handleEdit = async (booking: Booking) => {
+  const handleEdit = async (booking: IBooking) => {
     setMode("Edit");
     showModal();
     setBooking(booking);
@@ -62,13 +62,13 @@ function BookingTable() {
   };
 
   const BookingForm = () => {
-    const { register, handleSubmit, setValue, reset } = useForm<Booking>();
+    const { register, handleSubmit, setValue, reset } = useForm<IBooking>();
 
     useEffect(() => {
       reset(selectedBooking);
     }, [setValue, reset]);
 
-    const onSubmit = async (formData: Booking) => {
+    const onSubmit = async (formData: IBooking) => {
       try {
         const tourPlanRef = doc(db, "bookings", selectedBooking?.id || "");
         await updateDoc(tourPlanRef, { ...formData });
@@ -97,7 +97,7 @@ function BookingTable() {
                   }
                   min={0}
                   id={key}
-                  {...register(key as keyof Booking, { required: true })}
+                  {...register(key as keyof IBooking, { required: true })}
                 />
               </div>
             ))}
@@ -136,7 +136,7 @@ function BookingTable() {
     );
   };
 
-  const bookingColumns = useMemo<MRT_ColumnDef<Booking>[]>(
+  const bookingColumns = useMemo<MRT_ColumnDef<IBooking>[]>(
     () => [
       {
         header: "Date",
@@ -240,7 +240,7 @@ function BookingTable() {
       </Modal>
       <MaterialReactTable
         columns={bookingColumns}
-        data={bookings as Booking[]}
+        data={bookings as IBooking[]}
         enableRowSelection
         rowCount={5}
         renderEmptyRowsFallback={() =>

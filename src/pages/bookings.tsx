@@ -1,4 +1,4 @@
-import { Booking, IUser } from "../api/@types";
+import { IBooking, IUser } from "../api/@types";
 import {
   BookingTable,
   LogoComponent,
@@ -23,9 +23,9 @@ import { toast } from "react-hot-toast";
 import { useForm } from "react-hook-form";
 import useLocalStorage from "../api/hooks/useLocalStorage";
 
-type booking = Omit<Booking, "id" | "userId" | "tourId">;
+type booking = Omit<IBooking, "id" | "userId" | "tourId">;
 
-type IBookingForm = Omit<Booking, "id">;
+type IBookingForm = Omit<IBooking, "id">;
 
 function Bookings() {
   const [isLoading, setIsLoading] = useState(false);

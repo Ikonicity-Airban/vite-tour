@@ -23,10 +23,12 @@ import SearchBar from "./SearchBar";
 import Section from "./Section";
 import ServicesCard from "./ServicesCard";
 import { UserTable } from "./UserTable";
+import ImageUploader from "./ImageUploader";
 
 export {
   Heading,
   Header,
+  ImageUploader,
   PlanCard,
   BookingTable,
   AllBookingTable,

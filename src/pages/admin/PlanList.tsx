@@ -12,7 +12,7 @@ import MaterialReactTable, { MRT_ColumnDef } from "material-react-table";
 import { deleteDoc, doc, setDoc, updateDoc } from "firebase/firestore";
 import { useMemo, useState } from "react";
 
-import { Plan } from "../../api/@types";
+import { IPlan } from "../../api/@types";
 import React from "react";
 import { db } from "../../firebase";
 import { v4 as randomUUID } from "uuid";
@@ -21,7 +21,7 @@ import { useForm } from "react-hook-form";
 import useModal from "../../api/hooks/useModal";
 import { useFetchCollection } from "../../api/hooks/fetchCollections";
 
-const defaultTourPlan: Plan = {
+const defaultTourPlan: IPlan = {
   id: "",
   title: "",
   description: "",
@@ -55,11 +55,19 @@ const colors = [
   "gold",
 ];
 
+const images = {
+  crown: "fa fa-crown",
+  suitcase: "fa fa-suitcase",
+  diamond: "fa fa-diamond",
+  star: "fa fa-star",
+  Hotel: "fa fa-hotel",
+};
+
 interface Props {
-  tourPlan?: Plan;
+  tourPlan?: IPlan;
 }
 
-interface FormData extends Plan {
+interface FormData extends IPlan {
   time: Date;
 }
 
@@ -70,17 +78,17 @@ const TourPlanList = () => {
     data: tourPlans,
     refetch,
     fetching,
-  } = useFetchCollection<Plan>("plans");
+  } = useFetchCollection<IPlan>("plans");
 
   const { hideModal, isModalVisible, showModal } = useModal();
-  const [selectedPlan, setSelectedPlan] = useState<Plan>(defaultTourPlan);
+  const [selectedPlan, setSelectedPlan] = useState<IPlan>(defaultTourPlan);
 
   const handleCreateTour = () => {
     setSelectedPlan(defaultTourPlan);
     setMode("Create");
     showModal();
   };
-  const handleEditTourPlan = async (tourPlan: Plan) => {
+  const handleEditTourPlan = async (tourPlan: IPlan) => {
     setSelectedPlan(tourPlan);
     setMode("Edit");
     showModal();
@@ -146,7 +154,7 @@ const TourPlanList = () => {
                   step={key === "price" ? 50 : key === "rate" ? 0.1 : 1}
                   min={0}
                   id={key}
-                  {...register(key as keyof Plan, { required: true })}
+                  {...register(key as keyof IPlan, { required: true })}
                 />
               </div>
             ))}
@@ -155,8 +163,23 @@ const TourPlanList = () => {
             <Label htmlFor="Color">Color</Label>
             <Select {...register("color")} id="color" defaultValue="gray">
               {colors.map((color) => (
-                <option value={color} className="capitalize" style={{ color }}>
+                <option
+                  value={color}
+                  className="capitalize"
+                  style={{ color }}
+                  key={color}
+                >
                   {color}
+                </option>
+              ))}
+            </Select>
+          </div>
+          <div className="">
+            <Label htmlFor="Color">Images</Label>
+            <Select {...register("color")} id="color" defaultValue="gray">
+              {Object.entries(images).map(([key, value]) => (
+                <option value={value} className="capitalize" key={key}>
+                  {key}
                 </option>
               ))}
             </Select>
@@ -184,7 +207,7 @@ const TourPlanList = () => {
     );
   };
 
-  const PlanColumns = useMemo<MRT_ColumnDef<Plan>[]>(
+  const PlanColumns = useMemo<MRT_ColumnDef<IPlan>[]>(
     () => [
       {
         header: "Title",
@@ -291,7 +314,7 @@ const TourPlanList = () => {
         </Button>
         <MaterialReactTable
           columns={PlanColumns}
-          data={(tourPlans as Plan[]) || []}
+          data={(tourPlans as IPlan[]) || []}
           renderEmptyRowsFallback={() =>
             fetching ? (
               <center className="p-4">

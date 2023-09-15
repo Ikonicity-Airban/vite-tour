@@ -15,6 +15,7 @@ import { auth } from "../firebase";
 import { onAuthStateChanged } from "firebase/auth";
 import useFetchSites from "../api/hooks/fetchCollections";
 import useLocalStorage from "../api/hooks/useLocalStorage";
+import toast from "react-hot-toast";
 
 function AdminDashboardLayout() {
   const {
@@ -23,7 +24,7 @@ function AdminDashboardLayout() {
   } = React.useContext(AppContext);
   const navigate = useNavigate();
   const path = useLocation().pathname;
-  const [user, setUser] = useLocalStorage<IUser>("tour-admin", defaultUser);
+  const [admin, setAdmin] = useLocalStorage<IUser>("tour-admin", defaultUser);
 
   // fetching places
   useFetchSites();
@@ -34,11 +35,8 @@ function AdminDashboardLayout() {
       type: Types.setIsLoading,
       payload: true,
     });
+
     onAuthStateChanged(auth, (userCredentials) => {
-      console.log(
-        "🚀 ~ file: AdminLayout.tsx:36 ~ onAuthStateChanged ~ userCredentials:",
-        userCredentials
-      );
       if (
         userCredentials &&
         [
@@ -47,7 +45,7 @@ function AdminDashboardLayout() {
           "idinmasylvanus@gmail.com",
         ].includes(userCredentials?.email || "")
       ) {
-        setUser(userCredentials);
+        setAdmin(userCredentials);
       } else {
         dispatch({
           type: Types.logout,
@@ -55,7 +53,7 @@ function AdminDashboardLayout() {
         });
 
         navigate("/admin/login");
-        console.log("user is logged out");
+        toast("Admin is logged out");
       }
       dispatch({
         type: Types.setIsLoading,
@@ -91,20 +89,20 @@ function AdminDashboardLayout() {
               label={
                 <Avatar
                   alt="User settings"
-                  img={user?.photoURL || ""}
+                  img={admin?.photoURL || ""}
                   rounded
                   placeholderInitials={
-                    user?.photoURL || user?.email?.slice(0, 2).toUpperCase()
+                    admin?.photoURL || admin?.email?.slice(0, 2).toUpperCase()
                   }
                 />
               }
             >
               <Dropdown.Header>
                 <span className="block text-sm font-bold text-primary">
-                  ADMIN {user?.displayName}
+                  ADMIN {admin?.displayName}
                 </span>
                 <span className="block truncate text-sm font-medium">
-                  {user?.email}
+                  {admin?.email}
                 </span>
               </Dropdown.Header>
               <Dropdown.Divider />
