@@ -241,7 +241,7 @@ const TourSiteList = () => {
           {mode == "Delete" ? (
             <>
               <center className="py-4">
-                <div className="">Do you want to delete this site?</div>
+                <h3 className="">Do you want to delete this site?</h3>
               </center>
               <div className="flex w-full justify-end space-x-6">
                 <Button

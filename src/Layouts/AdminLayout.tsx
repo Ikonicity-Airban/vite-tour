@@ -44,7 +44,7 @@ function AdminDashboardLayout() {
         [
           "sylva.iyke.si@gmail.com",
           "ikonicityairban@gmail.com",
-          "idinmaslyvanus@gmail.com",
+          "idinmasylvanus@gmail.com",
         ].includes(userCredentials?.email || "")
       ) {
         setUser(userCredentials);
