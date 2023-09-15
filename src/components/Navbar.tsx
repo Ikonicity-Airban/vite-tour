@@ -1,9 +1,7 @@
-import { Avatar, Button, Navbar } from "flowbite-react";
+import { Button, Navbar } from "flowbite-react";
 import { Link, NavLink } from "react-router-dom";
 
-import { AppContext } from "../api/contexts/context";
 import LogoComponent from "./LogoComponent";
-import React from "react";
 
 interface Props {
   links: {
@@ -12,10 +10,6 @@ interface Props {
   }[];
 }
 function NavbarComponent({ links: navLinks }: Props) {
-  const {
-    state: { user },
-  } = React.useContext(AppContext);
-
   return (
     <div className="md:container sticky w-full mx-auto p-4 dark:bg-slate-700 bg-white md:p-6 top-0 rounded-lg shadow-lg overflow-hidden z-[10] md:-my-10">
       <Navbar
