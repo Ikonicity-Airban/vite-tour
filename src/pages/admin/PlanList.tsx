@@ -9,15 +9,8 @@ import {
 } from "flowbite-react";
 import { FaPen, FaPlus, FaTrashCan } from "react-icons/fa6";
 import MaterialReactTable, { MRT_ColumnDef } from "material-react-table";
-import {
-  collection,
-  deleteDoc,
-  doc,
-  getDocs,
-  setDoc,
-  updateDoc,
-} from "firebase/firestore";
-import { useEffect, useMemo, useState } from "react";
+import { deleteDoc, doc, setDoc, updateDoc } from "firebase/firestore";
+import { useMemo, useState } from "react";
 
 import { Plan } from "../../api/@types";
 import React from "react";
@@ -25,8 +18,8 @@ import { db } from "../../firebase";
 import { v4 as randomUUID } from "uuid";
 import toast from "react-hot-toast";
 import { useForm } from "react-hook-form";
-import useLocalStorage from "../../api/useLocalStorage";
-import useModal from "../../api/useModal";
+import useModal from "../../api/hooks/useModal";
+import { useFetchCollection } from "../../api/hooks/fetchCollections";
 
 const defaultTourPlan: Plan = {
   id: "",
@@ -72,28 +65,15 @@ interface FormData extends Plan {
 
 const TourPlanList = () => {
   const [mode, setMode] = useState<"Create" | "Edit" | "Delete">("Create");
-  const [tourPlans, setTourPlans] = useLocalStorage<Plan[]>("tour-plans", [
-    defaultTourPlan,
-  ]);
-  console.log(
-    "🚀 ~ file: PlanList.tsx:78 ~ TourPlanList ~ tourPlans:",
-    tourPlans
-  );
+
+  const {
+    data: tourPlans,
+    refetch,
+    fetching,
+  } = useFetchCollection<Plan>("plans");
+
   const { hideModal, isModalVisible, showModal } = useModal();
   const [selectedPlan, setSelectedPlan] = useState<Plan>(defaultTourPlan);
-
-  const fetchTourPlans = async () => {
-    const tourPlansRef = collection(db, "plans");
-    const snapshot = await getDocs(tourPlansRef);
-    const data = snapshot.docs.map(
-      (doc) => ({ id: doc.id, ...doc.data() } as Plan)
-    );
-    setTourPlans(data);
-  };
-
-  useEffect(() => {
-    fetchTourPlans();
-  }, []);
 
   const handleCreateTour = () => {
     setSelectedPlan(defaultTourPlan);
@@ -110,19 +90,12 @@ const TourPlanList = () => {
     try {
       const planRef = doc(db, "plans", docId);
       await deleteDoc(planRef);
-      console.log("Document deleted successfully");
+      toast.success("Document deleted successfully");
+      refetch();
     } catch (error) {
       console.error("Error deleting document:", error);
     }
-
-    const tourPlansRef = collection(db, "plans");
-    const snapshot = await getDocs(tourPlansRef);
-    const data = snapshot.docs.map(
-      (doc) => ({ id: doc.id, ...doc.data() } as Plan)
-    );
-    fetchTourPlans();
     hideModal();
-    setTourPlans(data);
   };
 
   const TourPlanForm = ({ tourPlan = selectedPlan }: Props) => {
@@ -147,7 +120,6 @@ const TourPlanList = () => {
           toast.error(error.message);
         }
       } finally {
-        fetchTourPlans();
         reset(defaultTourPlan);
         hideModal();
       }
@@ -197,7 +169,14 @@ const TourPlanList = () => {
               {...register("description", { required: true })}
             />
           </div>
-          <Button type="submit" className="w-full" color="success" pill>
+          <Button
+            type="submit"
+            className="w-full"
+            color="success"
+            pill
+            disabled={fetching}
+            isProcessing={fetching}
+          >
             {mode == "Create" ? "Save" : "Update"}
           </Button>
         </form>
@@ -205,7 +184,7 @@ const TourPlanList = () => {
     );
   };
 
-  const PlanColumns: MRT_ColumnDef<Plan>[] = useMemo(
+  const PlanColumns = useMemo<MRT_ColumnDef<Plan>[]>(
     () => [
       {
         header: "Title",
@@ -261,6 +240,7 @@ const TourPlanList = () => {
     ],
     []
   );
+
   return (
     <div>
       <Modal show={isModalVisible} size="lg" popup onClose={hideModal}>
@@ -276,7 +256,9 @@ const TourPlanList = () => {
           {mode == "Delete" ? (
             <>
               <center className="py-4">
-                <div className="">Do you want to delete this tour?</div>
+                <div className="">
+                  Do you want to delete {selectedPlan.title} Plan?
+                </div>
               </center>
               <div className="flex w-full justify-end space-x-6">
                 <Button
@@ -309,12 +291,16 @@ const TourPlanList = () => {
         </Button>
         <MaterialReactTable
           columns={PlanColumns}
-          data={tourPlans || []}
-          renderEmptyRowsFallback={() => (
-            <center className="p-4">
-              <Spinner size="lg" />
-            </center>
-          )}
+          data={(tourPlans as Plan[]) || []}
+          renderEmptyRowsFallback={() =>
+            fetching ? (
+              <center className="p-4">
+                <Spinner size="lg" />
+              </center>
+            ) : (
+              <center className="p-10">No Plans Available</center>
+            )
+          }
         />
       </div>
     </div>

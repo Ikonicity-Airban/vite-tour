@@ -13,11 +13,11 @@ import {
 import { IPlace, IService } from "../api/@types";
 import { useContext, useState } from "react";
 
-import { AppContext } from "../api/context";
+import { AppContext } from "../api/contexts/context";
 import { Button } from "flowbite-react";
 import { Link } from "react-router-dom";
 import { shuffleArray } from "../api/helper";
-import { useFetchCollection } from "../api/fetchCollections";
+import { useFetchCollection } from "../api/hooks/fetchCollections";
 
 function HomePage() {
   const {

@@ -1,5 +1,14 @@
+import {
+  BookNowComponent,
+  BreadcrumbComponents,
+  CardComponent,
+  DivScrollToView,
+  GoogleMap,
+  LoadingSection,
+  PremiumCardList,
+  Section,
+} from "../components";
 import { Button, Card } from "flowbite-react";
-import { CardComponent, LoadingSection } from "../components";
 import { Link, useLocation } from "react-router-dom";
 import {
   generateRandomNum,
@@ -9,15 +18,9 @@ import {
 } from "../api/helper";
 import { useContext, useState } from "react";
 
-import { AppContext } from "../api/context";
-import BookNowComponent from "../components/BookNowComponent";
-import BreadcrumbComponents from "../components/BreadcrumbComponents";
-import DivScrollToView from "../components/Framer.div";
+import { AppContext } from "../api/contexts/context";
 import { FaHandPointUp } from "react-icons/fa6";
-import GoogleMap from "../components/GoogleMap";
 import { Helmet } from "react-helmet";
-import PremiumCardList from "../components/PremiumCard";
-import Section from "../components/Section";
 
 function TourPage() {
   const [mainPhoto, setMainPhoto] = useState(0);
@@ -107,7 +110,7 @@ function TourPage() {
         <BookNowComponent destination={name} />
       </Section>
       <Section subtitle="Suggestions" title="">
-        <div className="grid-card gap-4 place-items-center">
+        <div className="grid sm:grid-cols-2 laptop:grid-cols-3 gap-4 place-items-center">
           <LoadingSection />
           {shuffleArray(places)
             .splice(0, 6)

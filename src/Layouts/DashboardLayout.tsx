@@ -1,20 +1,19 @@
 import { Avatar, Dropdown, Navbar } from "flowbite-react";
+import {
+  BreadcrumbComponents,
+  FooterComponent,
+  LogoComponent,
+} from "../components";
 import { Link, Outlet, useNavigate } from "react-router-dom";
-import { Types, defaultUser } from "../api/reducer";
+import { Types, defaultUser } from "../api/contexts/reducer";
 import { auth, db } from "../firebase";
 import { doc, getDoc } from "firebase/firestore";
 
-import { AppContext } from "../api/context";
-import BreadcrumbComponents from "../components/BreadcrumbComponents";
-import FooterComponent from "../components/Footer";
+import { AppContext } from "../api/contexts/context";
 import { IUser } from "../api/@types";
-import LogoComponent from "../components/LogoComponent";
 import React from "react";
-import useFetchSites from "../api/fetchCollections";
-import useLocalStorage from "../api/useLocalStorage";
-
-// import ThemeToggler from "../components/ToggleTheme";
-// import Drawer from "../components/Drawer";
+import useFetchSites from "../api/hooks/fetchCollections";
+import useLocalStorage from "../api/hooks/useLocalStorage";
 
 function DashboardLayout() {
   const { dispatch } = React.useContext(AppContext);

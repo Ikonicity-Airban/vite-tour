@@ -1,4 +1,4 @@
-import { AppContext } from "../api/context";
+import { AppContext } from "../api/contexts/context";
 import { CardSkeleton } from "./Skeletons";
 import { useContext } from "react";
 

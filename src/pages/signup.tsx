@@ -1,4 +1,4 @@
-import { BreadcrumbComponents, Section } from "../components";
+import { BreadcrumbComponents, LogoComponent, Section } from "../components";
 import { Button, Card, Checkbox, Label, TextInput } from "flowbite-react";
 import {
   GoogleAuthProvider,
@@ -13,9 +13,8 @@ import { auth, db } from "../firebase";
 import { doc, setDoc } from "firebase/firestore";
 import { useContext, useState } from "react";
 
-import { AppContext } from "../api/context";
-import LogoComponent from "../components/LogoComponent";
-import { Types } from "../api/reducer";
+import { AppContext } from "../api/contexts/context";
+import { Types } from "../api/contexts/reducer";
 import getTokenUser from "../api/getTokenUser";
 import { toast } from "react-hot-toast";
 

@@ -7,13 +7,13 @@ import {
   query,
   where,
 } from "firebase/firestore";
-import { Types, defaultPlace } from "./reducer";
+import { Types, defaultPlace } from "../contexts/reducer";
 import { useCallback, useContext, useEffect, useState } from "react";
 
-import { AppContext } from "./context";
-import { IPlaceResponse } from "./@types";
-import { db } from "../firebase";
-import useLocalStorage from "./useLocalStorage";
+import { AppContext } from "../contexts/context";
+import { IPlaceResponse } from "../@types";
+import { db } from "../../firebase";
+import useLocalStorage from "../hooks/useLocalStorage";
 
 //
 function useFetchSites() {
@@ -49,24 +49,24 @@ function useFetchSites() {
 
 export function useFetchCollection<T>(colName: string) {
   const [col, setCol] = useState<T[] | DocumentData>([]);
+  const [fetching, setFetching] = useState(false);
   const { dispatch } = useContext(AppContext);
 
   const fetchData = useCallback(async () => {
-    dispatch({ type: Types.setIsLoading, payload: true });
-
+    setFetching(true);
     try {
       const querySnapshot = await getDocs(collection(db, colName));
       const newArray: T[] | DocumentData = [];
       querySnapshot.forEach((doc) => {
         // console.log(doc.data());
-        newArray.push(doc.data());
+        newArray.push({ ...doc.data(), id: doc.id });
       });
 
       setCol(newArray);
     } catch (e) {
       console.error("Error fe document: ", e);
     } finally {
-      dispatch({ type: Types.setIsLoading, payload: false });
+      setFetching(false);
     }
   }, [dispatch, colName]);
 
@@ -75,9 +75,11 @@ export function useFetchCollection<T>(colName: string) {
   }, [fetchData]);
 
   const refetch = () => {
-    dispatch({ type: Types.setIsLoading, payload: true });
+    setFetching(true);
+    fetchData();
   };
-  return { data: col, refetch };
+
+  return { data: col, refetch, fetching };
 }
 export function useQueryCollection<T>(
   colName: string,

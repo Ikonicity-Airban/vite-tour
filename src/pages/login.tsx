@@ -12,11 +12,11 @@ import { auth, db } from "../firebase";
 import { doc, setDoc } from "firebase/firestore";
 
 import { IUser } from "../api/@types";
-import LogoComponent from "../components/LogoComponent";
-import { defaultUser } from "../api/reducer";
+import { LogoComponent } from "../components";
+import { defaultUser } from "../api/contexts/reducer";
 import getTokenUser from "../api/getTokenUser";
 import toast from "react-hot-toast";
-import useLocalStorage from "../api/useLocalStorage";
+import useLocalStorage from "../api/hooks/useLocalStorage";
 import { useState } from "react";
 
 interface IFormInput {
@@ -30,6 +30,7 @@ function LoginPage() {
   const [showPass, setShowPass] = useState(true);
   const [user, setUser] = useLocalStorage<IUser>("tour-user", defaultUser);
   const navigate = useNavigate();
+
   const onSubmit: SubmitHandler<IFormInput> = async ({ email, password }) => {
     try {
       setLoading(true);
@@ -54,7 +55,7 @@ function LoginPage() {
         toast.error(
           errMsg === "Firebase: Error (auth/user-not-found)."
             ? "Account doesn't exist, please sign up now"
-            : "Something went wrong"
+            : "Something went wrong, try again"
         );
         console.log(
           "🚀 ~ file: login.tsx:55 ~ constonSubmit:SubmitHandler<IFormInput>= ~ errMsg:",
@@ -68,7 +69,6 @@ function LoginPage() {
 
   const googleSignIn = async () => {
     try {
-      setLoading(true);
       const provider = new GoogleAuthProvider();
       const { user } = await signInWithPopup(auth, provider);
       const usersRef = doc(db, "users", user.uid);
@@ -82,8 +82,6 @@ function LoginPage() {
         const errorMessage = error.message;
         toast.error(errorMessage);
       }
-    } finally {
-      setLoading(false);
     }
   };
 

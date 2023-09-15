@@ -1,5 +1,5 @@
-import BreadcrumbComponents from "../components/BreadcrumbComponents";
-import { GoogleMap } from "../components";
+import { BreadcrumbComponents, GoogleMap } from "../components";
+
 import { Link } from "react-router-dom";
 
 function AboutPage() {

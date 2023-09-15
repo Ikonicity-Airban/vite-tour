@@ -4,8 +4,8 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { FaMapLocation } from "react-icons/fa6";
 import { IPlace } from "../api/@types";
 import LogoComponent from "./LogoComponent";
-import { defaultPlace } from "../api/reducer";
-import useLocalStorage from "../api/useLocalStorage";
+import { defaultPlace } from "../api/contexts/reducer";
+import useLocalStorage from "../api/hooks/useLocalStorage";
 import { useNavigate } from "react-router-dom";
 
 interface IProps {

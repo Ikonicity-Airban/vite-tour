@@ -1,7 +1,7 @@
 import { Avatar, Navbar } from "flowbite-react";
 import { Link, NavLink } from "react-router-dom";
 
-import { AppContext } from "../api/context";
+import { AppContext } from "../api/contexts/context";
 import LogoComponent from "./LogoComponent";
 import React from "react";
 

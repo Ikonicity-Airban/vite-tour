@@ -1,18 +1,20 @@
+import {
+  BreadcrumbComponents,
+  DivScrollToView,
+  Heading,
+  LoadingSection,
+  SearchBar,
+  Section,
+} from "../components";
 import { Button, Card } from "flowbite-react";
 import { scrollIntoView, shuffleArray } from "../api/helper";
 
-import BreadcrumbComponents from "../components/BreadcrumbComponents";
-import DivScrollToView from "../components/Framer.div";
-import Heading from "../components/Heading";
 import { Helmet } from "react-helmet";
 import { IPlace } from "../api/@types";
 import { Link } from "react-router-dom";
-import LoadingSection from "../components/LoadingSection";
 import { Parallax } from "react-parallax";
-import SearchBar from "../components/SearchBar";
-import Section from "../components/Section";
-import { defaultPlace } from "../api/reducer";
-import useLocalStorage from "../api/useLocalStorage";
+import { defaultPlace } from "../api/contexts/reducer";
+import useLocalStorage from "../api/hooks/useLocalStorage";
 import { useState } from "react";
 
 function ToursPages() {

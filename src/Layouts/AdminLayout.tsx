@@ -1,18 +1,20 @@
 import { Avatar, Dropdown, Navbar } from "flowbite-react";
+import {
+  BreadcrumbComponents,
+  FooterComponent,
+  LogoComponent,
+} from "../components";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
-import { Types, defaultUser } from "../api/reducer";
+import { Types, defaultUser } from "../api/contexts/reducer";
 
-import { AppContext } from "../api/context";
-import BreadcrumbComponents from "../components/BreadcrumbComponents";
-import FooterComponent from "../components/Footer";
+import { AppContext } from "../api/contexts/context";
 import { Helmet } from "react-helmet";
 import { IUser } from "../api/@types";
-import LogoComponent from "../components/LogoComponent";
 import React from "react";
 import { auth } from "../firebase";
 import { onAuthStateChanged } from "firebase/auth";
-import useFetchSites from "../api/fetchCollections";
-import useLocalStorage from "../api/useLocalStorage";
+import useFetchSites from "../api/hooks/fetchCollections";
+import useLocalStorage from "../api/hooks/useLocalStorage";
 
 function AdminDashboardLayout() {
   const {
@@ -33,11 +35,17 @@ function AdminDashboardLayout() {
       payload: true,
     });
     onAuthStateChanged(auth, (userCredentials) => {
+      console.log(
+        "🚀 ~ file: AdminLayout.tsx:36 ~ onAuthStateChanged ~ userCredentials:",
+        userCredentials
+      );
       if (
         userCredentials &&
-        userCredentials.email !== "sylva.iyke.si@gmail.com" &&
-        userCredentials.email !== "ikonicityairban@gmail.com" &&
-        userCredentials.email !== "idinmaslyvanus@gmail.com"
+        [
+          "sylva.iyke.si@gmail.com",
+          "ikonicityairban@gmail.com",
+          "idinmaslyvanus@gmail.com",
+        ].includes(userCredentials?.email || "")
       ) {
         setUser(userCredentials);
       } else {
@@ -112,7 +120,7 @@ function AdminDashboardLayout() {
             </Dropdown>
           </div>
         </Navbar>
-        <div className="mt-24">
+        <div className="mt-20 py-10">
           <BreadcrumbComponents />
         </div>
         <section className=" tablet:px-6 min-h-[70vh]">

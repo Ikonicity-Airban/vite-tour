@@ -18,9 +18,9 @@ import { db } from "../../firebase";
 import { v4 as randomUUID } from "uuid";
 import toast from "react-hot-toast";
 import { truncateString } from "../../api/helper";
-import { useFetchCollection } from "../../api/fetchCollections";
+import { useFetchCollection } from "../../api/hooks/fetchCollections";
 import { useForm } from "react-hook-form";
-import useModal from "../../api/useModal";
+import useModal from "../../api/hooks/useModal";
 
 const defaultTourSite: IPlace = {
   id: "",
@@ -43,8 +43,11 @@ const TourSiteList = () => {
   const [mode, setMode] = useState<"Create" | "Edit" | "Delete" | "Edit Photo">(
     "Create"
   );
-
-  const { data: places, refetch } = useFetchCollection<IPlace>("places");
+  const {
+    data: places,
+    refetch,
+    fetching,
+  } = useFetchCollection<IPlace>("places");
   const { hideModal, isModalVisible, showModal } = useModal();
   const [selectedSite, setSelectedSite] = useState<IPlace>(defaultTourSite);
 
@@ -229,7 +232,7 @@ const TourSiteList = () => {
         <Modal.Header>
           <center>
             <h3 className="m-4 text-center w-full font-medium text-primary">
-              {mode} Tour
+              {mode} Site
             </h3>
           </center>
         </Modal.Header>
@@ -238,7 +241,7 @@ const TourSiteList = () => {
           {mode == "Delete" ? (
             <>
               <center className="py-4">
-                <div className="">Do you want to delete this tour?</div>
+                <div className="">Do you want to delete this site?</div>
               </center>
               <div className="flex w-full justify-end space-x-6">
                 <Button
@@ -283,11 +286,15 @@ const TourSiteList = () => {
         <MaterialReactTable
           columns={siteColumns}
           data={places as IPlace[]}
-          renderEmptyRowsFallback={() => (
-            <center className="p-4">
-              <Spinner size="lg" />
-            </center>
-          )}
+          renderEmptyRowsFallback={() =>
+            fetching ? (
+              <center className="p-4">
+                <Spinner size="lg" />
+              </center>
+            ) : (
+              <center className="p-10">No Site Available</center>
+            )
+          }
         />
       </div>
     </div>

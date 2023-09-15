@@ -4,7 +4,7 @@ import {
   IPlaceResponse,
   IUser,
   IUserResponse,
-} from "./@types";
+} from "../@types";
 
 type ActionMap<M extends { [index: string]: unknown }> = {
   [Key in keyof M]: M[Key] extends undefined

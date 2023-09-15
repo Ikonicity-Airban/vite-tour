@@ -1,10 +1,13 @@
+import {
+  BreadcrumbComponents,
+  LoadingSection,
+  PremiumCardList,
+  Section,
+} from "../components";
+
 import { Accordion } from "flowbite-react";
-import BreadcrumbComponents from "../components/BreadcrumbComponents";
 import { IService } from "../api/@types";
-import LoadingSection from "../components/LoadingSection";
-import PremiumCardList from "../components/PremiumCard";
-import Section from "../components/Section";
-import { useFetchCollection } from "../api/fetchCollections";
+import { useFetchCollection } from "../api/hooks/fetchCollections";
 
 function ServicesPage() {
   const { data: services } = useFetchCollection<IService>("services");

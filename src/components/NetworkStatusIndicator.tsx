@@ -1,6 +1,6 @@
 import React from "react";
-import useDisplayMessage from "../api/useDisplayMessage";
-import useNavigatorOnLine from "../api/useNavigator";
+import useDisplayMessage from "../api/hooks/useDisplayMessage";
+import useNavigatorOnLine from "../api/hooks/useNavigator";
 
 const NetworkStatusIndicator = () => {
   const { show, close } = useDisplayMessage();

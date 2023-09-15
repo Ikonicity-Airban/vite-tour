@@ -1,14 +1,14 @@
-import { Card, Toast } from "flowbite-react";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 
-import LogoComponent from "../../components/LogoComponent";
+import { Card } from "flowbite-react";
+import { LogoComponent } from "../../components";
 import { auth } from "../../firebase";
+import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 
 function AdminLoginPage() {
   const [loading, setLoading] = useState(false);
-  const [errMsg, setErrMsg] = useState("");
 
   const navigate = useNavigate();
 
@@ -30,23 +30,16 @@ function AdminLoginPage() {
     } catch (error) {
       if (error instanceof Error) {
         const errorMessage = error.message;
-        console.log(errorMessage);
-        setErrMsg(errorMessage);
+
+        toast.error(errorMessage);
       }
     } finally {
-      setTimeout(() => setErrMsg(""), 5000);
       setLoading(false);
     }
   };
   //return
   return (
     <section className="grid place-items-center my-20">
-      {errMsg && (
-        <Toast className="fixed top-0 md:top-10 z-50 min-w-max">
-          <p>{errMsg}</p>
-          <Toast.Toggle></Toast.Toggle>
-        </Toast>
-      )}
       <Card className="smallScreens:min-w-[320px] w-5/6 max-w-md mt-10">
         <div className="mx-auto mb-10">
           <LogoComponent />

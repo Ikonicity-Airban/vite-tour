@@ -1,11 +1,11 @@
-import { AppContext } from "../api/context";
-import FooterComponent from "../components/Footer";
+import { FooterComponent, LogoComponent } from "../components";
+
+import { AppContext } from "../api/contexts/context";
 import Header from "../components/Header";
 import { Helmet } from "react-helmet";
-import LogoComponent from "../components/LogoComponent";
 import { Outlet } from "react-router-dom";
 import { useContext } from "react";
-import useFetchSites from "../api/fetchCollections";
+import useFetchSites from "../api/hooks/fetchCollections";
 
 function MainLayout() {
   const {

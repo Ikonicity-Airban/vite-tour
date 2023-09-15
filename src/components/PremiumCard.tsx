@@ -6,16 +6,13 @@ import { doc, updateDoc } from "firebase/firestore";
 import LoadingSection from "./LoadingSection";
 import Section from "./Section";
 import { db } from "../firebase";
-import { defaultUser } from "../api/reducer";
+import { defaultUser } from "../api/contexts/reducer";
 import toast from "react-hot-toast";
-import { useFetchCollection } from "../api/fetchCollections";
-import useLocalStorage from "../api/useLocalStorage";
-import useModal from "../api/useModal";
+import { useFetchCollection } from "../api/hooks/fetchCollections";
+import useLocalStorage from "../api/hooks/useLocalStorage";
+import useModal from "../api/hooks/useModal";
 
-export const PlanCard: React.FC<{ plan: Plan; user?: IUser }> = ({
-  plan,
-  user,
-}) => {
+export const PlanCard = ({ plan, user }: { plan: Plan; user?: IUser }) => {
   const alreadySubscribed = Boolean(user?.plan == plan.title);
   const { title, description, image, price, rate, days, person, color } = plan;
 

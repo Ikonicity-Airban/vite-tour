@@ -1,4 +1,11 @@
-import { Button, Checkbox, Label, Modal, Spinner } from "flowbite-react";
+import {
+  Button,
+  Checkbox,
+  Label,
+  Modal,
+  Select,
+  Spinner,
+} from "flowbite-react";
 import { FaCheck, FaPen } from "react-icons/fa6";
 import { FaMinusCircle, FaTimes } from "react-icons/fa";
 import MaterialReactTable, { MRT_ColumnDef } from "material-react-table";
@@ -7,19 +14,18 @@ import { useEffect, useMemo, useState } from "react";
 
 import { Booking } from "../api/@types";
 import { db } from "../firebase";
-import { defaultBooking } from "../api/reducer";
+import { defaultBooking } from "../api/contexts/reducer";
 import toast from "react-hot-toast";
-import { useFetchCollection } from "../api/fetchCollections";
+import { useFetchCollection } from "../api/hooks/fetchCollections";
 import { useForm } from "react-hook-form";
-import useModal from "../api/useModal";
+import useModal from "../api/hooks/useModal";
 
 function AllBookingTable() {
-  const { data: bookings, refetch } = useFetchCollection<Booking>("bookings");
-  console.log(
-    "🚀 ~ file: AllBookingTable.tsx:18 ~ AllBookingTable ~ bookings:",
-    bookings
-  );
-
+  const {
+    data: bookings,
+    refetch,
+    fetching,
+  } = useFetchCollection<Booking>("bookings");
   const [selectedBooking, setSelectedBooking] =
     useState<Booking>(defaultBooking);
   const [mode, setMode] = useState<"Edit" | "Delete">("Edit");
@@ -45,22 +51,20 @@ function AllBookingTable() {
         refetch();
         toast.success("Update complete");
       } catch (error) {
-        console.log(
-          "🚀 ~ file: AllBookingTable.tsx:50 ~ onSubmit ~ error:",
-          error
-        );
+        error instanceof Error && toast.error(error.message);
+      } finally {
+        hideModal();
       }
     };
 
     return (
       <>
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-10 py-4">
           <div>
             <Label htmlFor="place">Status</Label>
-            <select
+            <Select
               required
               defaultValue={selectedBooking.status}
-              className="w-full space-y-2 block outline-none p-3 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-white focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               {...register("status")}
             >
               {["Declined", "Approved", "Idle"].map((item) => (
@@ -72,17 +76,17 @@ function AllBookingTable() {
                   {item}
                 </option>
               ))}
-            </select>
+            </Select>
           </div>
           <div className="flex items-center space-x-2">
             <Checkbox
-              size={30}
+              size={50}
               defaultChecked={selectedBooking.completed}
               {...register("completed")}
             />
             <Label htmlFor="place">Complete</Label>
           </div>
-          <Button type="submit" className="w-full">
+          <Button type="submit" className="w-full" pill color="success">
             Save
           </Button>
         </form>
@@ -182,7 +186,13 @@ function AllBookingTable() {
         <Modal.Body>
           <>
             <BookingForm />
-            <Button type="button" onClick={hideModal} className="w-full mt-2">
+            <Button
+              pill
+              type="button"
+              onClick={hideModal}
+              className="w-full mt-2"
+              color="failure"
+            >
               Cancel
             </Button>
           </>
@@ -190,11 +200,16 @@ function AllBookingTable() {
       </Modal>
       <MaterialReactTable
         columns={bookingColumns}
-        renderEmptyRowsFallback={() => (
-          <center className="p-4">
-            <Spinner size="lg" />
-          </center>
-        )}
+        memoMode="rows"
+        renderEmptyRowsFallback={() =>
+          fetching ? (
+            <center className="p-4">
+              <Spinner size="lg" />
+            </center>
+          ) : (
+            <center className="p-10">No Bookings Available</center>
+          )
+        }
         data={(bookings as Booking[]) || []}
         enableRowSelection
         rowCount={5}

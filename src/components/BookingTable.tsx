@@ -2,20 +2,20 @@ import { Booking, IPlace, IUser } from "../api/@types";
 import { Button, Label, Modal, Spinner, TextInput } from "flowbite-react";
 import { FaCheck, FaPen, FaTrashCan } from "react-icons/fa6";
 import MaterialReactTable, { MRT_ColumnDef } from "material-react-table";
-import { defaultBooking, defaultUser } from "../api/reducer";
+import { defaultBooking, defaultUser } from "../api/contexts/reducer";
 import { deleteDoc, doc, updateDoc } from "firebase/firestore";
 import { useEffect, useMemo, useState } from "react";
 import {
   useFetchCollection,
   useQueryCollection,
-} from "../api/fetchCollections";
+} from "../api/hooks/fetchCollections";
 
 import { FaMinusCircle } from "react-icons/fa";
 import { db } from "../firebase";
 import toast from "react-hot-toast";
 import { useForm } from "react-hook-form";
-import useLocalStorage from "../api/useLocalStorage";
-import useModal from "../api/useModal";
+import useLocalStorage from "../api/hooks/useLocalStorage";
+import useModal from "../api/hooks/useModal";
 
 const bookingKeys = {
   date: "Date",
@@ -29,7 +29,11 @@ const bookingKeys = {
 
 function BookingTable() {
   const [user] = useLocalStorage<IUser>("tour-user", defaultUser);
-  const { data: places } = useFetchCollection<IPlace>("places");
+  const {
+    data: places,
+    refetch,
+    fetching,
+  } = useFetchCollection<IPlace>("places");
   const bookings = useQueryCollection("bookings", "userId", user.uid ?? "");
   const [selectedBooking, setBooking] = useState<Booking>(defaultBooking);
   const [mode, setMode] = useState<"Edit" | "Delete">("Edit");
@@ -48,12 +52,12 @@ function BookingTable() {
 
   const onDelete = async () => {
     const bookingRef = doc(db, "bookings", selectedBooking?.id || "");
-
     try {
       await deleteDoc(bookingRef);
-      console.log("Booking deleted successfully");
+      toast.success("Booking deleted successfully");
     } catch (error) {
       console.error("Error deleting booking:", error);
+      toast.error("Something went wrong");
     }
   };
 
@@ -69,7 +73,7 @@ function BookingTable() {
         const tourPlanRef = doc(db, "bookings", selectedBooking?.id || "");
         await updateDoc(tourPlanRef, { ...formData });
         toast.success("Update complete");
-        location.reload();
+        refetch();
       } catch (error) {
         console.log("🚀 ~ file: dashboard.tsx:81 ~ onSubmit ~ error:", error);
       }
@@ -239,11 +243,15 @@ function BookingTable() {
         data={bookings as Booking[]}
         enableRowSelection
         rowCount={5}
-        renderEmptyRowsFallback={() => (
-          <center className="p-4">
-            <Spinner size="lg" />
-          </center>
-        )}
+        renderEmptyRowsFallback={() =>
+          fetching ? (
+            <center className="p-4">
+              <Spinner size="lg" />
+            </center>
+          ) : (
+            <center className="p-10">You haven't booked any tour yet</center>
+          )
+        }
       />
     </>
   );

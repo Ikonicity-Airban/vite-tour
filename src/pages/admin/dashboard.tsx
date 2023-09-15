@@ -1,39 +1,42 @@
-import { FaHeart, FaHotel, FaReceipt } from "react-icons/fa6";
+import { AllBookingTable, Section, UserTable } from "../../components";
+import { FaCrown, FaMapLocation, FaPerson, FaReceipt } from "react-icons/fa6";
 
-import AllBookingTable from "../../components/AllBookingTable";
 import { FaUserCircle } from "react-icons/fa";
-import { IUser } from "../../api/@types";
-import Section from "../../components/Section";
 import { Tabs } from "flowbite-react";
 import TourPlanList from "./PlanList";
 import TourSiteList from "./SitesList";
-import { UserTable } from "../../components/TableComponent";
-import { useFetchCollection } from "../../api/fetchCollections";
 
 export default function AdminDashboard() {
-  const users = useFetchCollection<IUser[]>("users");
-
   return (
     <div className="my-10 max-w-screen-desktop w-full mx-auto">
-      <Tabs.Group aria-label="Full width tabs" style="underline">
-        <Tabs.Item active icon={FaUserCircle} title="Users">
-          <Section title="Users" subtitle="All Tour Users">
-            <UserTable users={users.data} />
+      <Tabs.Group
+        aria-label="Full width tabs"
+        style="underline"
+        className="space-x-20 mx-auto -mb-10"
+      >
+        <Tabs.Item icon={FaReceipt} title="Bookings">
+          <Section title="bookings" subtitle="All Bookings by Users">
+            <AllBookingTable />
           </Section>
         </Tabs.Item>
-        <Tabs.Item icon={FaHeart} title="Plans">
-          <Section title="Plans" subtitle="All Tour Plans">
+        <Tabs.Item icon={FaCrown} title="Plans">
+          <Section title="Plans" subtitle="All Tour Package Plans">
             <TourPlanList />
           </Section>
         </Tabs.Item>
-        <Tabs.Item icon={FaHotel} title="Tour Sites">
-          <Section title="Sites" subtitle="All Tour Sites">
+        <Tabs.Item icon={FaMapLocation} title="Tour Sites">
+          <Section title="Sites" subtitle="All Tour Sites and Centers">
             <TourSiteList />
           </Section>
         </Tabs.Item>
-        <Tabs.Item icon={FaReceipt} title="Bookings">
-          <Section title="bookings" subtitle="All Bookings">
-            <AllBookingTable />
+        <Tabs.Item icon={FaPerson} title="Tour Guides">
+          <Section title="Sites" subtitle="All Tour Guides">
+            <TourSiteList />
+          </Section>
+        </Tabs.Item>
+        <Tabs.Item icon={FaUserCircle} title="Users">
+          <Section title="Users" subtitle="All Tour Users">
+            <UserTable />
           </Section>
         </Tabs.Item>
       </Tabs.Group>

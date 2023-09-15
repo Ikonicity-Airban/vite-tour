@@ -1,12 +1,11 @@
 import { Avatar, Checkbox, Label, TextInput } from "flowbite-react";
 import { IUser, Plan } from "../api/@types";
+import { PlanCard, Section } from "../components";
 import { useEffect, useState } from "react";
 
-import { PlanCard } from "../components/PremiumCard";
-import Section from "../components/Section";
-import { defaultUser } from "../api/reducer";
-import { useFetchCollection } from "../api/fetchCollections";
-import useLocalStorage from "../api/useLocalStorage";
+import { defaultUser } from "../api/contexts/reducer";
+import { useFetchCollection } from "../api/hooks/fetchCollections";
+import useLocalStorage from "../api/hooks/useLocalStorage";
 
 function ProfilePage() {
   const [user] = useLocalStorage<IUser>("tour-user", defaultUser);

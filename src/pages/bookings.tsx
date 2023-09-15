@@ -1,4 +1,10 @@
 import { Booking, IUser } from "../api/@types";
+import {
+  BookingTable,
+  LogoComponent,
+  PremiumCardList,
+  Section,
+} from "../components";
 import { Button, Card, Label, TextInput } from "flowbite-react";
 import { Form, useLocation, useNavigate } from "react-router-dom";
 import {
@@ -10,16 +16,12 @@ import {
 } from "firebase/firestore";
 import { useMemo, useState } from "react";
 
-import BookingTable from "../components/BookingTable";
-import { LogoComponent } from "../components";
-import PremiumCardList from "../components/PremiumCard";
-import Section from "../components/Section";
 import { db } from "../firebase";
-import { defaultUser } from "../api/reducer";
+import { defaultUser } from "../api/contexts/reducer";
 import { scrollIntoView } from "../api/helper";
 import { toast } from "react-hot-toast";
 import { useForm } from "react-hook-form";
-import useLocalStorage from "../api/useLocalStorage";
+import useLocalStorage from "../api/hooks/useLocalStorage";
 
 type booking = Omit<Booking, "id" | "userId" | "tourId">;
 
@@ -44,10 +46,6 @@ function Bookings() {
 
     const onSubmit = async (book: booking) => {
       if (!user?.plan) {
-        console.log(
-          "🚀 ~ file: bookings.tsx:47 ~ onSubmit ~ !user?.plan:",
-          user?.plan
-        );
         toast.error("Please subscribe to a plan first");
         scrollIntoView("plans");
         return;
@@ -68,7 +66,6 @@ function Bookings() {
         toast.success("Successfully Booked a tour for " + location);
         navigate("/dashboard");
       } catch (e) {
-        console.log("🚀 ~ file: bookings.tsx:59 ~ onSubmit ~ e:", e);
         toast.error("Something went wrong");
       } finally {
         setIsLoading(false);
