@@ -13,9 +13,8 @@ import { IUser } from "../api/@types";
 import React from "react";
 import { auth } from "../firebase";
 import { onAuthStateChanged } from "firebase/auth";
-import useFetchSites from "../api/hooks/fetchCollections";
-import useLocalStorage from "../api/hooks/useLocalStorage";
 import toast from "react-hot-toast";
+import useLocalStorage from "../api/hooks/useLocalStorage";
 
 function AdminDashboardLayout() {
   const {
@@ -25,9 +24,6 @@ function AdminDashboardLayout() {
   const navigate = useNavigate();
   const path = useLocation().pathname;
   const [admin, setAdmin] = useLocalStorage<IUser>("tour-admin", defaultUser);
-
-  // fetching places
-  useFetchSites();
 
   //useEffect
   React.useLayoutEffect(() => {
