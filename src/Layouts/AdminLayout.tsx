@@ -1,13 +1,10 @@
 import { Avatar, Dropdown, Navbar } from "flowbite-react";
-import {
-  BreadcrumbComponents,
-  FooterComponent,
-  LogoComponent,
-} from "../components";
+import { FooterComponent, LogoComponent } from "../components";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { Types, defaultUser } from "../api/contexts/reducer";
 
 import { AppContext } from "../api/contexts/context";
+import { FaSignOutAlt } from "react-icons/fa";
 import { Helmet } from "react-helmet";
 import { IUser } from "../api/@types";
 import React from "react";
@@ -46,7 +43,7 @@ function AdminDashboardLayout() {
           payload: {},
         });
         navigate("/admin/login");
-        toast("Admin is logged out");
+        toast.success("Admin is logged out");
       }
       dispatch({
         type: Types.setIsLoading,
@@ -61,7 +58,7 @@ function AdminDashboardLayout() {
         <title className="capitalize">Admin | {path.split("/")[1]}</title>
       </Helmet>
       <Navbar
-        className="w-full py-6 px-4 fixed top-0 left-0 z-[999]"
+        className="w-full py-6 px-4 fixed top-0 left-0 z-[999] bg-slate-200"
         border
         fluid
         rounded
@@ -99,8 +96,9 @@ function AdminDashboardLayout() {
             </Dropdown.Header>
             <Dropdown.Divider />
             <Dropdown.Item
+              icon={FaSignOutAlt}
               onClick={() => {
-                dispatch({ type: Types.logout, payload: null });
+                localStorage.removeItem("tour-admin");
                 auth.signOut();
                 navigate("login");
               }}
@@ -110,10 +108,8 @@ function AdminDashboardLayout() {
           </Dropdown>
         </div>
       </Navbar>
-      <div className="mt-20 py-10">
-        <BreadcrumbComponents />
-      </div>
-      <section className=" tablet:px-6 min-h-[70vh]">
+
+      <section className=" tablet:px-6 min-h-[70vh] mt-32">
         <Outlet />
       </section>
 

@@ -1,25 +1,39 @@
 import {
   Button,
+  Card,
   Label,
   Modal,
+  Rating,
   Select,
   Spinner,
   TextInput,
   Textarea,
 } from "flowbite-react";
-import { FaPen, FaPlus, FaTrashCan } from "react-icons/fa6";
+import {
+  FaClock,
+  FaNairaSign,
+  FaPen,
+  FaPlus,
+  FaTrashCan,
+  FaUsers,
+} from "react-icons/fa6";
 import MaterialReactTable, { MRT_ColumnDef } from "material-react-table";
-import { deleteDoc, doc, setDoc, updateDoc } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  updateDoc,
+} from "firebase/firestore";
 import { useMemo, useState } from "react";
 
 import { IPlan } from "../../api/@types";
 import React from "react";
 import { db } from "../../firebase";
-import { v4 as randomUUID } from "uuid";
 import toast from "react-hot-toast";
+import { useFetchCollection } from "../../api/hooks/fetchCollections";
 import { useForm } from "react-hook-form";
 import useModal from "../../api/hooks/useModal";
-import { useFetchCollection } from "../../api/hooks/fetchCollections";
 
 const defaultTourPlan: IPlan = {
   id: "",
@@ -116,13 +130,14 @@ const TourPlanList = () => {
     const onSubmit = async (formData: FormData) => {
       try {
         if (mode == "Create") {
-          const id = randomUUID();
-          const tourPlansRef = doc(db, "plans", id);
-          await setDoc(tourPlansRef, { ...formData, id });
+          // const id = randomUUID();
+          const tourPlansRef = collection(db, "plans");
+          await addDoc(tourPlansRef, { ...formData });
         } else {
-          const tourPlanRef = doc(db, "plans", formData.id);
+          const tourPlanRef = doc(db, "plans", selectedPlan.id);
           await updateDoc(tourPlanRef, { ...formData });
         }
+        refetch();
       } catch (error) {
         if (error instanceof Error) {
           toast.error(error.message);
@@ -135,7 +150,10 @@ const TourPlanList = () => {
 
     return (
       <>
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-2 py-4">
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="py-4 grid grid-cols-2 gap-6 justify-between"
+        >
           {Object.keys(defaultTourPlan)
             .filter(
               (key) => !["id", "color", "image", "description"].includes(key)
@@ -146,6 +164,7 @@ const TourPlanList = () => {
                   {tourPlanKeys[key]}
                 </Label>
                 <TextInput
+                  autoCapitalize="characters"
                   type={
                     ["person", "price", "rate", "days"].includes(key)
                       ? "number"
@@ -153,6 +172,7 @@ const TourPlanList = () => {
                   }
                   step={key === "price" ? 50 : key === "rate" ? 0.1 : 1}
                   min={0}
+                  max={key == "rate" ? 5.0 : Number.POSITIVE_INFINITY}
                   id={key}
                   {...register(key as keyof IPlan, { required: true })}
                 />
@@ -175,8 +195,12 @@ const TourPlanList = () => {
             </Select>
           </div>
           <div className="">
-            <Label htmlFor="Color">Images</Label>
-            <Select {...register("color")} id="color" defaultValue="gray">
+            <Label htmlFor="image">Images</Label>
+            <Select
+              {...register("image")}
+              id="image"
+              defaultValue="fa fa-suitcase"
+            >
               {Object.entries(images).map(([key, value]) => (
                 <option value={value} className="capitalize" key={key}>
                   {key}
@@ -194,13 +218,22 @@ const TourPlanList = () => {
           </div>
           <Button
             type="submit"
-            className="w-full"
+            className="w-full col-span"
             color="success"
             pill
             disabled={fetching}
             isProcessing={fetching}
           >
             {mode == "Create" ? "Save" : "Update"}
+          </Button>
+          <Button
+            type="button"
+            color="failure"
+            pill
+            onClick={hideModal}
+            className="w-full mt-2"
+          >
+            Cancel
           </Button>
         </form>
       </>
@@ -231,7 +264,13 @@ const TourPlanList = () => {
       },
       {
         header: "Color",
-        accessorKey: "color",
+        accessorFn: ({ color }) => <span style={{ color }}>{color}</span>,
+      },
+      {
+        header: "Image",
+        accessorFn: ({ image, color }) => (
+          <i className={image + " text-3xl"} style={{ color }}></i>
+        ),
       },
       {
         header: "Days",
@@ -242,13 +281,13 @@ const TourPlanList = () => {
         accessorFn: (item) => (
           <div className="flex space-x-3">
             <div
-              className="ring-1 p-2 rounded-lg"
+              className="ring-1 p-2 rounded-lg cursor-pointer"
               onClick={() => handleEditTourPlan(item)}
             >
               <FaPen />
             </div>
             <div
-              className="ring-1 p-2 rounded-lg"
+              className="ring-1 p-2 rounded-lg cursor-pointer"
               onClick={() => {
                 setSelectedPlan(item);
                 setMode("Delete");
@@ -266,7 +305,7 @@ const TourPlanList = () => {
 
   return (
     <div>
-      <Modal show={isModalVisible} size="lg" popup onClose={hideModal}>
+      <Modal show={isModalVisible} size="2xl" popup onClose={hideModal}>
         <Modal.Header>
           <center>
             <h3 className="m-4 text-center w-full font-medium text-primary">
@@ -301,14 +340,11 @@ const TourPlanList = () => {
           ) : (
             <>
               <TourPlanForm tourPlan={selectedPlan} />
-              <Button type="button" onClick={hideModal} className="w-full mt-2">
-                Cancel
-              </Button>
             </>
           )}
         </Modal.Body>
       </Modal>
-      <div className="space-y-6">
+      <div className="space-y-20">
         <Button type="button" onClick={handleCreateTour} className="w-full">
           <FaPlus className="mr-4" /> Add a New Plan
         </Button>
@@ -325,9 +361,61 @@ const TourPlanList = () => {
             )
           }
         />
+        <div className="grid-card my-20">
+          {tourPlans.map((plan: IPlan) => (
+            <PlanCard plan={plan} key={plan.id} />
+          ))}
+        </div>
       </div>
     </div>
   );
 };
 
 export default TourPlanList;
+
+function PlanCard({ plan }: { plan: IPlan }) {
+  const { title, description, image, price, rate, days, person, color } = plan;
+
+  return (
+    <Card
+      className={
+        "rounded-lg shadow-lg h-full overflow-hidden text-center max-w-sm w-full"
+      }
+    >
+      <i
+        className={image + " text-7xl text-center w-full"}
+        style={{ color }}
+      ></i>
+      <div className="p-2  flex flex-col justify-between h-full">
+        <h2 className="mb-10 font-light" style={{ color }}>
+          {title}
+        </h2>
+        <p className="mb-4 font-medium text-lg">{description}</p>
+        <ul className="mb-4 space-y-3">
+          <li className="flex items-center gap-2  text-sm mb-1">
+            <Rating>
+              <Rating.Star></Rating.Star>
+            </Rating>
+            Rating: {rate}
+          </li>
+          <li className="flex items-center gap-2  text-sm mb-1">
+            <FaClock />
+            <span>Duration: {days} days</span>
+          </li>
+          <li className="flex gap-2 items-center  text-sm mb-1">
+            <FaUsers /> <span>Number of people: {person}</span>
+          </li>
+          <li className={" py-6 "}>
+            <h3
+              style={{ color }}
+              className="font-bold inline-flex items-center space-x-2"
+            >
+              Price: <FaNairaSign className="ml-2 text-xl" />
+              {price}
+            </h3>
+          </li>
+        </ul>
+      </div>
+    </Card>
+  );
+}

@@ -54,11 +54,11 @@ export const router = createBrowserRouter([
             path: "/create-account",
             element: <SignUpPage />,
           },
-          {
-            path: "/admin/login",
-            element: <AdminLoginPage />,
-          },
         ],
+      },
+      {
+        path: "/admin/login",
+        element: <AdminLoginPage />,
       },
       {
         path: "/",

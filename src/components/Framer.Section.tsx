@@ -50,7 +50,7 @@ function GridInViewAnimation({ list }: GridInViewAnimationProps) {
       ref={gridRef}
     >
       <motion.div
-        className="grid-card gap-6"
+        className="grid-card gap-10"
         // animate={controls}
         layout
         variants={{

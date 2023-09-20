@@ -8,21 +8,22 @@ import {
   TextInput,
   Tooltip,
 } from "flowbite-react";
-import { IUser, IPlan } from "../api/@types";
+import { IPlan, IUser } from "../api/@types";
 import { ImageUploader, PlanCard, Section } from "../components";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { doc, updateDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
-
-import { defaultUser } from "../api/contexts/reducer";
 import {
   useFetchCollection,
   useFetchSingleDoc,
 } from "../api/hooks/fetchCollections";
-import useLocalStorage from "../api/hooks/useLocalStorage";
-import { SubmitHandler, useForm } from "react-hook-form";
-import useModal from "../api/hooks/useModal";
-import { doc, updateDoc } from "firebase/firestore";
+
+import { FaCamera } from "react-icons/fa6";
 import { db } from "../firebase";
+import { defaultUser } from "../api/contexts/reducer";
 import toast from "react-hot-toast";
+import useLocalStorage from "../api/hooks/useLocalStorage";
+import useModal from "../api/hooks/useModal";
 
 function ProfilePage() {
   const [storageUser] = useLocalStorage<IUser>("tour-user", defaultUser);
@@ -36,6 +37,7 @@ function ProfilePage() {
   const [userPlan, setUserPlan] = useState<IPlan>();
   const { data: plans, refetch, fetching } = useFetchCollection<IPlan>("plans");
   const [loading, setLoading] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
 
   const { showModal, hideModal, isModalVisible } = useModal();
   const { handleSubmit, register } = useForm<IUser>();
@@ -69,10 +71,12 @@ function ProfilePage() {
 
   const handleUploadPhoto = async () => {
     try {
+      setIsUploading(true);
       await updateDoc(doc(db, "users", storageUser.uid || ""), {
         photoURL: imageData,
       });
       toast.success("Updated profile successfully");
+      setImageData(null);
       refetch();
     } catch (error) {
       console.log(
@@ -80,13 +84,14 @@ function ProfilePage() {
         error
       );
     }
+    setIsUploading(false);
     hideModal();
   };
 
   const ProfileForm = () => (
     <div className="mx-auto max-w-xl w-full min-w-[280px] space-y-3">
       <Modal show={isModalVisible} size="lg" popup onClose={hideModal}>
-        <Modal.Header className="p-2 text-center">
+        <Modal.Header className="p-6 text-center">
           Upload a profile photo
         </Modal.Header>
         <hr />
@@ -96,8 +101,9 @@ function ProfilePage() {
         <Modal.Footer>
           <Button
             pill
+            disabled={!imageData || isUploading}
             gradientDuoTone="greenToBlue"
-            isProcessing={fetching}
+            isProcessing={isUploading}
             className="w-full"
             onClick={handleUploadPhoto}
           >
@@ -121,7 +127,7 @@ function ProfilePage() {
             className="cursor-pointer mx-auto"
           >
             <div className="hover:scale-150 absolute left-[55%] bottom-0">
-              <i className="fa fa-camera"></i>
+              <FaCamera />
             </div>
           </Tooltip>
         </Avatar>

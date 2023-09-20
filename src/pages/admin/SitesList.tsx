@@ -7,15 +7,21 @@ import {
   TextInput,
   Textarea,
 } from "flowbite-react";
+import { ChangeEvent, useMemo, useState } from "react";
 import { FaPen, FaPlus, FaTrashCan } from "react-icons/fa6";
 import MaterialReactTable, { MRT_ColumnDef } from "material-react-table";
-import { deleteDoc, doc, setDoc, updateDoc } from "firebase/firestore";
-import { useMemo, useState } from "react";
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  updateDoc,
+} from "firebase/firestore";
 
+import { FaTimes } from "react-icons/fa";
 import { IPlace } from "../../api/@types";
 import React from "react";
 import { db } from "../../firebase";
-import { v4 as randomUUID } from "uuid";
 import toast from "react-hot-toast";
 import { truncateString } from "../../api/helper";
 import { useFetchCollection } from "../../api/hooks/fetchCollections";
@@ -27,7 +33,6 @@ const defaultTourSite: IPlace = {
   name: "",
   about: "",
   tags: "",
-  other: [],
   images: [""],
 };
 
@@ -56,6 +61,7 @@ const TourSiteList = () => {
     setMode("Create");
     showModal();
   };
+
   const handleEditTourPlan = async (tourSite: IPlace) => {
     setSelectedSite(tourSite);
     setMode("Edit");
@@ -82,25 +88,102 @@ const TourSiteList = () => {
   };
 
   const ImageRenderer = () => {
+    const [images, setImages] = useState<string[]>(selectedSite.images);
+    const [addedImage, setAddedImage] = useState<string>("");
+
+    function handleDeleteImage(img: string) {
+      setImages(images.filter((image) => image !== img));
+    }
+
+    async function handleUpload() {
+      try {
+        await updateDoc(doc(db, "places", selectedSite.id), { images: images });
+        toast.success("Update completed image added successfully");
+      } catch (error) {
+        error instanceof Error && toast.error(error.message);
+      } finally {
+        hideModal();
+        refetch();
+      }
+    }
+
+    const handleFileInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+      const file = event.target.files?.[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          const dataURL = reader.result as string;
+          // Pass dataURL to parent component
+          setAddedImage(dataURL);
+          setImages((prev) => [...prev, dataURL]);
+        };
+
+        reader.readAsDataURL(file);
+      }
+    };
     return (
-      <div className="relative">
-        <div className="flex my-10 gap-2">
-          {selectedSite.images?.map((image) => (
-            <div key={image} className="w-32 hover:">
-              <img src={image} alt="image" className="rounded-lg" />
-            </div>
-          ))}
-        </div>
-        <Label htmlFor="images" className="capitalize">
-          Images
+      <form className="w-full my-10">
+        {images && (
+          <div className="w-full flex mb-10 items-center gap-4">
+            {images?.map((image) => (
+              <div
+                key={image}
+                className="ring-1 rounded-lg p-1 w-1/3 flex text-xs justify-between h-16 items-center relative"
+              >
+                <img
+                  src={image}
+                  alt="image"
+                  className="object-cover w-full h-full"
+                />
+                <FaTimes
+                  type="search"
+                  onClick={() => handleDeleteImage(image)}
+                  className="text-red-600 cursor-pointer absolute -top-4 -right-2 ring-1 ring-slate-500 p-1 rounded-full"
+                />
+              </div>
+            ))}
+            <hr />
+          </div>
+        )}
+        <Label htmlFor="images" className="first-letter:capitalize">
+          You can add a new image url or upload an image
         </Label>
-        <TextInput id="images" placeholder="Add a url" />
+        <TextInput
+          id="images"
+          placeholder="Add a url"
+          value={addedImage}
+          onChange={(e) => setAddedImage(e.target.value)}
+        />
         <center>or</center>
-        <FileInput />
-        <Button className="absolute right-0 bottom-0">
-          <FaPlus />
-        </Button>
-      </div>
+
+        <div className="space-y-6">
+          <FileInput
+            required={!addedImage}
+            accept="image/*"
+            onChange={handleFileInputChange}
+            id="image"
+          />{" "}
+        </div>
+        <div className="flex h-auto items-center justify-between gap-4 my-4">
+          <Button
+            className="w-full"
+            pill
+            color="success"
+            onClick={handleUpload}
+          >
+            Save Image
+          </Button>
+          <Button
+            type="button"
+            onClick={hideModal}
+            className="w-full mt-2"
+            pill
+            color="failure"
+          >
+            Cancel
+          </Button>
+        </div>
+      </form>
     );
   };
 
@@ -114,21 +197,24 @@ const TourSiteList = () => {
     const onSubmit = async (formData: FormData) => {
       try {
         if (mode == "Create") {
-          const id = randomUUID();
-          const tourSiteRef = doc(db, "plans", id);
-          await setDoc(tourSiteRef, { ...formData, id, images: [] });
+          const tourSiteRef = collection(db, "places");
+          await addDoc(tourSiteRef, { ...formData, images: [] });
+          toast.success("Successfully created a site");
+          setSelectedSite({ ...formData, images: [] });
+          setMode("Edit Photo");
         } else {
           const tourPlanRef = doc(db, "places", formData.id);
           await updateDoc(tourPlanRef, { ...formData });
+          toast.success("Successfully updated site");
+          hideModal();
         }
+        refetch();
       } catch (error) {
         if (error instanceof Error) {
           toast.error(error.message);
         }
       } finally {
-        refetch();
         reset(defaultTourSite);
-        hideModal();
       }
     };
 
@@ -158,9 +244,20 @@ const TourSiteList = () => {
               {...register("about", { required: true })}
             />
           </div>
-          <Button type="submit" className="w-full">
-            Save
-          </Button>
+          <div className="flex items-center justify-between gap-4">
+            <Button type="submit" className="w-full" pill color="success">
+              Save
+            </Button>
+            <Button
+              type="button"
+              onClick={hideModal}
+              className="w-full mt-2"
+              pill
+              color="failure"
+            >
+              Cancel
+            </Button>
+          </div>
         </form>
       </>
     );
@@ -267,9 +364,6 @@ const TourSiteList = () => {
           ) : (
             <>
               <TourPlanForm tourSite={selectedSite} />
-              <Button type="button" onClick={hideModal} className="w-full mt-2">
-                Cancel
-              </Button>
             </>
           )}
         </Modal.Body>

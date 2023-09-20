@@ -1,6 +1,6 @@
+import { Button } from "flowbite-react";
 import { ReactNode } from "react";
 import { truncateString } from "../api/helper";
-import { Button } from "flowbite-react";
 
 interface ICardProps {
   source: {
@@ -14,8 +14,8 @@ interface ICardProps {
 
 function CardComponent({ source: { source, about, name: place } }: ICardProps) {
   return (
-    <div className="max-w-sm min-h-fit h-full text-sm leading-snug flex flex-col p-4 border border-gray-200 rounded shadow md:p-6 dark:border-gray-700 relative card overflow-hidden">
-      <div className="flex items-center justify-center h-60 backdrop-blur-sm mb-4 bg-gray-300 rounded dark:bg-gray-700 dark:ring-slate-800 ring-[whitesmoke] overflow-hidden">
+    <div className="max-w-sm min-h-fit justify-between w-full h-full text-sm leading-snug flex flex-col p-4 border border-gray-200 rounded shadow md:p-6 dark:border-gray-700 relative card overflow-hidden">
+      <div className="flex items-center justify-center h-56 backdrop-blur-sm mb-4 bg-gray-300 rounded dark:bg-gray-700 dark:ring-slate-800 ring-[whitesmoke] overflow-hidden">
         <img
           className="w-full h-full hover:scale-105 duration-150"
           src={source}
@@ -35,7 +35,7 @@ function CardComponent({ source: { source, about, name: place } }: ICardProps) {
         </p>
       </div>
       <Button gradientDuoTone="greenToBlue" className="hover:text-base w-full">
-        Take a tour
+        Take a tour now
       </Button>
     </div>
   );

@@ -1,5 +1,7 @@
-import { FileInput, Label } from "flowbite-react";
 import { ChangeEvent, Dispatch, SetStateAction } from "react";
+import { FileInput, Label } from "flowbite-react";
+
+import { FaPlus } from "react-icons/fa6";
 
 interface ImageUploaderProps {
   setImageData: Dispatch<SetStateAction<string | null>>;
@@ -25,9 +27,10 @@ const ImageUploader = ({ imageData, setImageData }: ImageUploaderProps) => {
     <div className="space-y-6">
       <Label
         htmlFor="image"
-        className="flex place-content-center border p-16 rounded-lg border-dashed text-gray-400 cursor-pointer"
+        className="grid  place-content-center border p-16 rounded-lg border-dashed text-gray-400 cursor-pointer"
       >
-        click to add a photo
+        <FaPlus size={50} className="mx-auto my-6"></FaPlus>
+        <span className="text-sm text-gray-300">click to add a photo</span>
       </Label>
       <FileInput
         accept="image/*"

@@ -41,7 +41,7 @@ function LoginPage() {
         password
       );
       setUser({ ...user, ...newUser, email });
-      const usersRef = doc(db, "users", user?.uid || "");
+      const usersRef = doc(db, "users", newUser?.uid || "");
       await setDoc(
         usersRef,
         { lastLoggedIn: new Date(Date.now()).toUTCString() },
@@ -55,7 +55,9 @@ function LoginPage() {
         toast.error(
           errMsg === "Firebase: Error (auth/user-not-found)."
             ? "Account doesn't exist, please sign up now"
-            : "Something went wrong, try again"
+            : errMsg === "Firebase: Error (auth/network-request-failed)."
+            ? "Poor Network Connection"
+            : "Something went wrong, Try again"
         );
         console.log(
           "🚀 ~ file: login.tsx:55 ~ constonSubmit:SubmitHandler<IFormInput>= ~ errMsg:",

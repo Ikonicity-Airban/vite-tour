@@ -1,4 +1,5 @@
 import { FooterComponent, LogoComponent } from "../components";
+
 import { AppContext } from "../api/contexts/context";
 import Header from "../components/Header";
 import { Helmet } from "react-helmet";
@@ -34,7 +35,7 @@ function MainLayout() {
         className="relative min-h-[80vh]"
         data-testid="flowbite-navbar-toggle"
       >
-        <Outlet></Outlet>
+        <Outlet />
       </div>
       <FooterComponent />
     </section>

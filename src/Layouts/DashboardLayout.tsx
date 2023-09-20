@@ -4,23 +4,34 @@ import {
   FooterComponent,
   LogoComponent,
 } from "../components";
+import { FaArrowRightFromBracket, FaPlane, FaReceipt } from "react-icons/fa6";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import { Types, defaultUser } from "../api/contexts/reducer";
 import { auth, db } from "../firebase";
 import { doc, getDoc } from "firebase/firestore";
+import useFetchSites, {
+  useFetchSingleDoc,
+} from "../api/hooks/fetchCollections";
 
 import { AppContext } from "../api/contexts/context";
+import { FaUserEdit } from "react-icons/fa";
 import { IUser } from "../api/@types";
 import React from "react";
-import useFetchSites from "../api/hooks/fetchCollections";
 import useLocalStorage from "../api/hooks/useLocalStorage";
-import { FaArrowRightFromBracket, FaPlane, FaUser } from "react-icons/fa6";
 
 function DashboardLayout() {
   const { dispatch } = React.useContext(AppContext);
-  const [user, setUser] = useLocalStorage<IUser>("tour-user", defaultUser);
+  const [storageUser, setUser] = useLocalStorage<IUser>(
+    "tour-user",
+    defaultUser
+  );
 
   const navigate = useNavigate();
+
+  const { data: user } = useFetchSingleDoc<IUser>(
+    "users",
+    storageUser?.uid || ""
+  );
 
   // fetching places
   useFetchSites();
@@ -51,7 +62,7 @@ function DashboardLayout() {
             />
           }
         >
-          <Dropdown.Header className="">
+          <Dropdown.Header>
             <span className="block font-semibold text-primary">
               {user?.displayName}
             </span>
@@ -61,12 +72,21 @@ function DashboardLayout() {
           </Dropdown.Header>
           <Dropdown.Item icon={FaPlane}>
             <Link className="text-sm w-full text-left ml-2" to="/dashboard">
-              Dashboard
+              My Dashboard
             </Link>
           </Dropdown.Item>
-          <Dropdown.Item icon={FaUser}>
+          <Dropdown.Item icon={FaReceipt}>
+            <Link
+              className="text-sm w-full text-left ml-2"
+              to="/bookings"
+              state={{ location: "" }}
+            >
+              My Bookings
+            </Link>
+          </Dropdown.Item>
+          <Dropdown.Item icon={FaUserEdit}>
             <Link className="text-sm w-full text-left ml-2" to="/profile">
-              Profile
+              My Profile
             </Link>
           </Dropdown.Item>
           <Dropdown.Divider />
@@ -74,8 +94,8 @@ function DashboardLayout() {
             icon={FaArrowRightFromBracket}
             onClick={() => {
               dispatch({ type: Types.logout, payload: null });
-              navigate("/login");
               auth.signOut();
+              navigate("/login");
             }}
           >
             <div className="text-sm w-full text-left ml-2">Sign out</div>
@@ -87,7 +107,7 @@ function DashboardLayout() {
 
   //useEffect
   React.useEffect(() => {
-    if (!user.email) {
+    if (!storageUser.email) {
       navigate("/login");
       console.log("user is logged out");
       return;

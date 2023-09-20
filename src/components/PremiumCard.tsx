@@ -1,6 +1,6 @@
 import { Button, Card, Modal, Rating } from "flowbite-react";
 import { FaCheck, FaClock, FaNairaSign, FaUsers } from "react-icons/fa6";
-import { IUser, IPlan } from "../api/@types";
+import { IPlan, IUser } from "../api/@types";
 import { doc, updateDoc } from "firebase/firestore";
 
 import LoadingSection from "./LoadingSection";
@@ -15,6 +15,7 @@ import useModal from "../api/hooks/useModal";
 export const PlanCard = ({ plan, user }: { plan: IPlan; user?: IUser }) => {
   const alreadySubscribed = Boolean(user?.plan == plan.title);
   const { title, description, image, price, rate, days, person, color } = plan;
+  const { hideModal, isModalVisible, showModal } = useModal();
 
   const handleSubscription = async () => {
     if (!user?.email) {
@@ -34,7 +35,6 @@ export const PlanCard = ({ plan, user }: { plan: IPlan; user?: IUser }) => {
       hideModal();
     }
   };
-  const { hideModal, isModalVisible, showModal } = useModal();
   return (
     <>
       <Modal show={isModalVisible} size="lg" popup onClose={hideModal}>
