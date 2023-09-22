@@ -42,31 +42,30 @@ function ProfilePage() {
   const { showModal, hideModal, isModalVisible } = useModal();
   const { handleSubmit, register } = useForm<IUser>();
 
+  useEffect(() => {
+    setUserPlan(plans.find((plan: IPlan) => plan?.title === user?.plan));
+  }, [user, plans]);
+
   const onSubmit: SubmitHandler<IUser> = async (formData) => {
     setLoading(true);
     const updatedUser = {
       ...user,
       ...formData,
     };
-    console.log(
-      "🚀 ~ file: profile.tsx:46 ~ constonSubmit:SubmitHandler<IUser>= ~ updatedUser:",
-      updatedUser
-    );
-
-    // try {
-    //   await updateDoc(doc(db, "users", storageUser.uid || ""), {
-    //     ...formData,
-    //   });
-    //   toast.success("Updated photo successfully");
-    //   refetch();
-    // } catch (error) {
-    //   console.log(
-    //     "🚀 ~ file: profile.tsx:52 ~ constonSubmit:SubmitHandler<IUser>= ~ error:",
-    //     error
-    //   );
-    // } finally {
-    //   setLoading((prev) => !prev);
-    // }
+    try {
+      await updateDoc(doc(db, "users", storageUser.uid || ""), {
+        ...updatedUser,
+      });
+      toast.success("Updated profile successfully");
+      refetch();
+    } catch (error) {
+      console.log(
+        "🚀 ~ file: profile.tsx:61 ~ constonSubmit:SubmitHandler<IUser>= ~ error:",
+        error
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleUploadPhoto = async () => {
@@ -80,7 +79,7 @@ function ProfilePage() {
       refetch();
     } catch (error) {
       console.log(
-        "🚀 ~ file: profile.tsx:67 ~ handleUploadPhoto ~ error:",
+        "🚀 ~ file: profile.tsx:77 ~ handleUploadPhoto ~ error:",
         error
       );
     }
@@ -178,10 +177,6 @@ function ProfilePage() {
       </>
     </div>
   );
-
-  useEffect(() => {
-    setUserPlan(plans.find((plan: IPlan) => plan?.title === user?.plan));
-  }, [user, plans]);
 
   return (
     <div className="">
