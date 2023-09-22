@@ -40,7 +40,7 @@ function LoginPage() {
         email,
         password
       );
-      setUser({ ...user, ...newUser, email });
+      setUser({ ...user, ...getTokenUser(newUser), email });
       const usersRef = doc(db, "users", newUser?.uid || user?.uid || "");
 
       await setDoc(
