@@ -5,7 +5,7 @@ import {
   LogoComponent,
 } from "../components";
 import { FaArrowRightFromBracket, FaPlane, FaReceipt } from "react-icons/fa6";
-import { Link, Outlet, useNavigate } from "react-router-dom";
+import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { Types, defaultUser } from "../api/contexts/reducer";
 import { auth, db } from "../firebase";
 import { doc, getDoc } from "firebase/firestore";
@@ -15,6 +15,7 @@ import useFetchSites, {
 
 import { AppContext } from "../api/contexts/context";
 import { FaUserEdit } from "react-icons/fa";
+import { Helmet } from "react-helmet";
 import { IUser } from "../api/@types";
 import React from "react";
 import useLocalStorage from "../api/hooks/useLocalStorage";
@@ -27,6 +28,7 @@ function DashboardLayout() {
   );
 
   const navigate = useNavigate();
+  const pathArray = useLocation().pathname.split("/");
 
   const { data: user } = useFetchSingleDoc<IUser>(
     "users",
@@ -53,6 +55,7 @@ function DashboardLayout() {
           inline
           label={
             <Avatar
+              bordered
               alt="User settings"
               img={user?.photoURL || ""}
               rounded
@@ -76,11 +79,7 @@ function DashboardLayout() {
             </Link>
           </Dropdown.Item>
           <Dropdown.Item icon={FaReceipt}>
-            <Link
-              className="text-sm w-full text-left ml-2"
-              to="/bookings"
-              state={{ location: "" }}
-            >
+            <Link className="text-sm w-full text-left ml-2" to="/bookings">
               My Bookings
             </Link>
           </Dropdown.Item>
@@ -117,6 +116,7 @@ function DashboardLayout() {
         type: Types.setIsLoading,
         payload: true,
       });
+
       try {
         const userRef = doc(db, "users", user?.uid || "");
         const docSnap = await getDoc(userRef);
@@ -142,6 +142,12 @@ function DashboardLayout() {
   if (user?.email)
     return (
       <main className="w-full relative tablet:px-4">
+        <Helmet>
+          <title>
+            ESTB | {user?.email}{" "}
+            {pathArray[1].charAt(0).toUpperCase() + pathArray[1].slice(1)}
+          </title>
+        </Helmet>
         <UserNavbar />
         <div className="mt-20 pt-10">
           <BreadcrumbComponents />

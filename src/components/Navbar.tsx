@@ -34,11 +34,11 @@ function NavbarComponent({ links: navLinks }: Props) {
         <Navbar.Toggle className="order-2" />
         <Navbar.Collapse className="order-3 space-x-4 mr-4 ">
           {navLinks.map(({ link, title }) => (
-            <div className="flex justify-center" key={title}>
+            <div className="flex text-xl justify-center" key={title}>
               <NavLink
                 className={({ isActive }) =>
                   isActive
-                    ? "relative  dark:text-white text-primary overflow-hidden active-link py-1"
+                    ? "relative  dark:text-white text-primary overflow-hidden active-link py-1 font-bold"
                     : "overflow-hidden relative text-[#11224499] dark:text-white py-1"
                 }
                 to={link}

@@ -1,12 +1,12 @@
-import { IBooking, IUser } from "../api/@types";
 import {
   BookingTable,
   LogoComponent,
   PremiumCardList,
   Section,
 } from "../components";
-import { Button, Card, Label, TextInput } from "flowbite-react";
+import { Button, Card, Label, Select, TextInput } from "flowbite-react";
 import { Form, useLocation, useNavigate } from "react-router-dom";
+import { IBooking, IPlace, IUser } from "../api/@types";
 import {
   addDoc,
   arrayUnion,
@@ -14,10 +14,10 @@ import {
   doc,
   updateDoc,
 } from "firebase/firestore";
+import { defaultPlace, defaultUser } from "../api/contexts/reducer";
 import { useMemo, useState } from "react";
 
 import { db } from "../firebase";
-import { defaultUser } from "../api/contexts/reducer";
 import { scrollIntoView } from "../api/helper";
 import { toast } from "react-hot-toast";
 import { useForm } from "react-hook-form";
@@ -29,12 +29,14 @@ type IBookingForm = Omit<IBooking, "id">;
 
 function Bookings() {
   const [isLoading, setIsLoading] = useState(false);
-  const {
-    state: { location = "Enugu" },
-  } = useLocation();
+
+  let location = "Enugu";
+  location = useLocation().state?.location;
+
   const BookingForm = () => {
     const navigate = useNavigate();
     const { register, handleSubmit } = useForm<IBookingForm>();
+    const [places] = useLocalStorage<IPlace[]>("tour-places", defaultPlace);
 
     const [user] = useLocalStorage<IUser>("tour-user", defaultUser);
 
@@ -74,27 +76,35 @@ function Bookings() {
 
     return (
       <div className="w-full flex items-center justify-center">
-        <Card className="w-full max-w-md ">
-          <span className="mx-auto">
+        <Card className="w-full max-w-md">
+          <span className="mx-auto py-10">
             <LogoComponent />
           </span>
           <Form
             onSubmit={handleSubmit(onSubmit)}
             className="flex flex-col gap-4"
           >
-            <div className="mb-2 block">
-              <Label htmlFor="location" className="capitalize">
-                Location
-              </Label>
-              <TextInput
-                readOnly
-                step={1}
-                defaultValue={location}
-                required
-                id="location"
-                {...register("place")}
-              />
-            </div>
+            <Select required defaultValue={location} {...register("place")}>
+              <option
+                value={location}
+                className="text-gray-500"
+                disabled={!location}
+              >
+                {location || "Choose your Destination"}
+              </option>
+              {places
+                ?.filter((place) => place.name !== location)
+                .map(({ name }: IPlace, i: number) => (
+                  <option
+                    key={i}
+                    value={name}
+                    className="h-fit grid rounded cursor-pointer"
+                    // onClick={() => handleClick(name)}
+                  >
+                    {name}
+                  </option>
+                ))}
+            </Select>
             <div className="mb-2 block">
               <Label htmlFor="date" className="capitalize">
                 Date

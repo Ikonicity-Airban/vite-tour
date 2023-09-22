@@ -24,14 +24,13 @@ function Dashboard() {
   } = useContext(AppContext);
   return (
     <div className="block w-full max-w-screen-desktop mx-auto">
-      <Helmet>
-        <title>Dashboard | {user.email}</title>
-      </Helmet>
-
-      <Section title="My Recent bookings" id="">
+      <Section
+        title="My Recent bookings"
+        subtitle="View, Edit and Delete your bookings"
+      >
         {/* <BookingTable data={bookings} /> */}
         <BookingTable />
-        <Link to="/bookings" state={{ location: "The Oaklands" }}>
+        <Link to="/bookings">
           <Button className="w-full" gradientDuoTone="greenToBlue">
             See more bookings
           </Button>

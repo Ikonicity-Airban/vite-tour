@@ -41,7 +41,8 @@ function LoginPage() {
         password
       );
       setUser({ ...user, ...newUser, email });
-      const usersRef = doc(db, "users", newUser?.uid || "");
+      const usersRef = doc(db, "users", newUser?.uid || user?.uid || "");
+
       await setDoc(
         usersRef,
         { lastLoggedIn: new Date(Date.now()).toUTCString() },

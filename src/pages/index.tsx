@@ -49,12 +49,16 @@ function HomePage() {
         >
           <LoadingSection />
 
-          {places.length && (
+          {places.length ? (
             <div>
               <GridInViewAnimation
                 list={filtered ?? shuffleArray(places)}
               ></GridInViewAnimation>
             </div>
+          ) : (
+            <center className="p-20 border-dashed ring-1 rounded-lg">
+              <h3>No Tours site available</h3>
+            </center>
           )}
 
           <Link to="/tours">
