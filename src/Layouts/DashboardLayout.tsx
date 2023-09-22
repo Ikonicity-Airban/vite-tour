@@ -139,12 +139,12 @@ function DashboardLayout() {
     checkUser();
   }, []);
 
-  if (user?.email)
+  if (storageUser?.email)
     return (
       <main className="w-full relative tablet:px-4">
         <Helmet>
           <title>
-            ESTB | {user?.email}{" "}
+            ESTB | {storageUser?.email}
             {pathArray[1].charAt(0).toUpperCase() + pathArray[1].slice(1)}
           </title>
         </Helmet>
