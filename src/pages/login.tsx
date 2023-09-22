@@ -32,9 +32,9 @@ function LoginPage() {
   const navigate = useNavigate();
 
   const onSubmit: SubmitHandler<IFormInput> = async ({ email, password }) => {
+    await auth.setPersistence(browserLocalPersistence);
     try {
       setLoading(true);
-      await auth.setPersistence(browserLocalPersistence);
       const { user: newUser } = await signInWithEmailAndPassword(
         auth,
         email,
@@ -72,6 +72,7 @@ function LoginPage() {
 
   const googleSignIn = async () => {
     try {
+      await auth.setPersistence(browserLocalPersistence);
       const provider = new GoogleAuthProvider();
       const { user } = await signInWithPopup(auth, provider);
       const usersRef = doc(db, "users", user.uid);

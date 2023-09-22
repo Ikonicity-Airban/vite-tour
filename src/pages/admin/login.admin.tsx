@@ -1,4 +1,8 @@
-import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import {
+  GoogleAuthProvider,
+  browserSessionPersistence,
+  signInWithPopup,
+} from "firebase/auth";
 
 import { Card } from "flowbite-react";
 import { LogoComponent } from "../../components";
@@ -14,6 +18,7 @@ function AdminLoginPage() {
 
   const googleSignIn = async () => {
     try {
+      await auth.setPersistence(browserSessionPersistence);
       setLoading(true);
       const provider = new GoogleAuthProvider();
       const { user } = await signInWithPopup(auth, provider);
