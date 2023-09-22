@@ -45,7 +45,7 @@ function DashboardLayout() {
       fluid
       rounded
     >
-      <Navbar.Brand className="ml-10">
+      <Navbar.Brand className="md:ml-10">
         <LogoComponent />
       </Navbar.Brand>
       <div className="flex md:order-2 space-x-10 md:mr-10">
