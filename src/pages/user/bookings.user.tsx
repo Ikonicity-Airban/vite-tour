@@ -20,6 +20,7 @@ import { useMemo, useState } from "react";
 import { db } from "../../firebase";
 import { scrollIntoView } from "../../api/helper";
 import { toast } from "react-hot-toast";
+import { useFetchSingleDoc } from "../../api/hooks/fetchCollections";
 import { useForm } from "react-hook-form";
 import useLocalStorage from "../../api/hooks/useLocalStorage";
 
@@ -38,7 +39,11 @@ function Bookings() {
     const { register, handleSubmit } = useForm<IBookingForm>();
     const [places] = useLocalStorage<IPlace[]>("tour-places", defaultPlace);
 
-    const [user] = useLocalStorage<IUser>("tour-user", defaultUser);
+    const [storageUser] = useLocalStorage<IUser>("tour-user", defaultUser);
+    const { data: user } = useFetchSingleDoc<IUser>(
+      "users",
+      storageUser.uid || ""
+    );
 
     const defaultDate = useMemo(() => {
       const nextWeek = new Date();
