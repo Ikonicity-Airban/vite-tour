@@ -40,7 +40,7 @@ function Bookings() {
     const [places] = useLocalStorage<IPlace[]>("tour-places", defaultPlace);
 
     const [storageUser] = useLocalStorage<IUser>("tour-user", defaultUser);
-    const { data: user } = useFetchSingleDoc<IUser>(
+    const { data: user, refetch } = useFetchSingleDoc<IUser>(
       "users",
       storageUser.uid || ""
     );
@@ -71,6 +71,7 @@ function Bookings() {
         const userRef = doc(db, "users", user.uid || "");
         await updateDoc(userRef, { bookings: arrayUnion(newBooking) });
         toast.success("Successfully Booked a tour for " + location);
+        refetch();
         navigate("/dashboard");
       } catch (e) {
         toast.error("Something went wrong");
