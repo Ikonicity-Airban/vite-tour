@@ -1,6 +1,6 @@
 import PremiumCardList, { PlanCard } from "./PremiumCard";
 
-import AllBookingTable from "./AllBookingTable";
+import AllBookingTable from "./AllBookingList";
 import BookNowComponent from "./BookNowComponent";
 import BookingTable from "./BookingTable";
 import BreadcrumbComponents from "./BreadcrumbComponents";
@@ -14,6 +14,7 @@ import GridInViewAnimation from "./Framer.Section";
 import Header from "./Header";
 import Heading from "./Heading";
 import Hr from "./HR";
+import ImageUploader from "./ImageUploader";
 import LoadingSection from "./LoadingSection";
 import LogoComponent from "./LogoComponent";
 import NavbarComponent from "./Navbar";
@@ -23,7 +24,6 @@ import SearchBar from "./SearchBar";
 import Section from "./Section";
 import ServicesCard from "./ServicesCard";
 import { UserTable } from "./UserTable";
-import ImageUploader from "./ImageUploader";
 
 export {
   Heading,

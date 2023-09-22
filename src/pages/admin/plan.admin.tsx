@@ -303,47 +303,50 @@ const TourPlanList = () => {
     []
   );
 
+  const PlanModal = () => (
+    <Modal show={isModalVisible} size="2xl" popup onClose={hideModal}>
+      <Modal.Header>
+        <center>
+          <h3 className="m-4 text-center w-full font-medium text-primary">
+            {mode} Package Plan
+          </h3>
+        </center>
+      </Modal.Header>
+      <hr />
+      <Modal.Body>
+        {mode == "Delete" ? (
+          <>
+            <center className="py-4">
+              <div className="">
+                Do you want to delete {selectedPlan.title} Plan?
+              </div>
+            </center>
+            <div className="flex w-full justify-end space-x-6">
+              <Button
+                type="button"
+                color="failure"
+                onClick={() => handleDeleteTourPlan(selectedPlan?.id)}
+                className="mt-2"
+              >
+                Ok
+              </Button>
+
+              <Button type="button" onClick={hideModal} className="mt-2">
+                Cancel
+              </Button>
+            </div>
+          </>
+        ) : (
+          <>
+            <TourPlanForm tourPlan={selectedPlan} />
+          </>
+        )}
+      </Modal.Body>
+    </Modal>
+  );
   return (
     <div>
-      <Modal show={isModalVisible} size="2xl" popup onClose={hideModal}>
-        <Modal.Header>
-          <center>
-            <h3 className="m-4 text-center w-full font-medium text-primary">
-              {mode} Package Plan
-            </h3>
-          </center>
-        </Modal.Header>
-        <hr />
-        <Modal.Body>
-          {mode == "Delete" ? (
-            <>
-              <center className="py-4">
-                <div className="">
-                  Do you want to delete {selectedPlan.title} Plan?
-                </div>
-              </center>
-              <div className="flex w-full justify-end space-x-6">
-                <Button
-                  type="button"
-                  color="failure"
-                  onClick={() => handleDeleteTourPlan(selectedPlan?.id)}
-                  className="mt-2"
-                >
-                  Ok
-                </Button>
-
-                <Button type="button" onClick={hideModal} className="mt-2">
-                  Cancel
-                </Button>
-              </div>
-            </>
-          ) : (
-            <>
-              <TourPlanForm tourPlan={selectedPlan} />
-            </>
-          )}
-        </Modal.Body>
-      </Modal>
+      <PlanModal />
       <div className="space-y-20">
         <Button type="button" onClick={handleCreateTour} className="w-full">
           <FaPlus className="mr-4" /> Add a New Plan
@@ -370,8 +373,6 @@ const TourPlanList = () => {
     </div>
   );
 };
-
-export default TourPlanList;
 
 function PlanCard({ plan }: { plan: IPlan }) {
   const { title, description, image, price, rate, days, person, color } = plan;
@@ -419,3 +420,5 @@ function PlanCard({ plan }: { plan: IPlan }) {
     </Card>
   );
 }
+
+export default TourPlanList;

@@ -1,6 +1,13 @@
-import { IBooking, IPlace, IUser } from "../api/@types";
-import { Button, Label, Modal, Spinner, TextInput } from "flowbite-react";
+import {
+  Button,
+  Label,
+  Modal,
+  Select,
+  Spinner,
+  TextInput,
+} from "flowbite-react";
 import { FaCheck, FaPen, FaTrashCan } from "react-icons/fa6";
+import { IBooking, IPlace, IUser } from "../api/@types";
 import MaterialReactTable, { MRT_ColumnDef } from "material-react-table";
 import { defaultBooking, defaultUser } from "../api/contexts/reducer";
 import { deleteDoc, doc, updateDoc } from "firebase/firestore";
@@ -103,10 +110,9 @@ function BookingTable() {
             ))}
           <div>
             <Label htmlFor="place">Description</Label>
-            <select
+            <Select
               required
               defaultValue={selectedBooking.place}
-              className="w-full space-y-2 block outline-none p-3 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-white focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               {...register("place")}
             >
               <option
@@ -126,7 +132,7 @@ function BookingTable() {
                   {name}
                 </option>
               ))}
-            </select>
+            </Select>
           </div>
           <Button type="submit" className="w-full">
             Save
@@ -176,15 +182,15 @@ function BookingTable() {
       {
         header: " ",
         accessorFn: (item) => (
-          <div className="flex space-x-4">
+          <div className="flex space-x-4 cursor-pointer">
             <div
-              className="ring-1 p-2 rounded-lg"
+              className="ring-1 hover:bg-blue-50 p-2 rounded-lg"
               onClick={() => handleEdit(item)}
             >
               <FaPen />
             </div>
             <div
-              className="ring-1 p-2 rounded-lg"
+              className="ring-1 hover:bg-blue-100 p-2 rounded-lg"
               onClick={() => handleDelete(item)}
             >
               <FaTrashCan />

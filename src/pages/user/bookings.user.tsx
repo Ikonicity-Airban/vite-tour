@@ -3,10 +3,9 @@ import {
   LogoComponent,
   PremiumCardList,
   Section,
-} from "../components";
+} from "../../components";
 import { Button, Card, Label, Select, TextInput } from "flowbite-react";
-import { Form, useLocation, useNavigate } from "react-router-dom";
-import { IBooking, IPlace, IUser } from "../api/@types";
+import { IBooking, IPlace, IUser } from "../../api/@types";
 import {
   addDoc,
   arrayUnion,
@@ -14,14 +13,15 @@ import {
   doc,
   updateDoc,
 } from "firebase/firestore";
-import { defaultPlace, defaultUser } from "../api/contexts/reducer";
+import { defaultPlace, defaultUser } from "../../api/contexts/reducer";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useMemo, useState } from "react";
 
-import { db } from "../firebase";
-import { scrollIntoView } from "../api/helper";
+import { db } from "../../firebase";
+import { scrollIntoView } from "../../api/helper";
 import { toast } from "react-hot-toast";
 import { useForm } from "react-hook-form";
-import useLocalStorage from "../api/hooks/useLocalStorage";
+import useLocalStorage from "../../api/hooks/useLocalStorage";
 
 type booking = Omit<IBooking, "id" | "userId" | "tourId">;
 
@@ -80,7 +80,7 @@ function Bookings() {
           <span className="mx-auto py-10">
             <LogoComponent />
           </span>
-          <Form
+          <form
             onSubmit={handleSubmit(onSubmit)}
             className="flex flex-col gap-4"
           >
@@ -161,7 +161,7 @@ function Bookings() {
             >
               Book
             </Button>
-          </Form>
+          </form>
         </Card>
       </div>
     );

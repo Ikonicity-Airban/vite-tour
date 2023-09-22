@@ -8,22 +8,22 @@ import {
   TextInput,
   Tooltip,
 } from "flowbite-react";
-import { IPlan, IUser } from "../api/@types";
-import { ImageUploader, PlanCard, Section } from "../components";
+import { IPlan, IUser } from "../../api/@types";
+import { ImageUploader, PlanCard, Section } from "../../components";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { doc, updateDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import {
   useFetchCollection,
   useFetchSingleDoc,
-} from "../api/hooks/fetchCollections";
+} from "../../api/hooks/fetchCollections";
 
 import { FaCamera } from "react-icons/fa6";
-import { db } from "../firebase";
-import { defaultUser } from "../api/contexts/reducer";
+import { db } from "../../firebase";
+import { defaultUser } from "../../api/contexts/reducer";
 import toast from "react-hot-toast";
-import useLocalStorage from "../api/hooks/useLocalStorage";
-import useModal from "../api/hooks/useModal";
+import useLocalStorage from "../../api/hooks/useLocalStorage";
+import useModal from "../../api/hooks/useModal";
 
 function ProfilePage() {
   const [storageUser] = useLocalStorage<IUser>("tour-user", defaultUser);

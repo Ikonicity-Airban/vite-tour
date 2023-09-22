@@ -3,8 +3,8 @@ import { FaCrown, FaMapLocation, FaReceipt } from "react-icons/fa6";
 
 import { FaUserCircle } from "react-icons/fa";
 import { Tabs } from "flowbite-react";
-import TourPlanList from "./PlanList";
-import TourSiteList from "./SitesList";
+import TourPlanList from "./plan.admin";
+import TourSiteList from "./site.admin";
 
 export default function AdminDashboard() {
   return (

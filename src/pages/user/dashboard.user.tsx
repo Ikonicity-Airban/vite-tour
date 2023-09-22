@@ -5,20 +5,15 @@ import {
   GoogleMap,
   LoadingSection,
   Section,
-} from "../components";
+} from "../../components";
 
-import { AppContext } from "../api/contexts/context";
+import { AppContext } from "../../api/contexts/context";
 import { Button } from "flowbite-react";
-import { Helmet } from "react-helmet";
-import { IUser } from "../api/@types";
 import { Link } from "react-router-dom";
-import { defaultUser } from "../api/contexts/reducer";
-import { shuffleArray } from "../api/helper";
+import { shuffleArray } from "../../api/helper";
 import { useContext } from "react";
-import useLocalStorage from "../api/hooks/useLocalStorage";
 
 function Dashboard() {
-  const [user] = useLocalStorage<IUser>("tour-user", defaultUser);
   const {
     state: { places },
   } = useContext(AppContext);
