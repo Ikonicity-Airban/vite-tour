@@ -27,7 +27,7 @@ const initialState = {
   },
   isLoggedIn: false,
   carousel: [carousel1, carousel2, carousel4, carousel5],
-  isLoading: true,
+  isLoading: false,
   places: [
     {
       name: "",
