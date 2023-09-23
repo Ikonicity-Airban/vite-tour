@@ -1,4 +1,4 @@
-import { FooterComponent, Loading } from "../components";
+import { FooterComponent} from "../components";
 
 import Header from "../components/Header";
 import { Helmet } from "react-helmet";
