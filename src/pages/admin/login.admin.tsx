@@ -5,6 +5,7 @@ import {
 } from "firebase/auth";
 
 import { Card } from "flowbite-react";
+import { Helmet } from "react-helmet";
 import { LogoComponent } from "../../components";
 import { auth } from "../../firebase";
 import toast from "react-hot-toast";
@@ -49,6 +50,9 @@ function AdminLoginPage() {
   //return
   return (
     <section className="grid place-items-center h-screen">
+      <Helmet>
+        <title>ESTC | Admin Login Page</title>
+      </Helmet>
       <div className=" my-auto">
         <h2 className="font-medium mb-20 text-primary text-center">
           Welcome to the Admin Panel <br />
