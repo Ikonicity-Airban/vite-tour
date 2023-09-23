@@ -27,6 +27,7 @@ function TourPage() {
   const {
     state: { places },
   } = useContext(AppContext);
+
   const {
     state: { name = "Enugu", images = [""], about = "" },
   } = useLocation();
@@ -114,7 +115,6 @@ function TourPage() {
       </Section>
       <Section subtitle="Suggestions">
         <div className="grid sm:grid-cols-2 laptop:grid-cols-3 gap-4 place-items-center">
-          <LoadingSection />
           {shuffleArray(places)
             .splice(0, 6)
             .map((source) => (

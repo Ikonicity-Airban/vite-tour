@@ -50,10 +50,12 @@ function useFetchSites() {
 }
 
 export function useFetchCollection<T>(colName: string) {
+  const { dispatch } = useContext(AppContext);
   const [col, setCol] = useState<T[] | DocumentData>([]);
   const [fetching, setFetching] = useState(false);
 
   const fetchData = useCallback(async () => {
+    dispatch({ type: Types.setIsLoading, payload: true });
     setFetching(true);
     try {
       const querySnapshot = await getDocs(collection(db, colName));
@@ -67,6 +69,7 @@ export function useFetchCollection<T>(colName: string) {
     } catch (e) {
       console.error("Error fe document: ", e);
     } finally {
+      dispatch({ type: Types.setIsLoading, payload: false });
       setFetching(false);
     }
   }, [colName]);
@@ -84,10 +87,12 @@ export function useFetchCollection<T>(colName: string) {
 }
 
 export function useFetchSingleDoc<T>(colName: string, docId: string) {
+  const { dispatch } = useContext(AppContext);
   const [document, setDocument] = useState<T | DocumentData>({});
   const [fetching, setFetching] = useState(false);
 
   const fetchData = useCallback(async () => {
+    dispatch({ type: Types.setIsLoading, payload: true });
     setFetching(true);
     try {
       const newDoc = await getDoc(doc(db, colName, docId));
@@ -96,6 +101,7 @@ export function useFetchSingleDoc<T>(colName: string, docId: string) {
     } catch (e) {
       console.error("Error fetching document: ", e);
     } finally {
+      dispatch({ type: Types.setIsLoading, payload: false });
       setFetching(false);
     }
   }, [docId, colName]);

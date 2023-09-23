@@ -40,7 +40,7 @@ function DashboardLayout() {
 
   const UserNavbar = () => (
     <Navbar
-      className="w-full py-6 px-4 fixed top-0 left-0 z-[99]"
+      className="w-full py-6 px-4 fixed top-0 left-0 z-[50]"
       border
       fluid
       rounded
@@ -141,7 +141,7 @@ function DashboardLayout() {
 
   if (storageUser?.email)
     return (
-      <main className="w-full relative tablet:px-4">
+      <main className="w-full tablet:px-4">
         <Helmet>
           <title>
             ESTB | {storageUser?.email}

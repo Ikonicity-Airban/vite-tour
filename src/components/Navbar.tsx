@@ -64,6 +64,8 @@ function NavbarComponent({ links: navLinks }: Props) {
               className="absolute"
               label={
                 <Avatar
+                  // bordered
+                  className="ring-2 border-blue-700 rounded-full p-2"
                   alt="User settings"
                   img={storageUser?.photoURL || ""}
                   rounded

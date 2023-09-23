@@ -161,6 +161,8 @@ function Bookings() {
               />
             </div>
             <Button
+              pill
+              gradientDuoTone="greenToBlue"
               isProcessing={isLoading}
               type="submit"
               className="btn btn-primary"

@@ -9,14 +9,15 @@ import {
 import { FaCheck, FaPen, FaTrashCan } from "react-icons/fa6";
 import { IBooking, IPlace, IUser } from "../api/@types";
 import MaterialReactTable, { MRT_ColumnDef } from "material-react-table";
-import { defaultBooking, defaultUser } from "../api/contexts/reducer";
+import { Types, defaultBooking, defaultUser } from "../api/contexts/reducer";
 import { deleteDoc, doc, updateDoc } from "firebase/firestore";
-import { useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import {
   useFetchCollection,
   useQueryCollection,
 } from "../api/hooks/fetchCollections";
 
+import { AppContext } from "../api/contexts/context";
 import { FaMinusCircle } from "react-icons/fa";
 import { db } from "../firebase";
 import toast from "react-hot-toast";
@@ -46,6 +47,8 @@ function BookingTable() {
   const [mode, setMode] = useState<"Edit" | "Delete">("Edit");
   const { hideModal, isModalVisible, showModal } = useModal();
 
+  const { dispatch } = useContext(AppContext);
+
   const handleDelete = async (booking: IBooking) => {
     setMode("Delete");
     showModal();
@@ -60,11 +63,14 @@ function BookingTable() {
   const onDelete = async () => {
     const bookingRef = doc(db, "bookings", selectedBooking?.id || "");
     try {
+      dispatch({ type: Types.setIsLoading, payload: true });
       await deleteDoc(bookingRef);
       toast.success("Booking deleted successfully");
     } catch (error) {
       console.error("Error deleting booking:", error);
       toast.error("Something went wrong");
+    } finally {
+      dispatch({ type: Types.setIsLoading, payload: false });
     }
   };
 
@@ -77,12 +83,19 @@ function BookingTable() {
 
     const onSubmit = async (formData: IBooking) => {
       try {
+        dispatch({ type: Types.setIsLoading, payload: true });
+
         const tourPlanRef = doc(db, "bookings", selectedBooking?.id || "");
         await updateDoc(tourPlanRef, { ...formData });
         toast.success("Update complete");
         refetch();
       } catch (error) {
-        console.log("🚀 ~ file: dashboard.tsx:81 ~ onSubmit ~ error:", error);
+        console.log(
+          "🚀 ~ file: BookingTable.tsx:91 ~ onSubmit ~ error:",
+          error
+        );
+      } finally {
+        dispatch({ type: Types.setIsLoading, payload: false });
       }
     };
 
@@ -134,9 +147,25 @@ function BookingTable() {
               ))}
             </Select>
           </div>
-          <Button type="submit" className="w-full">
-            Save
-          </Button>
+          <div className="pt-6">
+            <Button
+              pill
+              gradientDuoTone="greenToBlue"
+              type="submit"
+              className="w-full"
+            >
+              Save
+            </Button>
+            <Button
+              type="button"
+              pill
+              color="failure"
+              onClick={hideModal}
+              className="w-full mt-4"
+            >
+              Cancel
+            </Button>
+          </div>
         </form>
       </>
     );
@@ -206,22 +235,26 @@ function BookingTable() {
     <>
       <Modal show={isModalVisible} size="lg" popup onClose={hideModal}>
         <Modal.Header>
-          <center>
+          <center className="my-4">
             <h3 className="m-4 text-center w-full font-medium text-primary">
               {mode} Booking
             </h3>
           </center>
         </Modal.Header>
         <hr />
-        <Modal.Body>
-          {mode == "Delete" ? (
-            <>
+        {mode == "Delete" ? (
+          <>
+            <Modal.Body className="my-6">
               <center className="py-4">
                 <div className="">Do you want to delete this Booking?</div>
               </center>
+            </Modal.Body>
+            <hr />
+            <Modal.Footer>
               <div className="flex w-full justify-end space-x-6">
                 <Button
                   type="button"
+                  size="sm"
                   color="failure"
                   onClick={() => onDelete()}
                   className="mt-2"
@@ -229,20 +262,23 @@ function BookingTable() {
                   Ok
                 </Button>
 
-                <Button type="button" onClick={hideModal} className="mt-2">
+                <Button
+                  color="gray"
+                  size="sm"
+                  type="button"
+                  onClick={hideModal}
+                  className="mt-2"
+                >
                   Cancel
                 </Button>
               </div>
-            </>
-          ) : (
-            <>
-              <BookingForm />
-              <Button type="button" onClick={hideModal} className="w-full mt-2">
-                Cancel
-              </Button>
-            </>
-          )}
-        </Modal.Body>
+            </Modal.Footer>
+          </>
+        ) : (
+          <Modal.Body>
+            <BookingForm />
+          </Modal.Body>
+        )}
       </Modal>
       <MaterialReactTable
         columns={bookingColumns}

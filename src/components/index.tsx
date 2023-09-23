@@ -15,6 +15,7 @@ import Header from "./Header";
 import Heading from "./Heading";
 import Hr from "./HR";
 import ImageUploader from "./ImageUploader";
+import Loading from "./Loading";
 import LoadingSection from "./LoadingSection";
 import LogoComponent from "./LogoComponent";
 import NavbarComponent from "./Navbar";
@@ -26,6 +27,7 @@ import ServicesCard from "./ServicesCard";
 import { UserTable } from "./UserTable";
 
 export {
+  Loading,
   Heading,
   Header,
   ImageUploader,
