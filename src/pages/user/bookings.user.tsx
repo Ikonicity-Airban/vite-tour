@@ -4,7 +4,7 @@ import {
   PremiumCardList,
   Section,
 } from "../../components";
-import { Button, Card, Label, Select, TextInput } from "flowbite-react";
+import { Button, Card, Label, Modal, Select, TextInput } from "flowbite-react";
 import { IBooking, IPlace, IUser } from "../../api/@types";
 import {
   addDoc,
@@ -17,12 +17,14 @@ import { defaultPlace, defaultUser } from "../../api/contexts/reducer";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useMemo, useState } from "react";
 
+import PaymentForm from "../../components/CheckoutForm";
 import { db } from "../../firebase";
 import { scrollIntoView } from "../../api/helper";
 import { toast } from "react-hot-toast";
 import { useFetchSingleDoc } from "../../api/hooks/fetchCollections";
 import { useForm } from "react-hook-form";
 import useLocalStorage from "../../api/hooks/useLocalStorage";
+import useModal from "../../api/hooks/useModal";
 
 type booking = Omit<IBooking, "id" | "userId" | "tourId">;
 
@@ -30,6 +32,8 @@ type IBookingForm = Omit<IBooking, "id">;
 
 function Bookings() {
   const [isLoading, setIsLoading] = useState(false);
+  const { hideModal, isModalVisible, showModal } = useModal();
+  const [hasPaid, setHasPaid] = useState(false);
 
   let location = "Enugu";
   location = useLocation().state?.location;
@@ -38,7 +42,6 @@ function Bookings() {
     const navigate = useNavigate();
     const { register, handleSubmit } = useForm<IBookingForm>();
     const [places] = useLocalStorage<IPlace[]>("tour-places", defaultPlace);
-
     const [storageUser] = useLocalStorage<IUser>("tour-user", defaultUser);
     const { data: user, refetch } = useFetchSingleDoc<IUser>(
       "users",
@@ -164,7 +167,8 @@ function Bookings() {
               pill
               gradientDuoTone="greenToBlue"
               isProcessing={isLoading}
-              type="submit"
+              type={hasPaid ? "submit" : "button"}
+              onClick={() => !hasPaid && showModal()}
               className="btn btn-primary"
             >
               Book
@@ -177,6 +181,20 @@ function Bookings() {
 
   return (
     <>
+      <Modal
+        show={isModalVisible}
+        className="py-6 space-y-10"
+        size="2xl"
+        popup
+        onClose={hideModal}
+      >
+        <Modal.Header className="p-6">
+          <h3>Pay for the booking</h3>
+        </Modal.Header>
+        <Modal.Body>
+          <PaymentForm setHasPaid={setHasPaid} hasPaid={hasPaid} />
+        </Modal.Body>
+      </Modal>
       <Section subtitle="All Bookings">
         <BookingTable />
       </Section>
