@@ -10,10 +10,11 @@ import { FaCheck, FaPen, FaTrashCan } from "react-icons/fa6";
 import { IBooking, IPlace, IUser } from "../api/@types";
 import MaterialReactTable, { MRT_ColumnDef } from "material-react-table";
 import { Types, defaultBooking, defaultUser } from "../api/contexts/reducer";
-import { deleteDoc, doc, updateDoc } from "firebase/firestore";
+import { arrayRemove, deleteDoc, doc, updateDoc } from "firebase/firestore";
 import { useContext, useEffect, useMemo, useState } from "react";
 import {
   useFetchCollection,
+  useFetchSingleDoc,
   useQueryCollection,
 } from "../api/hooks/fetchCollections";
 
@@ -36,7 +37,11 @@ const bookingKeys = {
 };
 
 function BookingTable() {
-  const [user] = useLocalStorage<IUser>("tour-user", defaultUser);
+  const [storageUser] = useLocalStorage<IUser>("tour-user", defaultUser);
+  const { data: user } = useFetchSingleDoc<IUser>(
+    "users",
+    storageUser.uid ?? ""
+  );
   const {
     data: places,
     refetch,
@@ -65,6 +70,12 @@ function BookingTable() {
     try {
       dispatch({ type: Types.setIsLoading, payload: true });
       await deleteDoc(bookingRef);
+      refetch();
+      await updateDoc(doc(db, "users", user.uid || ""), {
+        bookings: arrayRemove(selectedBooking),
+        noOfTourLeft: user.noOfTourLeft || 0 + 1,
+      });
+      hideModal();
       toast.success("Booking deleted successfully");
     } catch (error) {
       console.error("Error deleting booking:", error);
@@ -191,6 +202,7 @@ function BookingTable() {
         header: "Guests",
         accessorKey: "numGuests",
       },
+
       {
         header: "Status",
         accessorFn: ({ status }) => <center>{status}</center>,
@@ -218,12 +230,14 @@ function BookingTable() {
             >
               <FaPen />
             </div>
-            <div
-              className="ring-1 hover:bg-blue-100 p-2 rounded-lg"
-              onClick={() => handleDelete(item)}
-            >
-              <FaTrashCan />
-            </div>
+            {item.status !== "approved" ? (
+              <div
+                className="ring-1 hover:bg-blue-100 p-2 rounded-lg"
+                onClick={() => handleDelete(item)}
+              >
+                <FaTrashCan />
+              </div>
+            ) : null}
           </div>
         ),
       },
@@ -253,6 +267,7 @@ function BookingTable() {
             <Modal.Footer>
               <div className="flex w-full justify-end space-x-6">
                 <Button
+                  isProcessing={fetching}
                   type="button"
                   size="sm"
                   color="failure"

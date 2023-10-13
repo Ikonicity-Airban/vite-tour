@@ -35,6 +35,7 @@ const ImageUploader = ({ imageData, setImageData }: ImageUploaderProps) => {
       <FileInput
         accept="image/*"
         onChange={handleFileInputChange}
+        maxLength={1000000}
         id="image"
         className="hidden"
       />

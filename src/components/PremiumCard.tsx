@@ -1,21 +1,45 @@
-import { Button, Card, Modal, Rating } from "flowbite-react";
-import { FaCheck, FaClock, FaNairaSign, FaUsers } from "react-icons/fa6";
+import { Button, Card, Modal } from "flowbite-react";
+import {
+  FaArrowsTurnRight,
+  FaCheck,
+  FaClock,
+  FaNairaSign,
+  FaUsers,
+} from "react-icons/fa6";
 import { IPlan, IUser } from "../api/@types";
 import { doc, updateDoc } from "firebase/firestore";
+import {
+  useFetchCollection,
+  useFetchSingleDoc,
+} from "../api/hooks/fetchCollections";
 
 import LoadingSection from "./LoadingSection";
+import PaymentForm from "./CheckoutForm";
+import { Rating } from "@mui/material";
 import Section from "./Section";
 import { db } from "../firebase";
 import { defaultUser } from "../api/contexts/reducer";
 import toast from "react-hot-toast";
-import { useFetchCollection } from "../api/hooks/fetchCollections";
 import useLocalStorage from "../api/hooks/useLocalStorage";
 import useModal from "../api/hooks/useModal";
+import { useState } from "react";
 
 export const PlanCard = ({ plan, user }: { plan: IPlan; user?: IUser }) => {
   const alreadySubscribed = Boolean(user?.plan == plan.title);
-  const { title, description, image, price, rate, days, person, color } = plan;
+
+  const {
+    title,
+    description,
+    image,
+    price,
+    rate,
+    days,
+    person,
+    color,
+    noOfTours,
+  } = plan;
   const { hideModal, isModalVisible, showModal } = useModal();
+  const [hasPaid, setHasPaid] = useState(false);
 
   const handleSubscription = async () => {
     if (!user?.email) {
@@ -26,7 +50,11 @@ export const PlanCard = ({ plan, user }: { plan: IPlan; user?: IUser }) => {
 
     try {
       const userRef = doc(db, "users", user?.uid ?? "");
-      await updateDoc(userRef, { plan: plan.title });
+      await updateDoc(userRef, {
+        plan: plan.title,
+        noOfTourLeft: plan.noOfTours,
+      });
+
       toast.success(`Update complete - ${plan.title} plan subscribed`);
       location.reload();
     } catch (error) {
@@ -35,37 +63,29 @@ export const PlanCard = ({ plan, user }: { plan: IPlan; user?: IUser }) => {
       hideModal();
     }
   };
+
   return (
     <>
-      <Modal show={isModalVisible} size="lg" popup onClose={hideModal}>
-        <Modal.Header>
-          <center>
-            <h3 className="m-4 text-center w-full font-medium text-primary">
-              Choose {title} plan
-            </h3>
-          </center>
+      <Modal
+        show={isModalVisible}
+        className="py-6 space-y-10"
+        size="2xl"
+        popup
+        onClose={hideModal}
+      >
+        <Modal.Header className="p-6 font-bold">
+          Pay for the booking
         </Modal.Header>
         <hr />
-        <Modal.Body>
-          <>
-            <center className="py-10">
-              <div className="">Do you want to subscribe to {title} plan</div>
-            </center>
-            <div className="flex w-full justify-end space-x-6">
-              <Button
-                type="button"
-                color="failure"
-                onClick={handleSubscription}
-                className="mt-2"
-              >
-                Ok
-              </Button>
-
-              <Button type="button" onClick={hideModal} className="mt-2">
-                Cancel
-              </Button>
-            </div>
-          </>
+        <Modal.Body className="p-4">
+          <center>
+            <h3 className="font-bold">{plan.price}</h3> (Naira)
+          </center>
+          <PaymentForm
+            setHasPaid={setHasPaid}
+            hasPaid={hasPaid}
+            price={plan.price}
+          />
         </Modal.Body>
       </Modal>
       <Card
@@ -83,18 +103,21 @@ export const PlanCard = ({ plan, user }: { plan: IPlan; user?: IUser }) => {
           </h2>
           <p className="mb-4 font-medium text-lg">{description}</p>
           <ul className="mb-4 space-y-3">
-            <li className="flex items-center gap-2  text-sm mb-1">
-              <Rating>
-                <Rating.Star></Rating.Star>
-              </Rating>
-              Rating: {rate}
+            <li className="flex items-center gap-2 w-full text-sm mb-1">
+              <center className="mx-auto">
+                <Rating name="size-large" size="large" value={+rate} readOnly />
+              </center>
             </li>
             <li className="flex items-center gap-2  text-sm mb-1">
               <FaClock />
               <span>Duration: {days} days</span>
             </li>
             <li className="flex gap-2 items-center  text-sm mb-1">
-              <FaUsers /> <span>Number of people: {person}</span>
+              <FaUsers /> <span>Number of Guest: {person}</span>
+            </li>
+            <li className="flex gap-2 items-center  text-sm mb-1">
+              <FaArrowsTurnRight />{" "}
+              <span>Number of Times to tour: {noOfTours}</span>
             </li>
             <li className={" py-6 "}>
               <h3
@@ -110,15 +133,18 @@ export const PlanCard = ({ plan, user }: { plan: IPlan; user?: IUser }) => {
             outline={alreadySubscribed}
             pill
             disabled={alreadySubscribed}
-            onClick={showModal}
+            onClick={() => (!hasPaid ? showModal() : handleSubscription())}
+            style={{ backgroundColor: color }}
           >
             {alreadySubscribed ? (
               <>
                 <FaCheck color="green" size={20} className="mr-4" />
                 Already Paid
               </>
+            ) : hasPaid ? (
+              "Complete Payment"
             ) : (
-              "Choose Now"
+              "Subscribe Now"
             )}
           </Button>
         </div>
@@ -129,7 +155,11 @@ export const PlanCard = ({ plan, user }: { plan: IPlan; user?: IUser }) => {
 
 export default function PremiumCardList() {
   const { data: plans } = useFetchCollection<IPlan>("plans");
-  const [user] = useLocalStorage<IUser>("tour-user", defaultUser);
+  const [storageUser] = useLocalStorage<IUser>("tour-user", defaultUser);
+  const { data: user } = useFetchSingleDoc<IUser>(
+    "users",
+    storageUser?.uid || ""
+  );
   return (
     <div className="w-full">
       <Section

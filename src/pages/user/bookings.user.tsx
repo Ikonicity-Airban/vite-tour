@@ -4,8 +4,8 @@ import {
   PremiumCardList,
   Section,
 } from "../../components";
-import { Button, Card, Label, Modal, Select, TextInput } from "flowbite-react";
-import { IBooking, IPlace, IUser } from "../../api/@types";
+import { Button, Card, Label, Select, TextInput } from "flowbite-react";
+import { IBooking, IPlace, IPlan, IUser } from "../../api/@types";
 import {
   addDoc,
   arrayUnion,
@@ -14,17 +14,18 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { defaultPlace, defaultUser } from "../../api/contexts/reducer";
+import {
+  useFetchCollection,
+  useFetchSingleDoc,
+} from "../../api/hooks/fetchCollections";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useMemo, useState } from "react";
 
-import PaymentForm from "../../components/CheckoutForm";
 import { db } from "../../firebase";
 import { scrollIntoView } from "../../api/helper";
 import { toast } from "react-hot-toast";
-import { useFetchSingleDoc } from "../../api/hooks/fetchCollections";
 import { useForm } from "react-hook-form";
 import useLocalStorage from "../../api/hooks/useLocalStorage";
-import useModal from "../../api/hooks/useModal";
 
 type booking = Omit<IBooking, "id" | "userId" | "tourId">;
 
@@ -32,8 +33,6 @@ type IBookingForm = Omit<IBooking, "id">;
 
 function Bookings() {
   const [isLoading, setIsLoading] = useState(false);
-  const { hideModal, isModalVisible, showModal } = useModal();
-  const [hasPaid, setHasPaid] = useState(false);
 
   let location = "Enugu";
   location = useLocation().state?.location;
@@ -43,11 +42,14 @@ function Bookings() {
     const { register, handleSubmit } = useForm<IBookingForm>();
     const [places] = useLocalStorage<IPlace[]>("tour-places", defaultPlace);
     const [storageUser] = useLocalStorage<IUser>("tour-user", defaultUser);
+
     const { data: user, refetch } = useFetchSingleDoc<IUser>(
       "users",
       storageUser.uid || ""
     );
 
+    const { data: fetchedPlans } = useFetchCollection<IPlan>("plans");
+    const plan: IPlan = fetchedPlans.find((p: IPlan) => p.title == user?.plan);
     const defaultDate = useMemo(() => {
       const nextWeek = new Date();
       nextWeek.setDate(nextWeek.getDate() + 7);
@@ -55,12 +57,18 @@ function Bookings() {
     }, []);
 
     const onSubmit = async (book: booking) => {
+      setIsLoading(true);
       if (!user?.plan) {
         toast.error("Please subscribe to a plan first");
         scrollIntoView("plans");
+        setIsLoading(false);
         return;
       }
-      setIsLoading(true);
+      if (user?.noOfTourLeft < 1) {
+        updateDoc(doc(db, "users", storageUser?.uid || ""), { plan: null });
+        setIsLoading(false);
+        return;
+      }
       try {
         const newBooking = await addDoc(collection(db, "bookings"), {
           ...book,
@@ -71,8 +79,11 @@ function Bookings() {
           completed: false,
         });
 
-        const userRef = doc(db, "users", user.uid || "");
-        await updateDoc(userRef, { bookings: arrayUnion(newBooking) });
+        await updateDoc(doc(db, "users", user.uid || ""), {
+          bookings: arrayUnion(newBooking),
+          noOfTourLeft: user.noOfTourLeft - 1,
+        });
+
         toast.success("Successfully Booked a tour for " + location);
         refetch();
         navigate("/dashboard");
@@ -122,6 +133,7 @@ function Bookings() {
                 type="date"
                 required
                 id="date"
+                min={Date.now()}
                 defaultValue={defaultDate}
                 {...register("date")}
               />
@@ -133,8 +145,9 @@ function Bookings() {
               <TextInput
                 type="number"
                 step={1}
+                min={1}
                 required
-                defaultValue={3}
+                max={plan?.person}
                 id="numOfGuest"
                 {...register("numGuests")}
               />
@@ -145,10 +158,22 @@ function Bookings() {
               </Label>
               <TextInput
                 type="number"
-                defaultValue={3}
+                min={1}
+                max={plan?.days}
                 required
                 id="duration"
                 {...register("duration")}
+              />
+            </div>
+            <div className="mb-2 block">
+              <Label htmlFor="noOfTourLeft" className="capitalize">
+                No. of Tours Left
+              </Label>
+              <TextInput
+                disabled
+                value={user?.noOfTourLeft}
+                required
+                id="noOfTourLeft"
               />
             </div>
             <div className="mb-2 block">
@@ -160,15 +185,13 @@ function Bookings() {
                 defaultValue={user?.plan || ""}
                 required
                 id="plan"
-                {...register("plan")}
               />
             </div>
             <Button
               pill
               gradientDuoTone="greenToBlue"
               isProcessing={isLoading}
-              type={hasPaid ? "submit" : "button"}
-              onClick={() => !hasPaid && showModal()}
+              type="submit"
               className="btn btn-primary"
             >
               Book
@@ -181,20 +204,6 @@ function Bookings() {
 
   return (
     <>
-      <Modal
-        show={isModalVisible}
-        className="py-6 space-y-10"
-        size="2xl"
-        popup
-        onClose={hideModal}
-      >
-        <Modal.Header className="p-6">
-          <h3>Pay for the booking</h3>
-        </Modal.Header>
-        <Modal.Body>
-          <PaymentForm setHasPaid={setHasPaid} hasPaid={hasPaid} />
-        </Modal.Body>
-      </Modal>
       <Section subtitle="All Bookings">
         <BookingTable />
       </Section>

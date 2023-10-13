@@ -60,7 +60,7 @@ function ProfilePage() {
       refetch();
     } catch (error) {
       console.log(
-        "🚀 ~ file: profile.tsx:61 ~ constonSubmit:SubmitHandler<IUser>= ~ error:",
+        "🚀 ~ file: profile.tsx:62 ~ constonSubmit:SubmitHandler<IUser>= ~ error:",
         error
       );
     } finally {
@@ -77,14 +77,23 @@ function ProfilePage() {
       toast.success("Updated profile successfully");
       setImageData(null);
       refetch();
+      hideModal();
     } catch (error) {
-      console.log(
-        "🚀 ~ file: profile.tsx:77 ~ handleUploadPhoto ~ error:",
-        error
-      );
+      if (error instanceof Error) {
+        console.log(
+          "🚀 ~ file: profile.tsx:77 ~ handleUploadPhoto ~ error:",
+          error.message
+        );
+
+        if (
+          error.message ==
+          `The value of property "photoURL" is longer than 1048487 bytes.`
+        )
+          toast.error("Image file is too large");
+        toast.error(error.message);
+      }
     }
     setIsUploading(false);
-    hideModal();
   };
 
   const ProfileForm = () => (

@@ -45,6 +45,7 @@ const defaultTourPlan: IPlan = {
   rate: "",
   person: 0,
   days: 0,
+  noOfTours: 0,
 };
 const tourPlanKeys = {
   title: "Name of Plan",
@@ -53,8 +54,9 @@ const tourPlanKeys = {
   price: "Price",
   color: "Color",
   rate: "Rating",
-  person: "Number of Guests",
+  person: "No. of Guests",
   days: "Days of tour",
+  noOfTours: "No. of tour",
 };
 
 const colors = [
@@ -150,91 +152,94 @@ const TourPlanList = () => {
 
     return (
       <>
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className="py-4 grid grid-cols-2 gap-6 justify-between"
-        >
-          {Object.keys(defaultTourPlan)
-            .filter(
-              (key) => !["id", "color", "image", "description"].includes(key)
-            )
-            .map((key) => (
-              <div key={key}>
-                <Label htmlFor={key} className="capitalize">
-                  {tourPlanKeys[key]}
-                </Label>
-                <TextInput
-                  autoCapitalize="characters"
-                  type={
-                    ["person", "price", "rate", "days"].includes(key)
-                      ? "number"
-                      : "text"
-                  }
-                  step={key === "price" ? 50 : key === "rate" ? 0.1 : 1}
-                  min={0}
-                  max={key == "rate" ? 5.0 : Number.POSITIVE_INFINITY}
-                  id={key}
-                  {...register(key as keyof IPlan, { required: true })}
-                />
-              </div>
-            ))}
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <div className="py-4 grid grid-cols-2 gap-6 justify-between">
+            {Object.keys(defaultTourPlan)
+              .filter(
+                (key) => !["id", "color", "image", "description"].includes(key)
+              )
+              .map((key) => (
+                <div key={key}>
+                  <Label htmlFor={key} className="capitalize">
+                    {tourPlanKeys[key]}
+                  </Label>
+                  <TextInput
+                    autoCapitalize="characters"
+                    type={
+                      ["person", "price", "rate", "days", "noOfTours"].includes(
+                        key
+                      )
+                        ? "number"
+                        : "text"
+                    }
+                    step={key === "price" ? 50 : key === "rate" ? 0.1 : 1}
+                    min={0}
+                    max={key == "rate" ? 5.0 : Number.POSITIVE_INFINITY}
+                    id={key}
+                    {...register(key as keyof IPlan, { required: true })}
+                  />
+                </div>
+              ))}
 
-          <div className="">
-            <Label htmlFor="Color">Color</Label>
-            <Select {...register("color")} id="color" defaultValue="gray">
-              {colors.map((color) => (
-                <option
-                  value={color}
-                  className="capitalize"
-                  style={{ color }}
-                  key={color}
-                >
-                  {color}
-                </option>
-              ))}
-            </Select>
+            <div className="">
+              <Label htmlFor="Color">Color</Label>
+              <Select {...register("color")} id="color" defaultValue="gray">
+                {colors.map((color) => (
+                  <option
+                    value={color}
+                    className="capitalize"
+                    style={{ color }}
+                    key={color}
+                  >
+                    {color}
+                  </option>
+                ))}
+              </Select>
+            </div>
+            <div className="">
+              <Label htmlFor="image">Images</Label>
+              <Select
+                {...register("image")}
+                id="image"
+                defaultValue="fa fa-suitcase"
+              >
+                {Object.entries(images).map(([key, value]) => (
+                  <option value={value} className="capitalize" key={key}>
+                    {key}
+                  </option>
+                ))}
+              </Select>
+            </div>
+            <div>
+              <Label htmlFor="description">Description</Label>
+              <Textarea
+                id="description"
+                className="h-20"
+                {...register("description", { required: true })}
+              />
+            </div>
           </div>
-          <div className="">
-            <Label htmlFor="image">Images</Label>
-            <Select
-              {...register("image")}
-              id="image"
-              defaultValue="fa fa-suitcase"
+          <div className="flex gap-4 items-center h-auto">
+            <Button
+              type="submit"
+              className="w-full col-span"
+              color="success"
+              pill
+              disabled={fetching}
+              isProcessing={fetching}
             >
-              {Object.entries(images).map(([key, value]) => (
-                <option value={value} className="capitalize" key={key}>
-                  {key}
-                </option>
-              ))}
-            </Select>
+              {mode == "Create" ? "Save" : "Update"}
+            </Button>
+            <Button
+              type="button"
+              color="failure"
+              pill
+              onClick={hideModal}
+              className="w-full mt-2"
+            >
+              Cancel
+            </Button>
           </div>
-          <div>
-            <Label htmlFor="description">Description</Label>
-            <Textarea
-              id="description"
-              className="h-20"
-              {...register("description", { required: true })}
-            />
-          </div>
-          <Button
-            type="submit"
-            className="w-full col-span"
-            color="success"
-            pill
-            disabled={fetching}
-            isProcessing={fetching}
-          >
-            {mode == "Create" ? "Save" : "Update"}
-          </Button>
-          <Button
-            type="button"
-            color="failure"
-            pill
-            onClick={hideModal}
-            className="w-full mt-2"
-          >
-            Cancel
-          </Button>
         </form>
       </>
     );
@@ -275,6 +280,10 @@ const TourPlanList = () => {
       {
         header: "Days",
         accessorKey: "days",
+      },
+      {
+        header: "No. of Tour",
+        accessorKey: "noOfTours",
       },
       {
         header: "Action",

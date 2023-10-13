@@ -112,10 +112,13 @@ function AllBookingTable() {
         header: "Place",
         accessorKey: "place",
       },
-
       {
         header: "Guests",
         accessorKey: "numGuests",
+      },
+      {
+        header: "Price",
+        accessorKey: "price",
       },
       {
         header: "Status",

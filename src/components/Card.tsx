@@ -34,9 +34,14 @@ function CardComponent({ source: { source, about, name: place } }: ICardProps) {
           <span className="text-gray-400 text-sm">see more</span>
         </p>
       </div>
-      <Button gradientDuoTone="greenToBlue" className="hover:text-base w-full">
-        Take a tour now
-      </Button>
+      <div className="bottom-button">
+        <Button
+          gradientDuoTone="greenToBlue"
+          className="hover:text-base w-full"
+        >
+          Take a tour now
+        </Button>
+      </div>
     </div>
   );
 }

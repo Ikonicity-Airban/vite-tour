@@ -38,6 +38,45 @@ function DashboardLayout() {
   // fetching places
   useFetchSites();
 
+  React.useEffect(() => {
+    if (!storageUser.email) {
+      navigate("/login");
+      console.log("user is logged out");
+      return;
+    }
+
+    const checkUser = async () => {
+      dispatch({
+        type: Types.setIsLoading,
+        payload: true,
+      });
+
+      try {
+        const userRef = doc(db, "users", user?.uid || "");
+        const docSnap = await getDoc(userRef);
+        if (docSnap.exists()) {
+          setUser(docSnap.data());
+          console.log(
+            "🚀 ~ file: DashboardLayout.tsx:59 ~ checkUser ~ docSnap.data():",
+            docSnap.data()
+          );
+        } else {
+          navigate("/login");
+
+          console.log("user is logged out");
+        }
+      } catch (error) {
+        console.error("Error getting document:", error);
+      } finally {
+        dispatch({
+          type: Types.setIsLoading,
+          payload: false,
+        });
+      }
+    };
+    checkUser();
+  }, []);
+
   const UserNavbar = () => (
     <Navbar
       className="w-full py-6 px-4 fixed top-0 left-0 z-[50]"
@@ -105,39 +144,6 @@ function DashboardLayout() {
   );
 
   //useEffect
-  React.useEffect(() => {
-    if (!storageUser.email) {
-      navigate("/login");
-      console.log("user is logged out");
-      return;
-    }
-    const checkUser = async () => {
-      dispatch({
-        type: Types.setIsLoading,
-        payload: true,
-      });
-
-      try {
-        const userRef = doc(db, "users", user?.uid || "");
-        const docSnap = await getDoc(userRef);
-        if (docSnap.exists()) {
-          setUser(docSnap.data());
-        } else {
-          navigate("/login");
-
-          console.log("user is logged out");
-        }
-      } catch (error) {
-        console.error("Error getting document:", error);
-      } finally {
-        dispatch({
-          type: Types.setIsLoading,
-          payload: false,
-        });
-      }
-    };
-    checkUser();
-  }, []);
 
   if (storageUser?.email)
     return (

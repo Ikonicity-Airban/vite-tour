@@ -13,6 +13,12 @@ export type IUser = {
   bookings?: IBooking[];
   emailVerified?: boolean;
   lastLoggedIn?: string;
+  noOfTourLeft?: number;
+};
+
+export type IPayment = {
+  userId: IUser["uid"];
+  email: IUser["email"];
 };
 
 export interface ITourGuide {
@@ -95,4 +101,5 @@ export interface IPlan {
   days: number;
   color: string;
   person: number;
+  noOfTours: number;
 }

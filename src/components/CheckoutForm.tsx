@@ -1,10 +1,14 @@
 import { Avatar, Button, Spinner } from "flowbite-react";
 import { Dispatch, SetStateAction, useState } from "react";
 import { FaFingerprint, FaLock } from "react-icons/fa6";
+import { arrayUnion, doc, updateDoc } from "firebase/firestore";
 
 import { FaCheckCircle } from "react-icons/fa";
+import { IUser } from "../api/@types";
 import { SaveToFirestore } from "../api/hooks/fetchCollections";
+import { db } from "../firebase";
 import { defaultUser } from "../api/contexts/reducer";
+import toast from "react-hot-toast";
 import { useForm } from "react-hook-form";
 import useLocalStorage from "../api/hooks/useLocalStorage";
 
@@ -37,9 +41,12 @@ const validationSchema = {
 interface Props {
   setHasPaid: Dispatch<SetStateAction<boolean>>;
   hasPaid: boolean;
+  price?: number;
+  // booking: Omit<IBooking, "userId">;
 }
-const PaymentForm = ({ setHasPaid, hasPaid }: Props) => {
+const PaymentForm = ({ setHasPaid, hasPaid, price }: Props) => {
   const [processing, setProcessing] = useState(false);
+  const [user] = useLocalStorage<IUser>("tour-user", defaultUser);
 
   const {
     register,
@@ -47,16 +54,22 @@ const PaymentForm = ({ setHasPaid, hasPaid }: Props) => {
     formState: { errors },
   } = useForm();
 
-  const [user] = useLocalStorage("tour-user", defaultUser);
+  const onSubmit = async () => {
+    if (!user?.email) {
+      toast.error("You are not logged in, please login to continue");
+      return;
+    }
 
-  const onSubmit = (data) => {
     setProcessing(true);
-    console.log(data);
     try {
-      SaveToFirestore("payment", {
-        ...data,
+      const newPayment = await SaveToFirestore("payment", {
         userId: user.uid,
-        user: user.email,
+        email: user.email,
+        price,
+      });
+
+      await updateDoc(doc(db, "users", user.uid || ""), {
+        payments: arrayUnion(newPayment),
       });
 
       setHasPaid(true);
@@ -146,7 +159,7 @@ const PaymentForm = ({ setHasPaid, hasPaid }: Props) => {
               )}
             </div>
           </div>
-          <div className="flex gap-4 items-center justify-between">
+          <div className="flex gap-4 justify-between">
             <div className="">
               <div className="flex gap-1 items-center">
                 <label htmlFor="expiry-date">Expiry</label>
@@ -157,18 +170,25 @@ const PaymentForm = ({ setHasPaid, hasPaid }: Props) => {
                     required: validationSchema.expiryMonth.required,
                   })}
                 >
-                  <option>MM</option>
-                  <option value="1">01</option>
-                  <option value="2">02</option>
-                  <option value="3">03</option>
-                  <option value="4">04</option>
-                  <option value="5">05</option>
-                  <option value="6">06</option>
-                  <option value="7">07</option>
-                  <option value="8">08</option>
-                  <option value="9">10</option>
-                  <option value="11">11</option>
-                  <option value="12">12</option>
+                  <option value="">MM</option>
+                  {[
+                    "01",
+                    "02",
+                    "03",
+                    "04",
+                    "05",
+                    "06",
+                    "07",
+                    "08",
+                    "09",
+                    "10",
+                    "11",
+                    "12",
+                  ].map((value) => (
+                    <option key={value} value={value}>
+                      {value}
+                    </option>
+                  ))}
                 </select>
                 <span>/</span>
                 <select
@@ -178,7 +198,7 @@ const PaymentForm = ({ setHasPaid, hasPaid }: Props) => {
                     required: validationSchema.expiryYear.required,
                   })}
                 >
-                  <option>YYYY</option>
+                  <option value="">YYYY</option>
                   <option value="2016">2016</option>
                   <option value="2017">2017</option>
                   <option value="2018">2018</option>
@@ -196,14 +216,18 @@ const PaymentForm = ({ setHasPaid, hasPaid }: Props) => {
                   <option value="2030">2030</option>
                 </select>
               </div>
-              {errors.expiryMonth && (
-                <span className="text-red-600">
-                  {errors.expiryMonth.message as string}
-                </span>
-              )}
-              {errors.expiryYear && (
-                <span>{errors.expiryYear.message as string}</span>
-              )}
+              <div className="flex flex-col">
+                {errors.expiryMonth && (
+                  <span className="text-red-600">
+                    {errors.expiryMonth.message as string}
+                  </span>
+                )}
+                {errors.expiryYear && (
+                  <span className="text-red-600">
+                    {errors.expiryYear.message as string}
+                  </span>
+                )}
+              </div>
             </div>
             <div className="space-y-2">
               <div className="flex gap-2 items-center ml-6">
@@ -233,7 +257,13 @@ const PaymentForm = ({ setHasPaid, hasPaid }: Props) => {
         </div>
       </div>
       <div className="mt-10">
-        <Button type="submit" className="mb-6" pill color="purple" fullSized>
+        <Button
+          type="submit"
+          className="mb-6"
+          pill
+          gradientDuoTone="purpleToBlue"
+          fullSized
+        >
           <FaLock className="mx-4" /> Confirm and Pay
         </Button>
       </div>
