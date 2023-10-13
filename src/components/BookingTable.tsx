@@ -7,6 +7,7 @@ import {
   TextInput,
 } from "flowbite-react";
 import { FaCheck, FaPen, FaTrashCan } from "react-icons/fa6";
+import { FaMinusCircle, FaTimes } from "react-icons/fa";
 import { IBooking, IPlace, IUser } from "../api/@types";
 import MaterialReactTable, { MRT_ColumnDef } from "material-react-table";
 import { Types, defaultBooking, defaultUser } from "../api/contexts/reducer";
@@ -19,7 +20,6 @@ import {
 } from "../api/hooks/fetchCollections";
 
 import { AppContext } from "../api/contexts/context";
-import { FaMinusCircle } from "react-icons/fa";
 import { db } from "../firebase";
 import toast from "react-hot-toast";
 import { useForm } from "react-hook-form";
@@ -73,7 +73,7 @@ function BookingTable() {
       refetch();
       await updateDoc(doc(db, "users", user.uid || ""), {
         bookings: arrayRemove(selectedBooking),
-        noOfTourLeft: user.noOfTourLeft || 0 + 1,
+        noOfTourLeft: user.noOfTourLeft + 1,
       });
       hideModal();
       toast.success("Booking deleted successfully");
@@ -205,7 +205,28 @@ function BookingTable() {
 
       {
         header: "Status",
-        accessorFn: ({ status }) => <center>{status}</center>,
+        accessorFn: ({ status }) => (
+          <div
+            className="capitalize flex items-center gap-2"
+            style={{
+              color:
+                status === "approved"
+                  ? "green"
+                  : status === "declined"
+                  ? "red"
+                  : "gray",
+            }}
+          >
+            {status}{" "}
+            {status === "approved" ? (
+              <FaCheck />
+            ) : status === "declined" ? (
+              <FaTimes />
+            ) : (
+              <FaMinusCircle />
+            )}
+          </div>
+        ),
       },
       {
         header: "Completed",
@@ -223,22 +244,24 @@ function BookingTable() {
       {
         header: " ",
         accessorFn: (item) => (
-          <div className="flex space-x-4 cursor-pointer">
-            <div
-              className="ring-1 hover:bg-blue-50 p-2 rounded-lg"
-              onClick={() => handleEdit(item)}
-            >
-              <FaPen />
-            </div>
+          <>
             {item.status !== "approved" ? (
-              <div
-                className="ring-1 hover:bg-blue-100 p-2 rounded-lg"
-                onClick={() => handleDelete(item)}
-              >
-                <FaTrashCan />
+              <div className="flex space-x-4 cursor-pointer">
+                <div
+                  className="ring-1 hover:bg-blue-50 p-2 rounded-lg"
+                  onClick={() => handleEdit(item)}
+                >
+                  <FaPen />
+                </div>
+                <div
+                  className="ring-1 hover:bg-blue-100 p-2 rounded-lg"
+                  onClick={() => handleDelete(item)}
+                >
+                  <FaTrashCan />
+                </div>
               </div>
             ) : null}
-          </div>
+          </>
         ),
       },
     ],
